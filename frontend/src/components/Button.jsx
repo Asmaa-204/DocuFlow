@@ -1,0 +1,41 @@
+import styled from "styled-components";
+
+const StyledButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+
+  padding: 1rem 1.6rem;
+  background-color: var(--color-brand-600);
+  color: var(--color-grey-0);
+
+  border: none;
+  border-radius: 5px;
+
+  font-size: 1.4rem;
+  font-weight: 500;
+
+  &:hover {
+    background-color: var(--color-brand-700);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  & svg {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+`;
+
+function Button({ children, onClick, ...props }) {
+  return (
+    <StyledButton onClick={onClick} {...props}>
+      {children}
+    </StyledButton>
+  );
+}
+
+export default Button;
