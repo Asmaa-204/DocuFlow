@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { HiPlus } from "react-icons/hi2";
+import { useNavigate } from "react-router-dom";
 
 import Button from "@components/Button";
 import UserAvatar from "@components/UserAvatar";
@@ -30,6 +31,12 @@ const HeaderRight = styled.div`
 `;
 
 function Header() {
+  const navigate = useNavigate();
+
+  const handleStartWorkflow = () => {
+    navigate("/workflows/new");
+  };
+
   return (
     <StyledHeader>
       <HeaderLeft>
@@ -37,7 +44,7 @@ function Header() {
       </HeaderLeft>
 
       <HeaderRight>
-        <Button>
+        <Button onClick={handleStartWorkflow}>
           <HiPlus />
           Start a new workflow
         </Button>

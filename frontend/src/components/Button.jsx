@@ -24,6 +24,17 @@ const StyledButton = styled.button`
     transform: translateY(0);
   }
 
+  &:disabled {
+    background-color: var(--color-grey-300);
+    color: var(--color-grey-500);
+    cursor: not-allowed;
+  }
+
+  &:hover:disabled {
+    background-color: var(--color-grey-300);
+    transform: none;
+  }
+
   & svg {
     width: 1.6rem;
     height: 1.6rem;

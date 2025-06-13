@@ -8,7 +8,8 @@
       "@pages/*": ["./pages/*"],
       "@styles/*": ["./styles/*"],
       "@hooks/*": ["./hooks/*"],
-      "@data/*": ["./data/*"]
+      "@data/*": ["./data/*"],
+      "@features/*": ["./features/*"]
     }
   }
 }

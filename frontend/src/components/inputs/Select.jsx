@@ -1,0 +1,59 @@
+import styled from "styled-components";
+import { HiChevronDown } from "react-icons/hi2";
+
+const SelectContainer = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const StyledSelect = styled.select`
+  width: 100%;
+  padding: 1.2rem 4rem 1.2rem 1.6rem;
+  border: 2px solid var(--color-grey-300);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-grey-0);
+  font-size: 1.6rem;
+  color: var(--color-grey-700);
+  appearance: none;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-brand-600);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  }
+
+  &::placeholder {
+    color: var(--color-grey-400);
+  }
+`;
+
+const SelectIcon = styled(HiChevronDown)`
+  position: absolute;
+  right: 1.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  color: var(--color-grey-400);
+  pointer-events: none;
+`;
+
+function Select({ placeholder, options = [], value, onChange, ...props }) {
+  return (
+    <SelectContainer>
+      <StyledSelect value={value} onChange={onChange} {...props}>
+        <option value="" disabled>
+          {placeholder}
+        </option>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </StyledSelect>
+      <SelectIcon />
+    </SelectContainer>
+  );
+}
+
+export default Select;

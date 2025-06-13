@@ -87,7 +87,7 @@ const GlobalStyles = createGlobalStyle`
     --image-opacity: 90%;
   }
 
-  --border-radius-tiny: 3px;
+  --border-radius-tiny: 2px;
   --border-radius-sm: 5px;
   --border-radius-md: 7px;
   --border-radius-lg: 9px;
