@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const StyledButton = styled.button`
   display: flex;
@@ -39,6 +39,36 @@ const StyledButton = styled.button`
     width: 1.6rem;
     height: 1.6rem;
   }
+
+  ${(props) =>
+    props.$variety === "primary" &&
+    css`
+      background-color: var(--color-brand-700);
+
+      &:hover {
+        background-color: var(--color-brand-800);
+      }
+    `};
+
+  ${(props) =>
+    props.$variety === "secondary" &&
+    css`
+      background-color: var(--color-blue-700);
+
+      &:hover {
+        background-color: var(--color-blue-800);
+      }
+    `};
+
+  ${(props) =>
+    props.$variety === "danger" &&
+    css`
+      background-color: var(--color-red-700);
+
+      &:hover {
+        background-color: var(--color-red-800);
+      }
+    `};
 `;
 
 function Button({ children, onClick, ...props }) {

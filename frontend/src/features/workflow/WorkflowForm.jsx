@@ -4,9 +4,9 @@ import styled from "styled-components";
 import Select from "@components/inputs/Select";
 import ProgressStepper from "@components/ProgressStepper";
 import Button from "@components/Button";
-import { workflowOptions } from "@data/workflow/options";
 import Heading from "@components/Heading";
-import toast from "react-hot-toast";
+import { workflowOptions } from "@data/workflow/options";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.form`
   display: flex;
@@ -59,7 +59,6 @@ const ButtonContainer = styled.div`
 `;
 
 const StyledButton = styled(Button)`
-  background-color: var(--color-brand-600);
   padding: 1.2rem 3.2rem;
 
   font-size: 1.6rem;
@@ -68,13 +67,14 @@ const StyledButton = styled(Button)`
   text-transform: uppercase;
   letter-spacing: 0.5px;
   min-width: 12rem;
+`;
 
-  &:hover {
-    background-color: var(--color-brand-700);
-  }
+const StyledHeading = styled(Heading)`
+  margin-bottom: 3rem;
 `;
 
 function WorkFlowForm() {
+  const navigate = useNavigate();
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
       workflow: "",
@@ -84,7 +84,7 @@ function WorkFlowForm() {
   const selectedWorkflow = watch("workflow");
 
   const onSubmit = (data) => {
-    console.log(data.workflow);
+    navigate("request");
   };
 
   const selectedOption = workflowOptions.find(
@@ -94,7 +94,7 @@ function WorkFlowForm() {
   return (
     <Container onSubmit={handleSubmit(onSubmit)}>
       <Content>
-        <Heading as="h1">Start New Workflow</Heading>
+        <StyledHeading as="h1">Start New Workflow</StyledHeading>
 
         <FormSection>
           <SelectContainer>

@@ -12,7 +12,7 @@ function AppRoutes() {
           <Route index element={<Navigate replace to="/home" />} />
           <Route path="/home" element={<Home />} />
           <Route path="/workflows/new" element={<StartNewWorkflow />} />
-          <Route path="/request/new" element={<NewRequest />} />
+          <Route path="/workflows/new/request" element={<NewRequest />} />
         </Route>
       </Routes>
     </BrowserRouter>
