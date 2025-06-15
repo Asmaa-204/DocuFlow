@@ -1,0 +1,11 @@
+{
+    "name": "DocuFlow",
+    "version": "1.0.0",
+    "description": "API documentation for DocuFlow",
+    "title": "DocuFlow Docs",
+    "url": "http://localhost:3000",
+    "template": {
+      "withCompare": true,
+      "withGenerator": true
+    }
+}
