@@ -1,6 +1,7 @@
 import { API_URL } from "@consts";
 
 async function login({ email, password }) {
+  console.log(email, password);
   const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: {

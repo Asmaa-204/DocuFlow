@@ -30,4 +30,9 @@ export const navLinks = [
     icon: "settings",
     to: "/settings",
   },
+  {
+    name: "logout",
+    icon: "logout",
+    to: "/login",
+  },
 ];

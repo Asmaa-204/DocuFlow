@@ -43,11 +43,12 @@ function SignupForm() {
     mode: "onTouched",
   });
 
-  const { signup, isPending } = useSignup();
+  const { signup, isPending } = useSignup(watch("password"));
 
   async function onSubmit(data) {
-    console.log(data);
-    signup(data);
+    const { confirmPassword, ...rest } = data;
+    console.log(rest);
+    signup(rest);
   }
 
   return (

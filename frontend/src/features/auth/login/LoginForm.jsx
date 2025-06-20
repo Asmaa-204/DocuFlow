@@ -40,7 +40,7 @@ function LoginForm() {
           <InputField
             label="Email"
             placeholder="Enter your email"
-            defaultValue="test1@gmail.com"
+            defaultValue="test@gmail.com"
             error={errors?.email?.message}
             type="email"
             id="email"
@@ -49,7 +49,7 @@ function LoginForm() {
           <InputField
             label="Password"
             placeholder="Enter your password"
-            defaultValue="12345"
+            defaultValue="1234"
             register={register}
             error={errors?.password?.message}
             type="password"

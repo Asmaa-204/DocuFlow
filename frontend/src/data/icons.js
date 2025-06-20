@@ -9,6 +9,7 @@ import { LuPen } from "react-icons/lu";
 import { PiTelegramLogo } from "react-icons/pi";
 import { MdOutlineWidgets } from "react-icons/md";
 import { LiaPlusSquare } from "react-icons/lia";
+import { SlLogout } from "react-icons/sl";
 
 export const icons = {
   home: HiOutlineHome,
@@ -20,4 +21,5 @@ export const icons = {
   workflow: MdOutlineWidgets,
   pen: LuPen,
   submitted: PiTelegramLogo,
+  logout: SlLogout,
 };

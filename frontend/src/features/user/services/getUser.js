@@ -1,4 +1,5 @@
 import { API_URL } from "@consts";
+
 async function getUser() {
   const res = await fetch(`${API_URL}/me`, {
     method: "GET",

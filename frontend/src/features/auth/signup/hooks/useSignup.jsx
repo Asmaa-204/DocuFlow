@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { signup } from "../services/signup";
 import { useLogin } from "@features/auth/login/hooks/useLogin";
 
-function useSignup() {
+function useSignup(password) {
   const queryClient = useQueryClient();
   const { login } = useLogin();
 
@@ -16,7 +16,10 @@ function useSignup() {
     onSuccess: (data) => {
       queryClient.setQueryData(["user"], data.user);
       queryClient.invalidateQueries({ queryKey: ["isAuth"] });
-      login({ email: data.user.email, password: data.password });
+      login({
+        email: data.user.email,
+        password,
+      });
     },
   });
 

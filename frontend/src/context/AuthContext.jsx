@@ -1,5 +1,5 @@
-import { useUser } from "@features/user/hooks/useUser";
 import { createContext, useContext } from "react";
+import { useUser } from "@features/user/hooks/useUser";
 
 const AuthContext = createContext(null);
 
