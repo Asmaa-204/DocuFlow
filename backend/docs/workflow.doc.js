@@ -49,10 +49,10 @@
  * @apiBody {String} title Workflow title
  * @apiBody {String} [description] Workflow description
  * @apiBody {Object[]} stages Array of stage objects
- * @apiBody {String} stages.title Stage title
- * @apiBody {String} [stages.description] Stage description
- * @apiBody {String="professor","department_manager","administrator"} stages.role Required role for this stage
- * @apiBody {Number} stages.stageOrder Order of the stage (must be sequential starting from 1)
+ * @apiBody {String} stages[].title Stage title
+ * @apiBody {String} [stages[].description] Stage description
+ * @apiBody {String="professor","department_manager","administrator"} stages[].role Required role for this stage
+ * @apiBody {Number} stages[].stageOrder Order of the stage (must be sequential starting from 1)
  *
  * @apiSuccess {Object} workflow Created workflow object
  * @apiSuccess {String} status Response status

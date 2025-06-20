@@ -9,7 +9,7 @@
  * @apiBody {String} password User's password
  * @apiBody {String="professor","department_manager","administrator"} [role="professor"] User's role
  *
- * @apiSuccess {Object} user User object containing user data
+ * @apiSuccess {Object} data.user User object containing user data
  * @apiSuccess {String} status Response status
  *
  * @apiError {String} message Error message (Email already exists)
@@ -49,7 +49,7 @@
  * @apiBody {String} email User's email address
  * @apiBody {String} password User's password
  *
- * @apiSuccess {String} token JWT token for the user
+ * @apiSuccess {String} data.token JWT token for the user
  * @apiSuccess {String} status Response status
  *
  * @apiError {String} message Error message (Invalid email or password)

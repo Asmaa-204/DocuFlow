@@ -19,9 +19,7 @@ class AuthService {
 
         const payload = user.toJSON();
 
-        const jwt_secret = process.env.JWT_SECRET;
-        const jwt_expires_in = process.env.JWT_EXPIRES_IN;
-        const token = jwt.sign(payload, jwt_secret, { expiresIn: jwt_expires_in });
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
         return token;
     };
 
