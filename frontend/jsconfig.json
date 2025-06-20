@@ -9,7 +9,9 @@
       "@styles/*": ["./styles/*"],
       "@hooks/*": ["./hooks/*"],
       "@data/*": ["./data/*"],
-      "@features/*": ["./features/*"]
+      "@features/*": ["./features/*"],
+      "@context/*": ["./context/*"],
+      "@consts": ["./consts.js"]
     }
   }
 }
