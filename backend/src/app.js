@@ -12,8 +12,8 @@ const apiRouter = require('./routes/api.js');
 const app = express();
 app.use(express.static('public'));
 
-//Logging
-app.use(morgan('dev'));
+if(process.env.MODE === "DEV")
+    app.use(morgan('dev'));
 
 app.use(cors(corOptions));
 app.use(express.json());

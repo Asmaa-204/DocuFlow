@@ -26,4 +26,4 @@ async function signup(req, res, next) {
 module.exports = {
     login: asyncDec(login),
     signup: asyncDec(signup)
-}
+};

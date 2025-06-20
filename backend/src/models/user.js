@@ -12,14 +12,16 @@ const UserSchema = {
   firstName: {
     type: DataTypes.STRING,
     allowNull: false,
-    min: 2,
-    max: 50
+    validate:{
+      len: [2, 50]
+    }
   },
   lastName: {
     type: DataTypes.STRING,
     allowNull: false,
-    min: 2,
-    max: 50
+    validate:{
+      len: [2, 50]
+    }
   },
   email: {
     type: DataTypes.STRING,
@@ -33,6 +35,11 @@ const UserSchema = {
     type: DataTypes.STRING,
     allowNull: false,
     min: 6
+  },
+  role: {
+    type: DataTypes.ENUM('professor', 'department_manager', 'administrator'),
+    allowNull: false,
+    defaultValue: 'professor',
   }
 };
 
@@ -53,6 +60,11 @@ module.exports = (sequelize) => {
         onDelete: 'CASCADE'
       });
 
+      User.hasMany(models.Request, {
+        foreignKey: "assignedToUserId",
+        as: "assignedRequests",
+        onDelete: "CASCADE"
+      });
     }
   }
 
@@ -79,6 +91,12 @@ module.exports = (sequelize) => {
 
   User.prototype.comparePassword = async function (password) {
     return await bcrypt.compare(password, this.password)
+  }
+
+  User.prototype.toJSON = function () {
+    const values = Object.assign({}, this.get())
+    delete values.password
+    return values
   }
 
   return User;

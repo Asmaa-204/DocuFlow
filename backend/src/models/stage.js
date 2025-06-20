@@ -23,6 +23,11 @@ const StageSchema = {
     allowNull: true
   },
 
+  role: {
+    type: DataTypes.ENUM('professor', 'department_manager', 'administrator'),
+    allowNull: false
+  },
+
   stageOrder: {
     type: DataTypes.INTEGER,
     allowNull: false

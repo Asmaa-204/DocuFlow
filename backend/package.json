@@ -7,7 +7,8 @@
   "type": "commonjs",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "test": "jest"
   },
   "author": "Google LLC",
   "license": "Apache-2.0",
@@ -24,7 +25,9 @@
   },
   "devDependencies": {
     "apidoc": "^1.2.0",
+    "jest": "^30.0.1",
     "nodemon": "^3.1.10",
-    "sequelize-cli": "^6.6.3"
+    "sequelize-cli": "^6.6.3",
+    "supertest": "^7.1.1"
   }
 }

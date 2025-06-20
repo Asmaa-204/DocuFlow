@@ -13,16 +13,15 @@ class AuthService {
             throw new AppError('Invalid email or password', 401);
         }
 
-        if(user.comparePassword(password)){
+        if(!(await user.comparePassword(password))){
             throw new AppError('Invalid email or password', 401);
         }
 
-        const payload = {
-            userId: user.id,
-            email: user.email
-        };
+        const payload = user.toJSON();
 
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+        const jwt_secret = process.env.JWT_SECRET;
+        const jwt_expires_in = process.env.JWT_EXPIRES_IN;
+        const token = jwt.sign(payload, jwt_secret, { expiresIn: jwt_expires_in });
         return token;
     };
 
@@ -30,7 +29,8 @@ class AuthService {
     {
         const { email } = userData;
 
-        if (await User.findOne({ where: { email } })) {
+        if (await User.findOne({ where: { email } })) 
+        {
             throw new AppError('Email already exists', 400);
         }
 

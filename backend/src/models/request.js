@@ -25,6 +25,11 @@ const RequestSchema = {
         allowNull: false,
     },
 
+    assignedToUserId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+
     note: {
         type: DataTypes.TEXT,
         allowNull: false,
@@ -55,6 +60,11 @@ module.exports = (sequelize) => {
                 foreignKey: 'userId',
                 as: 'user'
             });
+
+            Request.belongsTo(models.User, {
+                foreignKey: "assignedToUserId",
+                as: "assignee"
+            })
         }
     };
 
