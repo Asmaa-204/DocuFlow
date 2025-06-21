@@ -42,7 +42,7 @@ const StyledButton = styled.button`
   }
 
   ${(props) =>
-    props.$variety === "primary" &&
+    props.$variation === "primary" &&
     css`
       background-color: var(--color-brand-700);
 
@@ -52,7 +52,7 @@ const StyledButton = styled.button`
     `};
 
   ${(props) =>
-    props.$variety === "secondary" &&
+    props.$variation === "secondary" &&
     css`
       background-color: var(--color-blue-700);
 
@@ -62,7 +62,7 @@ const StyledButton = styled.button`
     `};
 
   ${(props) =>
-    props.$variety === "danger" &&
+    props.$variation === "danger" &&
     css`
       background-color: var(--color-red-700);
 

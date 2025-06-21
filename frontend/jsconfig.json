@@ -11,7 +11,7 @@
       "@data/*": ["./data/*"],
       "@features/*": ["./features/*"],
       "@context/*": ["./context/*"],
-      "@consts": ["./consts.js"]
+      "@utils/*": ["./utils/*"],
     }
   }
 }

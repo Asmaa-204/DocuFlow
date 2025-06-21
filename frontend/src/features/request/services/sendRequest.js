@@ -1,4 +1,4 @@
-import { API_URL } from "@consts";
+import { API_URL } from "@utils/consts";
 
 async function sendRequest(request) {
   const res = await fetch(`${API_URL}/request`, {

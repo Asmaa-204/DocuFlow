@@ -103,14 +103,14 @@ function NewRequestForm() {
       </Content>
 
       <Footer>
-        <Button $variety="danger" type="button" onClick={() => reset()}>
+        <Button $variation="danger" type="button" onClick={() => reset()}>
           CANCEL
         </Button>
 
         <ButtonGroup>
           <Button
             type="button"
-            $variety="secondary"
+            $variation="secondary"
             onClick={() => sendRequest(true)}
           >
             SAVE AS DRAFT

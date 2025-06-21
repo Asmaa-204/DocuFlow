@@ -1,4 +1,4 @@
-import { API_URL } from "@consts";
+import { API_URL } from "@utils/consts";
 
 async function getAllWorkflows() {
   const res = await fetch(`${API_URL}/workflow`, {

@@ -16,12 +16,12 @@ export const navLinks = [
       {
         name: "Drafts",
         icon: "pen",
-        to: "/workflows/drafts",
+        to: "/requests/drafts",
       },
       {
         name: "Submitted",
         icon: "submitted",
-        to: "/workflows/submitted",
+        to: "/requests/submitted",
       },
     ],
   },

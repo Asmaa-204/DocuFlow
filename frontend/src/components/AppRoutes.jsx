@@ -1,12 +1,18 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Home from "@pages/Home";
-import StartNewWorkflow from "@pages/StartNewWorkflow";
-import NewRequest from "@pages/NewRequest";
+
 import AppLayout from "@components/AppLayout";
 import ProtectedRoute from "@components/ProtectedRoute";
+
 import { AuthProvider } from "@context/AuthContext";
+
 import Login from "@pages/Login";
 import Signup from "@pages/Signup";
+import StartNewWorkflow from "@pages/StartNewWorkflow";
+import NewRequest from "@pages/NewRequest";
+import SubmittedRequests from "@pages/SubmittedRequests";
+import Dashboard from "@pages/Dashboard";
+import Settings from "@pages/Settings";
+import DraftRequests from "@pages/DraftRequests";
 
 function AppRoutes() {
   return (
@@ -21,13 +27,16 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate replace to="/home" />} />
-          <Route path="/home" element={<Home />} />
+          <Route index element={<Navigate replace to="/dashboard" />} />
           <Route path="/workflows/new" element={<StartNewWorkflow />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route
             path="/workflows/:workflowId/instances/:instanceId"
             element={<NewRequest />}
           />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/requests/submitted" element={<SubmittedRequests />} />
+          <Route path="/requests/drafts" element={<DraftRequests />} />
         </Route>
 
         <Route path="login" element={<Login />} />
