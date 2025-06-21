@@ -1,5 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
 
 import Button from "@components/Button";
 import TextArea from "@components/inputs/TextArea";
@@ -7,6 +8,8 @@ import Heading from "@components/Heading";
 import RequestedDocsList from "./RequestedDocsList";
 
 import { documents, forms } from "@data/workflow/requestedDocs";
+import { useAllWorkflows } from "@features/workflow/hooks/useAllWorkflows";
+import { useSendRequest } from "./hooks/useSendRequest";
 
 const Container = styled.form`
   display: flex;
@@ -51,7 +54,11 @@ const P = styled.p`
 `;
 
 function NewRequestForm() {
-  const { control, handleSubmit } = useForm({
+  const { data: workflows } = useAllWorkflows();
+  const { workflowId, instanceId } = useParams();
+  const { mutate } = useSendRequest();
+
+  const { control, handleSubmit, getValues, reset } = useForm({
     defaultValues: {
       note: "",
       selectedDocuments: [],
@@ -59,23 +66,26 @@ function NewRequestForm() {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log("Form submitted:", data);
-  };
+  const selectedWorkflow = workflows?.find(
+    (wf) => wf.id === Number(workflowId)
+  );
 
-  const handleCancel = () => {
-    console.log("Cancel clicked");
-  };
+  function sendRequest(isDraft) {
+    const data = getValues();
+    const requestPayload = {
+      instanceId: Number(instanceId),
+      note: data.note,
+      isDraft,
+    };
 
-  const handleSaveAsDraft = () => {
-    console.log("Save as draft clicked");
-  };
+    mutate(requestPayload);
+  }
 
   return (
-    <Container onSubmit={handleSubmit(onSubmit)}>
+    <Container onSubmit={handleSubmit(() => sendRequest(false))}>
       <Content>
         <Heading as="h1">New Request</Heading>
-        <P>Request For Supervisor Approval</P>
+        <P>Request For {selectedWorkflow?.title}</P>
 
         <RequestedDocsList type="documents" documents={documents} />
         <RequestedDocsList type="forms" documents={forms} />
@@ -93,7 +103,7 @@ function NewRequestForm() {
       </Content>
 
       <Footer>
-        <Button $variety="danger" type="button" onClick={handleCancel}>
+        <Button $variety="danger" type="button" onClick={() => reset()}>
           CANCEL
         </Button>
 
@@ -101,7 +111,7 @@ function NewRequestForm() {
           <Button
             type="button"
             $variety="secondary"
-            onClick={handleSaveAsDraft}
+            onClick={() => sendRequest(true)}
           >
             SAVE AS DRAFT
           </Button>

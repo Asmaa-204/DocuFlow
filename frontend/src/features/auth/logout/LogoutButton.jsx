@@ -5,7 +5,6 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const Button = styled.button`
   background: none;
-  width: 100%;
   border: none;
 `;
 

@@ -47,7 +47,6 @@ function SignupForm() {
 
   async function onSubmit(data) {
     const { confirmPassword, ...rest } = data;
-    console.log(rest);
     signup(rest);
   }
 

@@ -5,8 +5,9 @@ import Select from "@components/inputs/Select";
 import ProgressStepper from "@components/ProgressStepper";
 import Button from "@components/Button";
 import Heading from "@components/Heading";
-import { workflowOptions } from "@data/workflow/options";
-import { useNavigate } from "react-router-dom";
+
+import { useAllWorkflows } from "./hooks/useAllWorkflows";
+import { useCreateInstance } from "./hooks/useCreateInstance";
 
 const Container = styled.form`
   display: flex;
@@ -74,21 +75,22 @@ const StyledHeading = styled(Heading)`
 `;
 
 function WorkFlowForm() {
-  const navigate = useNavigate();
+  const { data: workflows } = useAllWorkflows();
+  const { createInstance } = useCreateInstance();
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
-      workflow: "",
+      workflowId: "",
     },
   });
 
-  const selectedWorkflow = watch("workflow");
+  const selectedWorkflow = watch("workflowId");
 
-  const onSubmit = (data) => {
-    navigate("request");
-  };
+  async function onSubmit(data) {
+    createInstance({ ...data, workflowId: Number(data.workflowId) });
+  }
 
-  const selectedOption = workflowOptions.find(
-    (option) => option?.value === selectedWorkflow
+  const selectedOption = workflows?.find(
+    (option) => option?.id == selectedWorkflow
   );
 
   return (
@@ -100,12 +102,12 @@ function WorkFlowForm() {
           <SelectContainer>
             <Controller
               control={control}
-              name="workflow"
+              name="workflowId"
               render={({ field }) => (
                 <Select
                   {...field}
                   placeholder="Choose a workflow"
-                  options={workflowOptions}
+                  options={workflows}
                 />
               )}
             />
@@ -120,7 +122,10 @@ function WorkFlowForm() {
       </Content>
 
       <Footer>
-        <ProgressStepper currentStep={1} totalSteps={5} />
+        <ProgressStepper
+          currentStep={1}
+          totalSteps={selectedOption?.stages.length || 0}
+        />
         <ButtonContainer>
           <StyledButton disabled={!selectedOption} type="submit">
             Start

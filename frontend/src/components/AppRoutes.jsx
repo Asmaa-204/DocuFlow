@@ -24,7 +24,10 @@ function AppRoutes() {
           <Route index element={<Navigate replace to="/home" />} />
           <Route path="/home" element={<Home />} />
           <Route path="/workflows/new" element={<StartNewWorkflow />} />
-          <Route path="/workflows/new/request" element={<NewRequest />} />
+          <Route
+            path="/workflows/:workflowId/instances/:instanceId"
+            element={<NewRequest />}
+          />
         </Route>
 
         <Route path="login" element={<Login />} />

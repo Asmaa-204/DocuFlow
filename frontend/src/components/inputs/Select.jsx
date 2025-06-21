@@ -46,8 +46,11 @@ function Select({ placeholder, options = [], value, onChange, ...props }) {
           {placeholder}
         </option>
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
+          <option
+            key={option?.id || option.value}
+            value={option.id || option.value}
+          >
+            {option.title || option.label}
           </option>
         ))}
       </StyledSelect>

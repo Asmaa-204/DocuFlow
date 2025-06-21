@@ -1,16 +1,21 @@
 import { API_URL } from "@consts";
 
-async function getUser() {
-  const res = await fetch(`${API_URL}/me`, {
+async function getAllWorkflows() {
+  const res = await fetch(`${API_URL}/workflow`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   });
+
   const data = await res.json();
 
-  return data.data.user;
+  if (data?.message) {
+    throw new Error(data.message);
+  }
+
+  return data?.data?.workflows;
 }
 
-export { getUser };
+export { getAllWorkflows };
