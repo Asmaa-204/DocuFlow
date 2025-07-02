@@ -6,12 +6,21 @@ import Pagination from "@components/Pagination";
 import RequestRow from "./RequestRow";
 
 import useRequests from "./hooks/useRequests";
+import { useSearchParams } from "react-router-dom";
+import { PAGE_SIZE } from "@utils/consts";
 
 function RequestsTable({ filter }) {
   const { isPending, data: requests } = useRequests({ filter });
+  const [searchParams] = useSearchParams();
 
   if (isPending) return <Spinner />;
   if (!requests?.length) return <Empty resource="Requests" />;
+
+  const currentPage = Number(searchParams.get("page")) || 1;
+
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+  const paginatedData = requests.slice(startIndex, endIndex);
 
   return (
     <Menus>
@@ -25,13 +34,13 @@ function RequestsTable({ filter }) {
         </Table.Header>
 
         <Table.Body
-          data={requests}
+          data={paginatedData}
           render={(request) => (
             <RequestRow key={request?.id} request={request} />
           )}
         />
         <Table.Footer>
-          <Pagination numResults={5} />
+          <Pagination numResults={requests?.length} />
         </Table.Footer>
       </Table>
     </Menus>

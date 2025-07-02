@@ -9,7 +9,8 @@ const StyledTable = styled.div`
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
-  /* overflow: hidden; */
+  overflow: hidden;
+  width: 100%;
 `;
 
 const CommonRow = styled.div`
@@ -49,7 +50,6 @@ const Footer = styled.footer`
   justify-content: center;
   padding: 1.2rem;
 
-  /* This will hide the footer when it contains no child elements. Possible thanks to the parent selector :has 🎉 */
   &:not(:has(*)) {
     display: none;
   }
@@ -57,7 +57,7 @@ const Footer = styled.footer`
 
 const TableContext = createContext();
 
-export default function Table({ columns, children }) {
+function Table({ columns, children }) {
   return (
     <TableContext.Provider value={{ columns }}>
       <StyledTable role="table">{children}</StyledTable>
@@ -95,3 +95,5 @@ Table.Header = Header;
 Table.Row = Row;
 Table.Body = Body;
 Table.Footer = Footer;
+
+export default Table;
