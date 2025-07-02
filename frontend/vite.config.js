@@ -15,7 +15,6 @@ export default defineConfig({
       "@data": "/src/data",
       "@features": "/src/features",
       "@context": "/src/context",
-      "@utils": "/src/utils",
     },
   },
 });
