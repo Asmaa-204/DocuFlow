@@ -1,20 +1,11 @@
-import { API_URL } from "@utils/consts";
+import { apiRequest } from "@utils/api";
 
 async function signup(user) {
-  const res = await fetch(`${API_URL}/auth/signup`, {
+  const data = await apiRequest("/auth/signup", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(user),
+    body: user,
   });
-  const data = await res.json();
-
-  if (data.status !== "success") {
-    console.error(data);
-    throw new Error(data.message);
-  }
-  return data.data;
+  return data?.data;
 }
 
 export { signup };

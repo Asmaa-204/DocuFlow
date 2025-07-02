@@ -1,3 +1,5 @@
+import { useSearchParams } from "react-router-dom";
+
 import Empty from "@components/Empty";
 import Spinner from "@components/Spinner";
 import Menus from "@components/Menu";
@@ -6,7 +8,6 @@ import Pagination from "@components/Pagination";
 import RequestRow from "./RequestRow";
 
 import useRequests from "./hooks/useRequests";
-import { useSearchParams } from "react-router-dom";
 import { PAGE_SIZE } from "@utils/consts";
 
 function RequestsTable({ filter }) {
@@ -16,11 +17,13 @@ function RequestsTable({ filter }) {
   if (isPending) return <Spinner />;
   if (!requests?.length) return <Empty resource="Requests" />;
 
+  //TODO: remove when pagination is done
   const currentPage = Number(searchParams.get("page")) || 1;
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
   const paginatedData = requests.slice(startIndex, endIndex);
+  //-----------------------------------------
 
   return (
     <Menus>

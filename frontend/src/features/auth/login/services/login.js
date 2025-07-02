@@ -1,19 +1,11 @@
-import { API_URL } from "@utils/consts";
+import { apiRequest } from "@utils/api";
 
 async function login({ email, password }) {
-  console.log(email, password);
-  const res = await fetch(`${API_URL}/auth/login`, {
+  const data = await apiRequest("/auth/login", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
+    body: { email, password },
   });
-  const data = await res.json();
 
-  if (data.status !== "success") {
-    throw new Error(data.message);
-  }
   return data.data;
 }
 

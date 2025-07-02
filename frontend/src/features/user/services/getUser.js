@@ -1,15 +1,11 @@
-import { API_URL } from "@utils/consts";
+import { apiRequest } from "@utils/api";
 
 async function getUser() {
-  const res = await fetch(`${API_URL}/me`, {
+  const token = localStorage.getItem("token");
+  const data = await apiRequest("/me", {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
+    token,
   });
-  const data = await res.json();
-
   return data.data.user;
 }
 

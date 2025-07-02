@@ -1,18 +1,12 @@
-import { API_URL } from "@utils/consts";
+import { apiRequest } from "@utils/api";
 
 async function createInstance(instance) {
-  const res = await fetch(`${API_URL}/instance`, {
+  const token = localStorage.getItem("token");
+  const data = await apiRequest("/instance", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-    body: JSON.stringify(instance),
+    body: instance,
+    token,
   });
-  const data = await res.json();
-  if (data?.message) {
-    throw new Error(data.message);
-  }
   return data?.data?.instance;
 }
 

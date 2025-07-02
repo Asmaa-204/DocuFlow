@@ -1,20 +1,12 @@
-import { API_URL } from "@utils/consts";
+import { apiRequest } from "@utils/api";
 
 async function sendRequest(request) {
-  const res = await fetch(`${API_URL}/request`, {
+  const token = localStorage.getItem("token");
+  const data = await apiRequest("/request", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-    body: JSON.stringify(request),
+    body: request,
+    token,
   });
-  const data = await res.json();
-  console.log(data);
-
-  if (data?.message) {
-    throw new Error(data.message);
-  }
   return data?.request;
 }
 

@@ -1,21 +1,12 @@
-import { API_URL } from "@utils/consts";
+import { apiRequest } from "@utils/api";
 
 async function getRequests({ isDraft }) {
   //TODO: add {"isDraft": isDraft} to the request body
-  const res = await fetch(`${API_URL}/request`, {
+  const token = localStorage.getItem("token");
+  const data = await apiRequest("/request", {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
+    token,
   });
-
-  const data = await res.json();
-
-  if (data?.message) {
-    throw new Error(data.message);
-  }
-
   return data.data?.requests;
 }
 
