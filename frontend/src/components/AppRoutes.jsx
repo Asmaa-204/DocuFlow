@@ -27,16 +27,20 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate replace to="/dashboard" />} />
-          <Route path="/workflows/new" element={<StartNewWorkflow />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route
-            path="/workflows/:workflowId/instances/:instanceId"
-            element={<NewRequest />}
-          />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/requests/submitted" element={<SubmittedRequests />} />
-          <Route path="/requests/drafts" element={<DraftRequests />} />
+          <Route index element={<Navigate replace to="dashboard" />} />
+          <Route path="workflows">
+            <Route path="new" element={<StartNewWorkflow />} />
+            <Route
+              path=":workflowId/instances/:instanceId"
+              element={<NewRequest />}
+            />
+          </Route>
+          <Route path="requests">
+            <Route path="submitted" element={<SubmittedRequests />} />
+            <Route path="drafts" element={<DraftRequests />} />
+          </Route>
+          <Route path="settings" element={<Settings />} />
+          <Route path="dashboard" element={<Dashboard />} />
         </Route>
 
         <Route path="login" element={<Login />} />
