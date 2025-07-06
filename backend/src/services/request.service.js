@@ -1,24 +1,71 @@
-const { WorkflowInstance, Request } = require('../models')
+const { WorkflowInstance, Workflow, Request } = require('../models')
 const AppError = require("../errors/AppError");
 const user = require('../models/user');
 
 class RequestService 
 {
-    static async getAllRequests(userId)
-    {
-        const filter = userId ? { where: { userId } } : {};
-        const requests = await Request.findAll(filter)
-        return requests
+    static async getAllRequests(userId) {
+        const filter = {
+            where: {},
+            include: [
+                {
+                    model: WorkflowInstance,
+                    attributes: ['id'],
+                    as: 'instance',
+                    include: [
+                        {
+                            model: Workflow,
+                            as: 'workflow',
+                            attributes: ['title']
+                        }
+                    ]
+                }
+            ]
+        };
+
+
+        if (userId) {
+            filter.where.userId = userId;
+        }
+
+        let requests = await Request.findAll(filter);
+
+        return requests.map(request => {
+            const plainRequest = request.get({ plain: true });
+            plainRequest.workflowTitle = plainRequest.instance?.workflow?.title || null;
+            delete plainRequest.instance;
+            return plainRequest;
+        });
     }
+
 
     static async getRequestById(requestId)
     {
-        const request = await Request.findByPk(requestId)
-     
+        const filter = {};
+        filter.include = [
+            {
+                model: WorkflowInstance,
+                as: 'instance',
+                include: [
+                    {
+                        model: Workflow,
+                        as: 'workflow',
+                        attributes: ['title']
+                    }
+                ]
+            }
+        ]
+
+        const request = await Request.findByPk(requestId, filter)
+
         if(!request)
             throw new AppError('Request not found', 404)
-     
-        return request
+
+        const plainRequest = request.get({plain: true})
+        plainRequest.workflowTitle = plainRequest.instance?.workflow?.title || null;
+        delete plainRequest.instance
+
+        return plainRequest
     }
     
     static async createRequest(instanceId, note, isDraft, userId) {

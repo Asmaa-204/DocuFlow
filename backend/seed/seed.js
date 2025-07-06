@@ -5,7 +5,7 @@ async function seed() {
   await sequelize.sync({ force: true }); // WARNING: this will drop all tables
 
   // Create users
-  const hashedPassword = await bcrypt.hash('password123', 10);
+  const hashedPassword = "password123"
   const [professor, manager, admin] = await Promise.all([
     User.create({ firstName: 'Alice', lastName: 'Prof', email: 'prof@example.com', password: hashedPassword, role: 'professor' }),
     User.create({ firstName: 'Bob', lastName: 'Manager', email: 'manager@example.com', password: hashedPassword, role: 'department_manager' }),
