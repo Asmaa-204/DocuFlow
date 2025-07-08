@@ -5,7 +5,7 @@ import WorkflowStepper from "./WorkflowStepper";
 
 const Card = styled.div`
   padding: 18px;
-  width: 80%;
+  width: 100%;
   background: #ffffffff;
   border-radius: 10px;
   border-width: 2px;
