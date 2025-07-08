@@ -3,6 +3,8 @@ import {
   HiOutlineCog6Tooth,
   HiOutlineHome,
   HiOutlineHomeModern,
+  HiOutlineInbox,
+  HiOutlineRectangleStack,
   HiOutlineUsers,
 } from "react-icons/hi2";
 import { LuPen } from "react-icons/lu";
@@ -22,4 +24,6 @@ export const icons = {
   pen: LuPen,
   submitted: PiTelegramLogo,
   logout: SlLogout,
+  inbox: HiOutlineInbox,
+  myWorkflows: HiOutlineRectangleStack,
 };
