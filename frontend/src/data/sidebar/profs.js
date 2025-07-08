@@ -14,6 +14,18 @@ export const navLinks = [
         to: "/workflows/new",
       },
       {
+        name: "My Workflows",
+        icon: "myWorkflows",
+        to: "/workflows/my-workflows",
+      },
+    ]
+
+  },
+  {
+    name: "Requests",
+    icon: "inbox",
+    children: [
+      {
         name: "Drafts",
         icon: "pen",
         to: "/requests/drafts",
