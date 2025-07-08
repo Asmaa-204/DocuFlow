@@ -1,6 +1,13 @@
 import { mockWorkflows } from "@data/mock_workflows";
 
 export function useWorkflowInstances() {
+  function getFilteredInstances(instances, selectedType) {
+    if (!selectedType) return instances;
+    return instances.filter(
+      (inst) => inst.workflow_definition_id === selectedType
+    );
+  }
+
   function renderStepper(instance) {
     const definition = mockWorkflows[`${instance.workflow_definition_id}`];
     if (!definition) {
@@ -38,5 +45,5 @@ export function useWorkflowInstances() {
     return instanceCardData;
   }
 
-  return { renderStepper };
+  return { renderStepper, getFilteredInstances };
 }

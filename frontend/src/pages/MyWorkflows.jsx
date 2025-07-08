@@ -2,54 +2,33 @@ import { useState, useMemo } from "react";
 import { mockInstances } from "@data/mock_Instances";
 import { mockWorkflows } from "@data/mock_workflows";
 import WorkflowInstanceList from "@features/workflow/WorkflowInstanceList";
-import Select from "@components/Select";
-import Heading from "@components/Heading";
-import Row from "@components/Row";
-
-const ids = new Set(mockInstances.map(inst => inst.workflow_definition_id));
-const workflowTypes = Array.from(ids).map(id => ({
-	value: id,
-	label: mockWorkflows[id]?.name || "Unknown"
-}));
-
-workflowTypes.unshift({ value: "", label: "All Workflows" });
-
-console.log("Workflow Types:", workflowTypes);
-
-function getFilteredInstances(selectedType) {
-	if (!selectedType) return mockInstances;
-	return mockInstances.filter(inst => inst.workflow_definition_id === selectedType);
-}
-
-// const
+import MyWorkflowHeaderOptions from "@features/workflow/MyWorkflowHeaderOptions";
+import { useWorkflowInstances } from "@features/workflow/hooks/useWorkflowInstances";
 
 function MyWorkflows() {
-	const [selectedType, setSelectedType] = useState("");
-	const filteredInstances = useMemo(
-		() => getFilteredInstances(selectedType),
-		[selectedType]
-	);
+  const { getFilteredInstances } = useWorkflowInstances();
+  const [selectedType, setSelectedType] = useState("");
 
-	function handleSearchChange(e) {
-		setSelectedType(e.target.value);
-	}
+  const filteredInstances = useMemo(
+    () => getFilteredInstances(mockInstances, selectedType),
+    [selectedType, getFilteredInstances]
+  );
 
-	return (
-		<div>
-			<Row type="horizontal">
-				<Heading as="h1">My Workflows</Heading>
+  function handleFilterChange(e) {
+    setSelectedType(e.target.value);
+  }
 
-				<Select
-					type="white"
-					value={selectedType}
-					onChange={handleSearchChange}
-					options={workflowTypes}
-				>
-				</Select>
-			</Row>
-			<WorkflowInstanceList instances={filteredInstances} />
-		</div>
-	);
+  return (
+    <div>
+      <MyWorkflowHeaderOptions
+        selectedType={selectedType}
+        handleFilterChange={handleFilterChange}
+				instances={mockInstances}
+				workflows={mockWorkflows}
+      />
+      <WorkflowInstanceList instances={filteredInstances} />
+    </div>
+  );
 }
 
 export default MyWorkflows;
