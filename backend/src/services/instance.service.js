@@ -1,30 +1,51 @@
 const { Workflow, Stage, WorkflowInstance, Request } = require('../models');
 const AppError = require('../errors/AppError');
+const SequelizeQueryBuilder = require("../utils/SequelizeQueryBuilder");
 
 class InstanceService
 {
-    static async getAllInstances(userId)
+    static async getAllInstances(query)
     {
-        const filter = userId ? { where: { userId } } : {};
+        const builder = new SequelizeQueryBuilder(query);
+        const filter = builder.filter().sort().attributes().get();
         const instances = await WorkflowInstance.findAll(filter);
-
+        
         return instances;
     }
 
-    static async getInstance(instanceId)
+    static async getInstance(instanceId, query, user)
     {
-        const instance = await WorkflowInstance.findByPk(instanceId);
+        const builder = new SequelizeQueryBuilder(query);
+        const filter = builder.attributes().get();
+        const instance = await WorkflowInstance.findByPk(instanceId, filter);
 
         if (!instance) {
             throw new AppError('Instance not found', 404);
         }
 
+        // Instance Access Policy
+        if(user?.role != 'administrator')
+        {
+            if (instance.userId !== user.id) {
+                throw new AppError('You do not have permission to access this instance', 403);
+            }
+        }
+        
         return instance;
+    }
+
+    static async getUserInstances(userId, query)
+    {
+        const builder = new SequelizeQueryBuilder(query);
+        const filter = builder.filter().sort().attributes().get();
+        filter.where.userId = userId;
+
+        const instances = await WorkflowInstance.findAll(filter);
+        return instances;
     }
 
     static async createInstance(workflowId, user)
     {
-
         const workflow = await Workflow.findByPk(workflowId, {
             include: {
                 model: Stage,

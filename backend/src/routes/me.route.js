@@ -1,18 +1,16 @@
 const express = require("express");
-const asyncDec = require("../utils/asyncDec");
 const { authenticate } = require("../middleware/auth");
+
+const {
+    getCurrentUser,
+    getMyInstances,
+    getMyRequests
+} = require("../controllers/me.controller");
 
 const meRouter = express.Router();
 
-const getCurrentUser = async (req, res) => {
-    res.status(200).json({
-        status: "success",
-        data: {
-            user: req.user,
-        },
-    });
-};
-
-meRouter.get("/", authenticate, asyncDec(getCurrentUser));
+meRouter.get("/", authenticate, getCurrentUser);
+meRouter.get("/instance", authenticate, getMyInstances);
+meRouter.get("/request", authenticate, getMyRequests);
 
 module.exports = meRouter;

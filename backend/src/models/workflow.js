@@ -32,6 +32,12 @@ module.exports = (sequelize) => {
                 onDelete: 'CASCADE'
             });
 
+            Workflow.hasMany(models.Stage, {
+                foreignKey: 'workflowId',
+                as: 'filterByRole',
+                onDelete: 'CASCADE'
+            })
+
             Workflow.hasMany(models.WorkflowInstance, {
                 foreignKey: 'workflowId',
                 as: 'instances',

@@ -1,5 +1,7 @@
 const asyncDec = require("../utils/asyncDec")
 const RequestService = require("../services/request.service")
+const { Op } = require('sequelize')
+
 
 async function createRequest(req, res)
 {
@@ -23,19 +25,9 @@ async function updateRequest(req, res)
     });
 }
 
-async function getMyRequests(req, res)
-{
-    const requests = await RequestService.getAllRequests(req.user.id);
-
-    res.json({
-        "status": "success",
-        "data": { requests }
-    });
-}
-
 async function getAllRequests(req, res)
 {
-    const requests = await RequestService.getAllRequests();
+    const requests = await RequestService.getAllRequests(req.query);
 
     res.json({
         "status": "success",
@@ -45,7 +37,8 @@ async function getAllRequests(req, res)
 
 async function getRequest(req, res)
 {
-    const request = await RequestService.getRequestById(req.params.id);
+    const { id } = req.params;
+    const request = await RequestService.getRequestById(id, req.query, req.user);
 
     res.json({
         "status": "success",
@@ -57,7 +50,6 @@ async function getRequest(req, res)
 module.exports = {
     createRequest: asyncDec(createRequest),
     updateRequest: asyncDec(updateRequest),
-    getMyRequests: asyncDec(getMyRequests),
     getAllRequests: asyncDec(getAllRequests),
     getRequest: asyncDec(getRequest)
 };

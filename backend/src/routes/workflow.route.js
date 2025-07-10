@@ -19,4 +19,11 @@ workflowRouter.get(
     workflowController.getAll
 );
 
+workflowRouter.get(
+    "/:id",
+    authenticate,
+    authorizeRoles(["professor", "department_manager", "administrator"]),
+    workflowController.getWorkflow
+)
+
 module.exports = workflowRouter

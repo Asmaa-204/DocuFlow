@@ -8,11 +8,11 @@ const meRouter = require('./me.route')
 
 const apiRouter = express.Router();
 
-apiRouter.use("/me", meRouter)
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/workflow', workflowRouter)
 apiRouter.use('/instance', instanceRouter)
 apiRouter.use('/request', requestRouter)
+apiRouter.use("/me", meRouter)
 
 module.exports = apiRouter;
 

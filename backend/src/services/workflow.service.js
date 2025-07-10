@@ -1,20 +1,72 @@
 const { sequelize } = require('../models')
 const { Workflow, Stage } = require('../models');
+const SequelizeQueryBuilder = require('../utils/SequelizeQueryBuilder');
 const AppError = require('../errors/AppError');
 const withTransaction = require('../utils/withTransaction');
 
-const validRoles = ['professor', 'department_manager', 'administrator'];
 
-class WorkflowService {
+class WorkflowService 
+{
+  static validRoles = ['professor', 'department_manager', 'administrator'];
+   
+  static roleFilter = (role) => {
+    return {
+      model: Stage,
+      as: "filterByRole",
+      where: {
+        stageOrder: 1,
+        role: role
+      },
+      required: true,
+      attributes: []
+    }
+  }
   
-  static async getAllWorkflows() 
+  static async getAllWorkflows(query) 
   {
-    const workflows = await Workflow.findAll({
-      include: [{ model: Stage, as: 'stages' }],
-      order: [[{ model: Stage, as: 'stages' }, 'stageOrder', 'ASC']]
+    const queryBuilder = new SequelizeQueryBuilder(query);
+    const filter = queryBuilder.filter().sort().attributes().get();
+
+    filter.include = []
+
+    if(query.role) {
+      const roleFilter = WorkflowService.roleFilter(query.role);
+      filter.include.push(roleFilter);
+      delete filter.where.role;
+    }
+
+    filter.include.push({
+      model: Stage,
+      as: 'stages',
+      seperate: true,
+      order: [['stageOrder', 'ASC']],
     });
 
+    const workflows = await Workflow.findAll(filter);
     return workflows
+  }
+
+  static async getWorkflow(workflowId, query)
+  {
+    const queryBuilder = new SequelizeQueryBuilder(query);
+    const filter = queryBuilder.attributes().get();
+
+    filter.include = [
+      {
+        model: Stage,
+        as: 'stages',
+        seperate: true,
+        order: [['stageOrder', 'ASC']],
+      }
+    ];
+
+    const workflow = await Workflow.findByPk(workflowId, filter);
+
+    if (!workflow) {
+      throw new AppError('Workflow not found', 404);
+    }
+
+    return workflow;
   }
 
   static async createWorkflow(title, description, stages) 
@@ -70,7 +122,6 @@ class WorkflowService {
 
     return workflow;
   }
-
 }
 
 module.exports = WorkflowService;
