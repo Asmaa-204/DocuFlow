@@ -1,4 +1,6 @@
 import { mockWorkflows } from "@data/mock_workflows";
+import { getMyInstances } from "../services/getMyInstances";
+import { useQuery } from "@tanstack/react-query";
 
 export function useWorkflowInstances() {
   function getFilteredInstances(instances, selectedType) {
@@ -45,5 +47,14 @@ export function useWorkflowInstances() {
     return instanceCardData;
   }
 
-  return { renderStepper, getFilteredInstances };
+  function useMyInstances() {
+    const { data, isPending } = useQuery({
+      queryKey: ["my-instances"],
+      queryFn: getMyInstances,
+    });
+
+    return { data, isPending };
+  }
+
+  return { renderStepper, getFilteredInstances, useMyInstances };
 }
