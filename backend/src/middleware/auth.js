@@ -16,7 +16,11 @@ async function authenticate(req, res, next) {
         return next(new AppError("Unauthorized: Invalid token format", 401));
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, {
+        algortihm: "HS256"
+    });
+    
+    console.log(decoded);
     const user = await User.findByPk(decoded.id);
 
     if (!user) {

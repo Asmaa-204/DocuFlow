@@ -5,7 +5,6 @@ const { authenticate, authorizeRoles } = require("../middleware/auth")
 
 const instanceRouter = express.Router()
 
-
 instanceRouter.post(
     "/",
      authenticate, 
@@ -18,12 +17,6 @@ instanceRouter.get(
     authenticate,
     authorizeRoles(["administrator"]),
     instanceController.getAllInstances
-)
-
-instanceRouter.get(
-    "/mine",
-    authenticate,
-    instanceController.getMyInstances
 )
 
 instanceRouter.get(

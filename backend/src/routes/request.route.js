@@ -13,16 +13,9 @@ requestRouter.post(
 );
 
 requestRouter.get(
-    "/mine",
-    authenticate,
-    authorizeRoles(["professor", "department_manager", "administrator"]),
-    requestController.getMyRequests
-);
-
-requestRouter.get(
     "/",
     authenticate,
-    authorizeRoles(["professor", "department_manager", "administrator"]),
+    authorizeRoles(["administrator"]),
     requestController.getAllRequests
 );
 
@@ -33,7 +26,7 @@ requestRouter.get(
     requestController.getRequest
 );
 
-requestRouter.put(
+requestRouter.patch(
     "/:id",
     authenticate,
     authorizeRoles(["professor", "department_manager", "administrator"]),
