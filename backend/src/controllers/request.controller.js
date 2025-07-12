@@ -1,6 +1,7 @@
 const asyncDec = require("../utils/asyncDec")
 const RequestService = require("../services/request.service")
-const { Op } = require('sequelize')
+const { Op } = require('sequelize');
+const AppError = require("../errors/AppError");
 
 
 async function createRequest(req, res)
@@ -16,12 +17,34 @@ async function createRequest(req, res)
 
 async function updateRequest(req, res)
 {
-    const { note, isDraft } = req.body;
-    const request = await RequestService.updateRequest(req.params.id, note, isDraft);
+    const {
+        status,
+        note,
+        assignedTo
+    } = req.body
 
+    const request = await RequestService.getRequestById(req.params.id);
+    
+    const sendToMe = request.assignedToUserId === req.user.id;
+    const sendByMe = request.userId === req.user.id;
+
+    if(!sendToMe && !sendByMe)
+        throw new AppError("You are not authorized to modify this request", 403);
+
+    let updatedRequest = null;
+
+    if(sendByMe)
+    {
+        updateRequest = await RequestService.updateMyRequest(request, status, note, assignedTo)
+    }
+    else if(sendToMe)
+    {
+        updatedRequest = await RequestService.respondToRequest(request, status)
+    }
+    
     res.json({
         "status": "success",
-        "data": { request }
+        "data": { request: updateRequest }
     });
 }
 
@@ -38,7 +61,7 @@ async function getAllRequests(req, res)
 async function getRequest(req, res)
 {
     const { id } = req.params;
-    const request = await RequestService.getRequestById(id, req.query, req.user);
+    const request = await RequestService.getRequest(id, req.query, req.user);
 
     res.json({
         "status": "success",

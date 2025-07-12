@@ -26,7 +26,7 @@ requestRouter.get(
     requestController.getRequest
 );
 
-requestRouter.put(
+requestRouter.patch(
     "/:id",
     authenticate,
     authorizeRoles(["professor", "department_manager", "administrator"]),
