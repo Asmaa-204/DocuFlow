@@ -26,6 +26,11 @@ export const navLinks = [
     icon: "inbox",
     children: [
       {
+        name: "Inbox",
+        icon: "email",
+        to: "/requests/incoming"
+      },
+      {
         name: "Drafts",
         icon: "pen",
         to: "/requests/drafts",

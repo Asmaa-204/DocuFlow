@@ -13,6 +13,8 @@ import { MdOutlineWidgets } from "react-icons/md";
 import { LiaPlusSquare } from "react-icons/lia";
 import { SlLogout } from "react-icons/sl";
 import { MdArrowDropDown } from "react-icons/md";
+import { MdEmail, MdOutlineEmail } from "react-icons/md";
+import { FaEnvelope, FaRegEnvelope } from "react-icons/fa";
 
 export const icons = {
   home: HiOutlineHome,
@@ -28,4 +30,5 @@ export const icons = {
   inbox: HiOutlineInbox,
   myWorkflows: HiOutlineRectangleStack,
   dropdownFilter: MdArrowDropDown,
+  email: MdOutlineEmail, // Alternative email icon
 };
