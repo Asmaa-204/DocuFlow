@@ -13,6 +13,7 @@ import SubmittedRequests from "@pages/SubmittedRequests";
 import Dashboard from "@pages/Dashboard";
 import Settings from "@pages/Settings";
 import DraftRequests from "@pages/DraftRequests";
+import MyWorkflows from "@pages/MyWorkflows";
 
 function AppRoutes() {
   return (
@@ -30,6 +31,7 @@ function AppRoutes() {
           <Route index element={<Navigate replace to="dashboard" />} />
           <Route path="workflows">
             <Route path="new" element={<StartNewWorkflow />} />
+            <Route path="my-workflows" element={<MyWorkflows />} />
             <Route
               path=":workflowId/instances/:instanceId"
               element={<NewRequest />}
