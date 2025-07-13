@@ -27,7 +27,7 @@ const ID = styled.span`
 `;
 
 const Dates = styled.span`
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: var(--color-grey-500);
   font-weight: normal;
 `;
@@ -39,7 +39,7 @@ function WorkflowInstanceCard({ instance }) {
         <HeaderContainer>
           <Header>{instance.header}</Header>
           <Dates>
-            {format(new Date(instance.start_datetime), "dd/MM/yyyy")} -
+            {format(new Date(instance.start_datetime), "dd/MM/yyyy")} {" - "}
             {format(new Date(instance.last_updated_datetime), "dd/MM/yyyy")}
           </Dates>
         </HeaderContainer>
