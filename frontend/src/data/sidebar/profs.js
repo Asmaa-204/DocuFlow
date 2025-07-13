@@ -28,7 +28,7 @@ export const navLinks = [
       {
         name: "Inbox",
         icon: "email",
-        to: "/requests/incoming"
+        to: "/requests/inbox"
       },
       {
         name: "Drafts",

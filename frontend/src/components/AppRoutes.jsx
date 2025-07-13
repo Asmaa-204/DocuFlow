@@ -14,6 +14,7 @@ import Dashboard from "@pages/Dashboard";
 import Settings from "@pages/Settings";
 import DraftRequests from "@pages/DraftRequests";
 import MyWorkflows from "@pages/MyWorkflows";
+import RequestsInbox from "@pages/RequestsInbox";
 
 function AppRoutes() {
   return (
@@ -38,6 +39,7 @@ function AppRoutes() {
             />
           </Route>
           <Route path="requests">
+            <Route path="inbox" element={<RequestsInbox />} />
             <Route path="submitted" element={<SubmittedRequests />} />
             <Route path="drafts" element={<DraftRequests />} />
           </Route>
