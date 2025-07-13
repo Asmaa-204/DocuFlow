@@ -1,47 +1,41 @@
-import { mockWorkflows } from "@data/mock_workflows";
 import { getMyInstances } from "../services/getMyInstances";
 import { useQuery } from "@tanstack/react-query";
 
 export function useWorkflowInstances() {
   function getFilteredInstances(instances, selectedType) {
+    if (!instances) return null;
     if (!selectedType) return instances;
     return instances.filter(
-      (inst) => inst.workflow_definition_id === selectedType
+      (inst) => inst.workflowId === selectedType
     );
   }
 
-  function renderStepper(instance) {
-    const definition = mockWorkflows[`${instance.workflow_definition_id}`];
+  function renderStepper(instance, workflows) {
+    const definition = workflows[`${instance.workflowId}`];
     if (!definition) {
       console.error(
         "Workflow definition not found for ID:",
-        instance.workflow_definition_id
+        instance.workflowId
       );
       return;
     }
 
     const allStages = definition.stages;
-    const currentStageId = instance.current_stage;
 
-    let currentStageIndex = Number.POSITIVE_INFINITY;
-    const stepperSteps = allStages.map((stage, index) => {
-      if (stage.id === currentStageId) {
-        currentStageIndex = index;
-      }
+    const stepperSteps = allStages.map((stage) => {
       return {
-        title: stage.name, // stage title
+        title: stage.title, // stage title
       };
     });
 
     const instanceCardData = {
       id: instance.id,
-      header: definition.name,
-      title: instance.name, // stage title
+      workflowId: instance.workflowId,
+      header: definition.title,
       description: instance.description,
-      currently_assigned_to: instance.assigned_to_user_id,
-      start_datetime: instance.start_datetime,
-      last_updated_datetime: instance.last_updated_datetime,
-      current_stage: currentStageIndex,
+      start_datetime: instance.createdAt,
+      last_updated_datetime: instance.updatedAt,
+      current_stage: instance.stageId - 1,
       items: stepperSteps,
     };
     return instanceCardData;

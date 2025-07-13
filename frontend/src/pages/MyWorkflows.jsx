@@ -1,31 +1,47 @@
 import { useState, useMemo, useEffect } from "react";
-import { mockInstances } from "@data/mock_Instances";
-import { mockWorkflows } from "@data/mock_workflows";
 import WorkflowInstanceList from "@features/workflow/WorkflowInstanceList";
 import MyWorkflowHeaderOptions from "@features/workflow/MyWorkflowHeaderOptions";
 import { useWorkflowInstances } from "@features/workflow/hooks/useWorkflowInstances";
 import { useAllWorkflows } from "@features/workflow/hooks/useAllWorkflows";
 
 function MyWorkflows() {
-  const { getFilteredInstances, useMyInstances } = useWorkflowInstances();
+  const { getFilteredInstances, useMyInstances, renderStepper } =
+    useWorkflowInstances();
   const { isPending: isWorkflowsPending, data: workflows } = useAllWorkflows();
   const { isPending: isInstancesPending, data: instances } = useMyInstances();
 
-  const [selectedType, setSelectedType] = useState("");
+  const [selectedType, setSelectedType] = useState(0);
+  
+  // Derive isPending directly - no state needed!
+  const isPending = isInstancesPending || isWorkflowsPending;
+  let instancesData = []; 
+  let workflowsMap = {};
 
-  useEffect(() => {
+  if (!isPending && workflows && instances) {
     console.log(workflows);
-    console.log('-----------------------------');
+    console.log("-----------------------------");
     console.log(instances);
-  }, [workflows, instances]);
+  
+      workflowsMap = workflows.reduce((acc, workflow) => {
+        acc[workflow.id] = workflow;
+        return acc;
+      }, {});
+
+    instancesData = instances.map((instance) =>
+      renderStepper(instance, workflowsMap)
+    );
+  }
 
   const filteredInstances = useMemo(
-    () => getFilteredInstances(mockInstances, selectedType),
+    () => getFilteredInstances(instancesData, selectedType),
     [selectedType, getFilteredInstances]
   );
 
+  console.log(`filtered to: ${filteredInstances}`);
+
   function handleFilterChange(e) {
-    setSelectedType(e.target.value);
+    console.log(`Selected value: ${e.target.value}`);
+    setSelectedType(Number(e.target.value));
   }
 
   return (
@@ -33,10 +49,14 @@ function MyWorkflows() {
       <MyWorkflowHeaderOptions
         selectedType={selectedType}
         handleFilterChange={handleFilterChange}
-				instances={mockInstances}
-				workflows={mockWorkflows}
+        instances={instances}
+        workflowsMap={workflowsMap}
+        isPending={isPending}
       />
-      <WorkflowInstanceList instances={filteredInstances} />
+      <WorkflowInstanceList
+        isPending={isPending}
+        instancesData={filteredInstances}
+      />
     </div>
   );
 }

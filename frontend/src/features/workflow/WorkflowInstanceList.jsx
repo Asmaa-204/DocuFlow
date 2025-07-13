@@ -1,17 +1,19 @@
 import Row from "@components/Row";
 import WorkflowInstanceCard from "./WorkflowInstanceCard";
-import { useWorkflowInstances } from "./hooks/useWorkflowInstances";
 import styled from "styled-components";
+import Spinner from "@components/Spinner";
+
+import { useWorkflowInstances } from "./hooks/useWorkflowInstances";
 
 const Container = styled.div`
   margin: 20px 0;
 `;
 
-function WorkflowInstanceList({ instances }) {
-  const { renderStepper } = useWorkflowInstances();
+function WorkflowInstanceList({ isPending, instancesData }) {
+  if (isPending) return <Spinner />;
 
-  const instancesData = instances.map((instance) => renderStepper(instance));
-
+  console.log(`Instances Data: \n${instancesData}`);
+  console.log(instancesData[0]);
   return (
     <Container>
       <Row type="vertical">
