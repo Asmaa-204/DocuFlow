@@ -31,17 +31,20 @@ const Info = styled.div`
   }
 `;
 
-function RequestRow({ request: { id, note, status, createdAt } }) {
+function RequestRow({ request: { id, workflowTitle, status, createdAt } }) {
   const statusToTag = {
     pending: "blue",
-    approved: "green",
+    draft: "green",
     rejected: "red",
   };
+
+
+  
 
   return (
     <Table.Row>
       <p>{id}</p>
-      <Note>{note}</Note>
+      <Note>{workflowTitle}</Note>
 
       <Tag $type={statusToTag[status]}>{status}</Tag>
       <Info>
@@ -49,22 +52,24 @@ function RequestRow({ request: { id, note, status, createdAt } }) {
         <span>{format(new Date(createdAt), "MMM dd yyyy, HH:mm")}</span>
       </Info>
 
-      <Modal>
-        <Menus.Menu>
-          <Menus.Toggle id={id} />
-          <Menus.List id={id}>
-            <Menus.Button icon={<CiEdit />}>Edit Request</Menus.Button>
+      {status === "draft" && (
+        <Modal>
+          <Menus.Menu>
+            <Menus.Toggle id={id} />
+            <Menus.List id={id}>
+              <Menus.Button icon={<CiEdit />}>Edit Request</Menus.Button>
 
-            <Modal.Open opens="delete-request">
-              <Menus.Button icon={<HiTrash />}>Delete request</Menus.Button>
-            </Modal.Open>
-          </Menus.List>
-        </Menus.Menu>
+              <Modal.Open opens="delete-request">
+                <Menus.Button icon={<HiTrash />}>Delete request</Menus.Button>
+              </Modal.Open>
+            </Menus.List>
+          </Menus.Menu>
 
-        <Modal.Window name="delete-request">
-          <ConfirmDelete resourceName="request" />
-        </Modal.Window>
-      </Modal>
+          <Modal.Window name="delete-request">
+            <ConfirmDelete resourceName="request" />
+          </Modal.Window>
+        </Modal>
+      )}
     </Table.Row>
   );
 }

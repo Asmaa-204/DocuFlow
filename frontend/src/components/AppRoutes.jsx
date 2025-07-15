@@ -9,11 +9,10 @@ import Login from "@pages/Login";
 import Signup from "@pages/Signup";
 import StartNewWorkflow from "@pages/StartNewWorkflow";
 import NewRequest from "@pages/NewRequest";
-import SubmittedRequests from "@pages/SubmittedRequests";
 import Dashboard from "@pages/Dashboard";
 import Settings from "@pages/Settings";
-import DraftRequests from "@pages/DraftRequests";
 import MyWorkflows from "@pages/MyWorkflows";
+import Requests from "@pages/Requests";
 
 function AppRoutes() {
   return (
@@ -38,8 +37,8 @@ function AppRoutes() {
             />
           </Route>
           <Route path="requests">
-            <Route path="submitted" element={<SubmittedRequests />} />
-            <Route path="drafts" element={<DraftRequests />} />
+            <Route path="submitted" element={<Requests filter="submitted" />} />
+            <Route path="drafts" element={<Requests filter="draft" />} />
           </Route>
           <Route path="settings" element={<Settings />} />
           <Route path="dashboard" element={<Dashboard />} />
@@ -47,6 +46,7 @@ function AppRoutes() {
 
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
+        <Route path="*" element={<h1>Page Not Fount</h1>} />
       </Routes>
     </BrowserRouter>
   );

@@ -32,7 +32,6 @@ const StyledToggle = styled.button`
 `;
 
 const StyledList = styled.ul`
-  /* position: fixed; */
   position: absolute;
   z-index: 1000;
 
@@ -75,7 +74,7 @@ const StyledButton = styled.button`
 
 const MenusContext = createContext();
 
-export default function Menus({ children }) {
+function Menus({ children }) {
   const [selectedId, setSelectedId] = useState("");
   const open = setSelectedId;
   const close = () => setSelectedId("");
@@ -131,3 +130,5 @@ Menus.Menu = Menu;
 Menus.List = List;
 Menus.Toggle = Toggle;
 Menus.Button = Button;
+
+export default Menus;

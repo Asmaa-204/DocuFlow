@@ -4,18 +4,18 @@ import Heading from "@components/Heading";
 import Row from "@components/Row";
 import RequestsTableOperations from "@features/request/RequestsTableOperations";
 
-function DraftRequests() {
+function Requests({ filter }) {
   return (
     <>
       <Row type="horizontal">
-        <Heading as="h1">Submitted Requests</Heading>
+        <Heading as="h1">{filter} Requests</Heading>
         <RequestsTableOperations />
       </Row>
       <Row>
-        <RequestsTable filter="drafts" />
+        <RequestsTable filter={filter} />
       </Row>
     </>
   );
 }
 
-export default DraftRequests;
+export default Requests;
