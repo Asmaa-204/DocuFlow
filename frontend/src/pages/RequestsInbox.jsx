@@ -17,7 +17,7 @@ function RequestsInbox() {
 
   return (
     <>
-      <Row type="horizontal">
+      <Row type="horizontal" style={{ gap: "2vw" }}>
         <Row type="vertical">
           <Heading as="h1">Inbox</Heading>
           <ScrollableList elements={allRequests} setSelectedElement={setSelectedRequest} />

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { format } from "date-fns";
 import Row from "@components/Row";
+import ID from "@components/ID";
 import WorkflowStepper from "./WorkflowStepper";
 
 const Card = styled.div`
@@ -19,11 +20,6 @@ const Header = styled.span`
   font-weight: bold;
   font-size: 2rem;
   margin-right: 10px;
-`;
-
-const ID = styled.span`
-  font-size: 1.4rem;
-  color: var(--color-grey-400);
 `;
 
 const Dates = styled.span`
