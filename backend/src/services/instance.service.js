@@ -73,7 +73,7 @@ class InstanceService
             workflowId,
             stageId: firstStage.id,
             userId: user.id
-        })
+        });
 
         return instance
     }

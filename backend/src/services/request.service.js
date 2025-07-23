@@ -1,8 +1,9 @@
-const { WorkflowInstance, Workflow, Request, User } = require('../models')
+const { WorkflowInstance, Workflow, Stage, Request, User, Document } = require('../models')
 const { Op } = require("sequelize")
 const AppError = require("../errors/AppError");
 const SequelizeQueryBuilder = require("../utils/SequelizeQueryBuilder");
 const InstanceService = require('./instance.service');
+
 
 class RequestService 
 {
@@ -85,40 +86,49 @@ class RequestService
     }
 
      
-    static async createRequest(instanceId, note, isDraft, userId) {
-      
+    static async createRequest(instanceId, note, userId) 
+    {  
         const instance = await WorkflowInstance.findByPk(instanceId, {
-            include: ['stage']
+            include: {
+                model: Stage,
+                include: {
+                    model: Template,
+                    fields: ['id']
+                }
+            }
         });
   
         if (!instance) {
             throw new AppError('Instance not found', 404);
         }
-  
-        if (isDraft) 
-        {
-            const existingDraft = await Request.findOne({
-                where: {
-                    instanceId,
-                    stageId: instance.stageId,
-                    userId,
-                    status: 'draft'
-                }
-            });
-  
-            if (existingDraft) {
-                throw new AppError('You already have a draft request for this stage and instance', 400);
+
+        const existingDraft = await Request.findOne({
+            where: {
+                instanceId,
+                stageId: instance.stageId,
+                userId,
+                status: 'draft'
             }
-        }
+        });
   
+        if (existingDraft) 
+            throw new AppError('You already have a draft request for this stage and instance', 400);
+        
         const request = await Request.create({
             instanceId,
             stageId: instance.stageId,
             note,
             userId,
-            status: isDraft ? 'draft' : 'pending'
+            status: 'draft'
         });
-  
+
+        const documents = instant.stage.templates.map(t => ({
+            templateId: t.id,
+            data: null,
+            requestId: request.id,
+        }));
+
+        await Document.bulkCreate(documents);
         return request;
     }
 
@@ -142,7 +152,7 @@ class RequestService
         if(!allowedStatuses.includes(status))
             throw new AppError('Invalid resposne status', 400);
         
-        // 3. If moving from draft → pending, ensure assigned user exists
+        // 3. If moving from draft → pending, ensure assigned user exists                              
         if (status === 'pending') 
         {    
             if (!assignedTo) 
@@ -155,11 +165,18 @@ class RequestService
             
             if (!user) 
                 throw new AppError("Assigned user not found", 404);
+
+            await Document.update(
+                { status: 'submitted' },
+                { where: { requestId: request.id } }
+            );
         }
 
         request.assignedToUserId = assignedTo;
         request.status = status;
         request.note = note
+
+
 
         await request.save()
         return request

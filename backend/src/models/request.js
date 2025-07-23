@@ -64,7 +64,17 @@ module.exports = (sequelize) => {
             Request.belongsTo(models.User, {
                 foreignKey: "assignedToUserId",
                 as: "assignee"
-            })
+            });
+
+            Request.belongsToMany(models.User, {
+                through: models.Access,
+                foreignKey: "requestId"          
+            });
+
+            Request.hasMany(models.Document, {
+                foreignKey: 'requestId',
+                as: 'documents'
+            });
         }
     };
 

@@ -19,8 +19,10 @@
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "hpp": "^0.2.3",
+    "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "multer": "^2.0.2",
     "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7"
   },

@@ -1,6 +1,5 @@
 const asyncDec = require("../utils/asyncDec")
 const RequestService = require("../services/request.service")
-const { Op } = require('sequelize');
 const AppError = require("../errors/AppError");
 
 
@@ -35,7 +34,7 @@ async function updateRequest(req, res)
 
     if(sendByMe)
     {
-        updateRequest = await RequestService.updateMyRequest(request, status, note, assignedTo)
+        updatedRequest = await RequestService.updateMyRequest(request, status, note, assignedTo)
     }
     else if(sendToMe)
     {

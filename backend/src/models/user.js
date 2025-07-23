@@ -1,7 +1,7 @@
 'use strict';
 
 const { Model, DataTypes } = require('sequelize')
-const bcrypt = require("bcryptjs")
+const bcrypt = require("bcryptjs");
 
 const UserSchema = {
   id: {
@@ -40,6 +40,10 @@ const UserSchema = {
     type: DataTypes.ENUM('professor', 'department_manager', 'administrator'),
     allowNull: false,
     defaultValue: 'professor',
+  },
+  departmentId: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 };
 
@@ -64,6 +68,28 @@ module.exports = (sequelize) => {
         foreignKey: "assignedToUserId",
         as: "assignedRequests",
         onDelete: "CASCADE"
+      });
+
+      User.hasOne(models.Department, {
+        foreignKey: "managerId",
+        as: "managedDepartment",
+        onDelete: "SET NULL"
+      });
+
+      User.hasMany(models.Department, {
+        foreignKey: "affairsEmployeeId",
+        as: "departments",
+        onDelete: "SET NULL"
+      });
+
+      User.belongsTo(models.Department, {
+        foreignKey: "departmentId",
+        as: "department"
+      });
+
+      User.belongsToMany(models.Request, {
+        through: models.Access,
+        foreignKey: "userId"
       });
     }
   }

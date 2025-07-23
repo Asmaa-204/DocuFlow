@@ -61,6 +61,11 @@ module.exports = (sequelize) => {
         onDelete: 'CASCADE'
       });
 
+      Stage.belongsToMany(models.Template, {
+        through: models.Condition,
+        foreignKey: "stageId"        
+      });
+
     }
   }
 
