@@ -1,5 +1,4 @@
 const { Model, DataTypes } = require("sequelize")
-const { sequelize } = require(".")
 
 
 const AccessSchema = {
@@ -15,7 +14,7 @@ const AccessSchema = {
     },
 
     accessLevel: {
-        type: DataTypes.ENUM("read", "write"),
+        type: DataTypes.ENUM("read", "respond", "edit"),
         allowNull: false
     }
 
@@ -36,5 +35,5 @@ module.exports = (sequelize) => {
         timestamps: true
     });
 
-    return Access
+    return Access;
 }
