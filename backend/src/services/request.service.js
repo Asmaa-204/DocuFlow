@@ -1,4 +1,4 @@
-const { WorkflowInstance, Workflow, Stage, Request, User, Document, Access } = require('../models')
+const { WorkflowInstance, Workflow, Stage, Request, User, Document, Access, Template } = require('../models')
 const { Op } = require("sequelize")
 const AppError = require("../errors/AppError");
 const SequelizeQueryBuilder = require("../utils/SequelizeQueryBuilder");

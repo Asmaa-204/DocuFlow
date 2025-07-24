@@ -1,5 +1,6 @@
 const AppError = require("../errors/AppError");
 const { Document, User, Request, Template } = require("../models");
+const { ajv } = require('../utils/ajv');
 
 
 class DocumentService
@@ -14,50 +15,65 @@ class DocumentService
         }
     };
 
-
-
     static includeSchema = {
         model: Template,
         attributes: ['schema']
     };
 
-    static async getDocumentById(userId, documentId)
+    static async getDocumentById(user, documentId)
     {
         const document = await Document.findByPk(
             documentId,
             {include: DocumentService.includeSchema}
         );
 
+        const { accessLevel } = await Access.findOne({
+            where: {
+                requestId: document.requestId,
+                userId
+            }
+        });
+
         if(!document)
             throw new AppError("Document Not Found", 404);
 
+        if(!accessLevel || user.role !== 'aministrator')
+            throw new AppError("You do not have permission to view this document", 403);
+    
         return document;
     }
 
     static async updateDocument(userId, documentId, data)
     {
-        const document = await Document.findByPk(
-            documentId, 
-            {include: DocumentService.includeUser}
-        );
+        const options = {}
+        options.include = [DocumentService.includeUser, DocumentService.includeSchema];
+
+        const document = await Document.findByPk(documentId, options);
 
         if(!document)
             throw new AppError("Document Not Found", 404);
 
-        const ownerId = document?.request?.user?.id;
+        const { accessLevel } = await Access.findOne({
+            where: {
+                requestId: document.requestId,
+                userId
+            }
+        });
 
-        if(ownerId !== userId)
-            throw new AppError("Not Authorized", 403);
+        if(!accessLevel || accessLevel !== 'edit')
+            throw new AppError("You do not have permission to update this document", 403);
 
-        if(document.request.status === "pending")
-            throw new AppError("You can't update an already submitted document!");
-
-        // update document --> not that simple
-        // validate(data, schema)
+        const validate = ajv.compile(document.Template.schema);
+        
+        if(!validate(data))
+        {
+            const errors = validate.errors.map(err => `${err.instancePath} ${err.message}`);
+            throw new AppError(`Invalid data: ${errors.join(', ')}`, 400);
+        }
 
         Object.assign(document.data, data);
-        await document.save()
-    
+        
+        await document.save()    
         return document
     }
 

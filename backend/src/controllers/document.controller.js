@@ -4,7 +4,7 @@ const document = require("../models/document.js");
 
 async function getDocument(req, res, next)
 {
-    const document = await DocumentService.getDocumentById(req.user.id, req.params.id);
+    const document = await DocumentService.getDocumentById(req.user, req.params.id);
 
     res.status(200).json({
         "status": "success",
