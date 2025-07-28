@@ -10,6 +10,7 @@ const List = styled.div`
   background-color: #fff;
   padding: 10px;
   height: calc((95vh - 2vh) * 0.8);
+  width: 20vw;
 `;
 
 
@@ -19,7 +20,6 @@ const ElementItem = styled.div`
   cursor: pointer;
   transition: background-color 0.2s ease;
   position: relative; /* For the dropdown arrow positioning */
-  width: 80%
 
   &:last-child {
     border-bottom: none;
@@ -55,19 +55,7 @@ const SubTitle = styled.span`
   color: #333;
   flex-grow: 1; /* Allow value to take remaining space */
   text-align: right;
-`;
-
-const DropDownArrow = styled.span`
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid #888; /* Simple down arrow */
-  pointer-events: none; /* Make sure clicks go through to the item */
+  padding-top: 2px;
 `;
 
 function ScrollableList({ elements, setSelectedElement }) {
@@ -80,25 +68,41 @@ function ScrollableList({ elements, setSelectedElement }) {
 
   return (
     <List>
-      {elements.map((element) => (
-        <ElementItem
-          key={element.id} // Essential for React list rendering
-          className={selectedId == element.id ? "selected" : ""}
-          onClick={() => handleSelect(element)}
-        >
-          <Row type="horizontal">
-            <Title>{element.workflowTitle}</Title>
-            <SubTitle>
-              {format(new Date(element.createdAt), "dd/MM/yyyy")}
-            </SubTitle>
-          </Row>
-          <ItemLine>
-            <SubTitle>#{element.id}</SubTitle>
-          </ItemLine>
-        </ElementItem>
-      ))}
+      {elements.length === 0 ? (
+        <div style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          color: "#888",
+        }}>
+          Empty
+        </div>
+      ) : (
+        elements.map((element) => (
+          SingleElement(element, selectedId, handleSelect)
+        ))
+      )}
     </List>
   );
+}
+
+function SingleElement(element, selectedId, handleSelect) {
+  return <ElementItem
+    key={element.id} // Essential for React list rendering
+    className={selectedId == element.id ? "selected" : ""}
+    onClick={() => handleSelect(element)}
+  >
+    <Row type="horizontal" style={{alignItems: "start"}}>
+      <Title>{element.workflowTitle}</Title>
+      <SubTitle>
+        {format(new Date(element.createdAt), "dd/MM/yyyy")}
+      </SubTitle>
+    </Row>
+    <ItemLine>
+      <SubTitle>#{element.id}</SubTitle>
+    </ItemLine>
+  </ElementItem>;
 }
 
 export default ScrollableList;

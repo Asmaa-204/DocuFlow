@@ -7,6 +7,7 @@ const Empty = styled.div`
   align-items: center;
   height: 100%;
   text-align: center;
+  padding-top: 40px;
 `;
 
 function EmptyState({ message = "Please select an item to read." }) {
