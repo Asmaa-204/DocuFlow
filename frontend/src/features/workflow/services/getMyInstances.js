@@ -2,7 +2,9 @@ import { apiRequest } from "@utils/api";
 
 async function getMyInstances() {
   const token = localStorage.getItem("token");
-  const data = await apiRequest("/me/instance", {
+
+  //! TODO: return the url to /me/instance after UI development
+  const data = await apiRequest("/instance", {
     method: "GET",
     token,
   });

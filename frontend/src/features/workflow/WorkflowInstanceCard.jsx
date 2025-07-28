@@ -6,8 +6,9 @@ import WorkflowStepper from "./WorkflowStepper";
 
 const Card = styled.div`
   padding: 18px;
+  padding-bottom: -10px;
   width: 100%;
-  background: #ffffffff;
+  // background: #ffffffff;
   border-radius: 10px;
   border-width: 2px;
   border-color: #dee1e6ff; /* neutral-300 */

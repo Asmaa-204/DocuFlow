@@ -12,7 +12,7 @@ import { useCreateInstance } from "./hooks/useCreateInstance";
 const Container = styled.form`
   display: flex;
   flex-direction: column;
-  height: 80%;
+  height: 85%;
   justify-content: space-between;
 `;
 
@@ -57,6 +57,7 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: 2rem;
+  padding-top: 4rem;
 `;
 
 const StyledButton = styled(Button)`
@@ -82,6 +83,8 @@ function WorkFlowForm() {
       workflowId: "",
     },
   });
+
+  console.log(workflows)
 
   const selectedWorkflow = watch("workflowId");
 
@@ -124,7 +127,7 @@ function WorkFlowForm() {
       <Footer>
         <ProgressStepper
           currentStep={1}
-          totalSteps={selectedOption?.stages.length || 0}
+          items={selectedOption?.stages || []}
         />
         <ButtonContainer>
           <StyledButton disabled={!selectedOption} type="submit">

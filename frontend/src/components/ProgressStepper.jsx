@@ -5,7 +5,7 @@ const StepperContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 0;
-  margin: 4rem 0;
+  margin: 4rem 0 8rem 0;
 `;
 
 const Step = styled.div`
@@ -45,17 +45,31 @@ const Step = styled.div`
 
 const StepConnector = styled.div`
   height: 3px;
-  width: 8rem;
+  // width: 8rem;
+  width: 15cqw;
   background-color: ${({ $isCompleted }) =>
     $isCompleted ? "var(--color-brand-600)" : "var(--color-grey-300)"};
   position: relative;
   z-index: 1;
 `;
 
-function ProgressStepper({ currentStep = 1, totalSteps = 5 }) {
+const Title = styled.span`
+  display: inline-block;
+  position: absolute;
+  width: 10rem;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 1.6rem;
+`;
+
+function ProgressStepper({ currentStep = 1, items = []}) {
+  const totalSteps = items.length;
+  console.log('stages', items)
   return (
     <StepperContainer>
-      {Array.from({ length: totalSteps }, (_, index) => {
+      {items.map((item, index) => {
         const stepNumber = index + 1;
         const isActive = stepNumber === currentStep;
         const isCompleted = stepNumber < currentStep;
@@ -63,11 +77,18 @@ function ProgressStepper({ currentStep = 1, totalSteps = 5 }) {
         return (
           <div
             key={stepNumber}
-            style={{ display: "flex", alignItems: "center" }}
+            style={{ display: "flex", alignItems: "center"}}
           >
-            <Step $isActive={isActive} $isCompleted={isCompleted}>
-              {stepNumber}
-            </Step>
+            <div style={{position: "relative"}}>
+              <Step $isActive={isActive} $isCompleted={isCompleted}
+                style={{}}
+                >
+                {stepNumber}
+              </Step>
+              <Title>
+                {item.title}
+              </Title>
+            </div>
             {stepNumber < totalSteps && (
               <StepConnector $isCompleted={isCompleted} />
             )}
