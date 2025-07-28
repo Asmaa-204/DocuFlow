@@ -12,6 +12,7 @@ import NewRequest from "@pages/NewRequest";
 import Dashboard from "@pages/Dashboard";
 import Settings from "@pages/Settings";
 import MyWorkflows from "@pages/MyWorkflows";
+import RequestsInbox from "@pages/RequestsInbox";
 import Requests from "@pages/Requests";
 
 function AppRoutes() {
@@ -37,6 +38,7 @@ function AppRoutes() {
             />
           </Route>
           <Route path="requests">
+            <Route path="inbox" element={<RequestsInbox />} />
             <Route path="submitted" element={<Requests filter="submitted" />} />
             <Route path="drafts" element={<Requests filter="draft" />} />
           </Route>
