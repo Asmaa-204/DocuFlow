@@ -9,7 +9,6 @@ function useSendRequest() {
     mutationFn: sendRequest,
     onSuccess: () => {
       toast.success("Request sent successfully!");
-      navigate("/requests/submitted");
     },
     onError: (error) => {
       toast.error(`Error sending request: ${error.message}`);

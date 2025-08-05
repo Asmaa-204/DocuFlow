@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { HiTrash } from "react-icons/hi2";
 import { CiEdit } from "react-icons/ci";
@@ -37,9 +36,6 @@ function RequestRow({ request: { id, workflowTitle, status, createdAt } }) {
     draft: "green",
     rejected: "red",
   };
-
-
-  
 
   return (
     <Table.Row>

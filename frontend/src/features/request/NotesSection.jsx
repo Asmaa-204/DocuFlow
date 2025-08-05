@@ -37,7 +37,13 @@ function NotesSection({ request, heading = "h3", onReject, onAccept }) {
           Nothing to look at for now
         </Notes>
       </div>
-      <ActionButtons onReject={onReject} onAccept={onAccept} />
+      <ActionButtons
+        isCancelDanger={true}
+        textSave="Accept"
+        textCancel="Reject"
+        onCancel={onReject}
+        onSave={onAccept}
+      />
     </CardDiv>
   );
 }

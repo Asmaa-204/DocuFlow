@@ -78,7 +78,11 @@ function NewRequestForm() {
       isDraft,
     };
 
-    mutate(requestPayload);
+    mutate(requestPayload, {
+      onSuccess: () => {
+        navigate(`/requests/${isDraft ? "draft" : "submitted"}`);
+      },
+    });
   }
 
   return (

@@ -5,6 +5,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  flex: 1 1 0;
 
   & input,
   & select {
@@ -13,6 +14,9 @@ const Container = styled.div`
     border-radius: var(--border-radius-sm);
     padding: 0.8rem 1.2rem;
     box-shadow: var(--shadow-sm);
+
+    width: 100%;
+    max-width: 100%;
   }
 
   & input:focus,
@@ -105,7 +109,7 @@ function InputField({
         />
       )}
 
-      {error && <Error>{error}</Error>}
+      {error?.length > 0 && <Error>{error}</Error>}
     </Container>
   );
 }

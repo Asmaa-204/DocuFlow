@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 import {
@@ -5,6 +6,9 @@ import {
   HiClipboardDocumentList,
   HiPlus,
 } from "react-icons/hi2";
+
+import Modal from "@components/Modal";
+import Form from "./Form";
 
 const ItemCard = styled.div`
   display: flex;
@@ -69,15 +73,22 @@ const ItemLabel = styled.span`
 
 function RequestedDoc({ doc: { name }, type }) {
   return (
-    <ItemCard>
-      <ItemIcon>
-        {type === "form" ? <HiClipboardDocumentList /> : <HiDocumentText />}
-      </ItemIcon>
-      <ItemLabel>{name}</ItemLabel>
-      <AddIcon>
-        <HiPlus />
-      </AddIcon>
-    </ItemCard>
+    <Modal>
+      <Modal.Open opens="fill-forms">
+        <ItemCard>
+          <ItemIcon>
+            {type === "form" ? <HiClipboardDocumentList /> : <HiDocumentText />}
+          </ItemIcon>
+          <ItemLabel>{name}</ItemLabel>
+          <AddIcon>
+            <HiPlus />
+          </AddIcon>
+        </ItemCard>
+      </Modal.Open>
+      <Modal.Window name="fill-forms">
+        <Form />
+      </Modal.Window>
+    </Modal>
   );
 }
 
