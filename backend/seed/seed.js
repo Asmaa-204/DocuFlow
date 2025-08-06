@@ -1,5 +1,6 @@
 const { User, Workflow, Stage, WorkflowInstance, Request, sequelize, Template } = require('../src/models');
 const bcrypt = require('bcryptjs');
+const fs = require('fs');
 
 async function seed() {
   await sequelize.sync({ force: true }); // WARNING: this will drop all tables
@@ -66,6 +67,11 @@ async function seed() {
   };
 
   const fileUrl = 'public/templates/template_tmp.docx';
+
+  // make sure the template file exists
+  if (!fs.existsSync(fileUrl)) {
+    throw new Error(`Template file not found at ${fileUrl}`);
+  };
 
   const template = await Template.create({
     title: 'Request for Supervision',

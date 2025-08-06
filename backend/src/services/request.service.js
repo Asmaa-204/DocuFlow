@@ -104,7 +104,6 @@ class RequestService
      
     static async createRequest(instanceId, note, userId) 
     {  
-
         const options = {}
         options.include = [RequestService.includeTemplateIds];
 
@@ -147,6 +146,8 @@ class RequestService
         });
 
         await Document.bulkCreate(documents);
+
+        request.documents = documents.map(doc => ({ id: doc.id }));
         return request;
     }
 
