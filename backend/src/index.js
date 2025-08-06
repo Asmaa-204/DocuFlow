@@ -9,7 +9,10 @@ async function main() {
   const port = parseInt(process.env.PORT || 3000);
 
   await db.sequelize.authenticate();
-  await db.sequelize.sync({force: true});
+  await db.sequelize.sync({
+    // force: true
+  });
+  
   console.log("Database is connected");
 
   await asyncListen(app, port);

@@ -1,4 +1,4 @@
-const { User, Workflow, Stage, WorkflowInstance, Request, sequelize } = require('../src/models');
+const { User, Workflow, Stage, WorkflowInstance, Request, sequelize, Template } = require('../src/models');
 const bcrypt = require('bcryptjs');
 
 async function seed() {
@@ -12,13 +12,113 @@ async function seed() {
     User.create({ firstName: 'Carol', lastName: 'Admin', email: 'admin@example.com', password: hashedPassword, role: 'administrator' }),
   ]);
 
+  // Create templates
+
+  const schema = {
+    "type": "object",
+    "properties": {
+      "department": {
+        "type": "string",
+        "title": "Department"
+      },
+      "studentName": {
+        "type": "string",
+        "title": "Student Name"
+      },
+      "registrationDate": {
+        "type": "string",
+        "format": "date",
+        "title": "Registration Date"
+      },
+      "creditHours": {
+        "type": "number",
+        "title": "Credit Hours"
+      },
+      "gpa": {
+        "type": "number",
+        "title": "GPA"
+      },
+      "supervisors": {
+        "type": "array",
+        "title": "Supervisors",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "title": "Name"
+            },
+            "degreeAndInstitution": {
+              "type": "string",
+              "title": "Degree / Institution"
+            }
+          }
+        }
+      },
+      "researchTitle": {
+        "type": "string",
+        "title": "Proposed Research Title"
+      }
+    }
+  };
+
+  const uiSchema = {
+    "type": "VerticalLayout",
+    "elements": [
+      {
+        "type": "Control",
+        "scope": "#/properties/department"
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/studentName"
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/registrationDate"
+      },
+      {
+        "type": "HorizontalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/creditHours"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/gpa"
+          }
+        ]
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/supervisors"
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/researchTitle"
+      }
+    ]
+  };
+
+  const fileUrl = '../../templates/request_for_supervision.doc';
+
+  const template = await Template.create({
+    title: 'Request for Supervision',
+    description: 'Template for requesting supervision for final year projects',
+    schema,
+    uiSchema,
+    fileUrl
+  });
+
+
   // Define workflows with varied lengths and roles
   const workflowsData = [
     {
       title: 'Research Proposal Approval',
       description: 'Workflow for approving research proposals',
       stages: [
-        { title: 'Initial Submission', role: 'professor', description: 'Submit proposal' },
+        { title: 'Initial Submission', role: 'professor', description: 'Submit proposal'},
         { title: 'Department Review', role: 'department_manager', description: 'Review proposal' },
       ],
       note: 'Requesting approval for my AI research proposal',
@@ -73,7 +173,7 @@ async function seed() {
     });
 
     const stages = await Promise.all(
-      workflowData.stages.map((stage, index) =>
+      workflowData.stages.map((stage, index) => 
         Stage.create({
           title: stage.title,
           description: stage.description,
@@ -81,8 +181,11 @@ async function seed() {
           stageOrder: index + 1,
           workflowId: workflow.id,
         })
-      )
-    );
+    ));
+
+
+    // Add templates to the first stage 
+    await stages[0].addTemplate(template);
 
     const instance = await WorkflowInstance.create({
       workflowId: workflow.id,

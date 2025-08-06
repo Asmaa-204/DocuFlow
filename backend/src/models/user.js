@@ -43,7 +43,7 @@ const UserSchema = {
   },
   departmentId: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true
   }
 };
 
