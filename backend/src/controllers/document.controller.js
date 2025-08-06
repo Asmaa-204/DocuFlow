@@ -23,7 +23,18 @@ async function updateDocument(req, res, next)
     });
 }
 
+async function getDocumentPdf(req, res, next)
+{
+    const pdfBuffer = await DocumentService.getDocumentPdf(req.user, req.params.id);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=document.pdf');
+    res.setHeader('Content-Length', pdfBuffer.length);
+    res.send(pdfBuffer);
+}
+
 module.exports = {
     getDocument: asyncDec(getDocument),
-    updateDocument: asyncDec(updateDocument)
+    updateDocument: asyncDec(updateDocument),
+    getDocumentPdf: asyncDec(getDocumentPdf)
 }

@@ -5,7 +5,7 @@ const { validateSchema, validateUiSchema } = require('../utils/ajv');
 
 class TemplateService
 {
-    static async createTemplate(name, description, schema,uiSchema, url)
+    static async createTemplate(title, description, schema,uiSchema, url)
     {
         if(!validateSchema(schema)) 
         {
@@ -20,7 +20,7 @@ class TemplateService
         }
 
         const template = await Template.create({
-            name,
+            title,
             description,
             schema,
             uiSchema,

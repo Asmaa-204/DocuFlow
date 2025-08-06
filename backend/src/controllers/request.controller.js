@@ -49,7 +49,7 @@ async function updateRequest(req, res)
     
     res.json({
         "status": "success",
-        "data": { request: updateRequest }
+        "data": { request: updatedRequest }
     });
 }
 

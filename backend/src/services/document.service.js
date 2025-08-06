@@ -1,5 +1,6 @@
 const AppError = require("../errors/AppError");
-const { Document, User, Request, Template } = require("../models");
+const { Document, User, Request, Template, Access } = require("../models");
+const DocxService = require("../services/docx.service");
 const { ajv } = require('../utils/ajv');
 
 
@@ -37,7 +38,7 @@ class DocumentService
         if(!document)
             throw new AppError("Document Not Found", 404);
 
-        if(!accessLevel || user.role !== 'aministrator')
+        if(!accessLevel || user.role !== 'administrator')
             throw new AppError("You do not have permission to view this document", 403);
     
         return document;
@@ -75,6 +76,34 @@ class DocumentService
         
         await document.save()    
         return document
+    }
+
+    static async getDocumentPdf(user, documentId)
+    {
+        const includes = includeSchema.attributes = ['fileUrl'];
+
+        const document = await Document.findByPk(documentId, {
+            include: includes
+        });
+
+        if(!document)
+            throw new AppError("Document Not Found", 404);
+
+        const { accessLevel } = await Access.findOne({
+            where: {
+                requestId: document.requestId,
+                userId: user.id
+            }
+        });
+
+        if(!accessLevel || accessLevel !== 'read')
+            throw new AppError("You do not have permission to view this document", 403);
+
+        const buffer = await DocxService.fillDocument(document.template.fileUrl, document.data);
+
+        const pdfBuffer = await DocxService.convertToPdf(buffer);
+
+        return pdfBuffer;
     }
 
 }

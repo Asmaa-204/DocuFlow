@@ -11,6 +11,12 @@ doucmentRouter.get("/:id",
     documentController.getDocument
 );
 
+doucmentRouter.get("/:id/pdf", 
+    authenticate,
+    authorizeRoles(["professor", "department_manager", "administrator"]),
+    documentController.getDocumentPdf
+);
+
 doucmentRouter.patch("/:id", 
     authenticate,
     authorizeRoles(["professor", "department_manager", "administrator"]),

@@ -14,7 +14,7 @@ async function createTemplate(req, res, next)
 
     // add a validation layer for schema as it's json
 
-    const template = await TemplateService.createTemplate(name, description, schema, url);
+    const template = await TemplateService.createTemplate(title, description, schema, fileUrl);
 
     res.status(200).json({
         "status": "success",

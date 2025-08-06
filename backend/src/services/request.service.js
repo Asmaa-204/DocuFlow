@@ -19,6 +19,12 @@ class RequestService
         ]
     }
 
+    static includeDocuments = {
+        model: Document,
+        as: 'documents',
+        attributes: ['id'],
+    };
+
     static includeTemplateIds = {
         model: Stage,
         as: 'stage',
@@ -40,7 +46,7 @@ class RequestService
     {
         const queryBuilder = new SequelizeQueryBuilder(query);
         const filter = queryBuilder.filter().sort().attributes().get(); 
-        filter.include = [RequestService.includeWorkflowTitle];
+        filter.include = [RequestService.includeWorkflowTitle, RequestService.includeDocuments];
 
         let requests = await Request.findAll(filter);
         return requests.map(request => RequestService._transformRequest(request));
@@ -51,7 +57,7 @@ class RequestService
         const queryBuilder = new SequelizeQueryBuilder(query);
         const filter = queryBuilder.filter().sort().attributes().get(); 
         filter.where.userId = userId;
-        filter.include = [RequestService.includeWorkflowTitle];
+        filter.include = [RequestService.includeWorkflowTitle, RequestService.includeDocuments];
         let requests = await Request.findAll(filter);
         return requests.map(request => RequestService._transformRequest(request));
     }
@@ -62,7 +68,7 @@ class RequestService
         const filter = queryBuilder.filter().sort().attributes().get(); 
         filter.where.assignedToUserId = userId;
         filter.where.status = { [Op.ne]: 'draft' }; // Exclude drafts
-        filter.include = [RequestService.includeWorkflowTitle];
+        filter.include = [RequestService.includeWorkflowTitle, RequestService.includeDocuments];
 
         let requests = await Request.findAll(filter);
         return requests.map(request => RequestService._transformRequest(request));
@@ -72,7 +78,7 @@ class RequestService
     {
         const queryBuilder = new SequelizeQueryBuilder(query);
         const filter = queryBuilder.attributes().get();
-        filter.include = [RequestService.includeWorkflowTitle];
+        filter.include = [RequestService.includeWorkflowTitle, RequestService.includeDocuments];
 
         const request = await Request.findByPk(requestId, filter)
 
@@ -128,7 +134,7 @@ class RequestService
             status: 'draft'
         });
 
-        const documents = instant.stage.templates.map(t => ({
+        const documents = instance.stage.templates.map(t => ({
             templateId: t.id,
             data: null,
             requestId: request.id,
@@ -175,6 +181,8 @@ class RequestService
             if (!user) {
                 throw new AppError("Assigned user not found", 404);
             }
+
+            //TODO: Validate the role of the assigned user
 
             await Document.update(
                 { status: 'submitted' },
