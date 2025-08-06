@@ -18,4 +18,27 @@ templateRouter.post(
     templateController.createTemplate
 );
 
+templateRouter.get(
+    "/",
+    authenticate,
+    authorizeRoles(["administrator"]),
+    templateController.getAllTemplates
+);
+
+templateRouter.get(
+    "/:id",
+    authenticate,
+    authorizeRoles(["administrator"]),
+    templateController.getTemplateById
+);
+
+templateRouter.patch(
+    "/:id",
+    authenticate,
+    authorizeRoles(["administrator"]),
+    templateController.updateTemplate
+);
+
+
+
 module.exports = templateRouter;

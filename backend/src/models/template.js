@@ -26,6 +26,11 @@ const TemplateSchema = {
         allowNull: false 
     },
 
+    uiSchema: {
+        type: DataTypes.JSON,
+        allowNull: false
+    },
+
     fileUrl: {
         type: DataTypes.STRING,
         allowNull: false

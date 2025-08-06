@@ -17,7 +17,7 @@ class DocumentService
 
     static includeSchema = {
         model: Template,
-        attributes: ['schema']
+        attributes: ['schema', 'uiSchema'],
     };
 
     static async getDocumentById(user, documentId)

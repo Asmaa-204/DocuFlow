@@ -22,6 +22,47 @@ async function createTemplate(req, res, next)
     });
 }
 
+async function getAllTemplates(req, res, next)
+{
+    const templates = await TemplateService.getAllTemplates();
+
+    res.status(200).json({
+        "status": "success",
+        "data": { templates }
+    });
+}
+
+
+async function getTemplateById(req, res, next)
+{
+    const { id } = req.params;
+
+    const template = await TemplateService.getTemplateById(id);
+
+    res.status(200).json({
+        "status": "success",
+        "data": { template }
+    });
+}
+
+async function updateTemplate(req, res, next)
+{
+    const { id } = req.params;
+    const data = req.body;
+
+    const template = await TemplateService.updateTemplate(id, data);
+
+    res.status(200).json({
+        "status": "success",
+        "data": { template }
+    });   
+}
+
+
+
 module.exports = {
-    createTemplate: asyncDec(createTemplate)
+    createTemplate: asyncDec(createTemplate),
+    getAllTemplates: asyncDec(getAllTemplates),
+    getTemplateById: asyncDec(getTemplateById),
+    updateTemplate: asyncDec(updateTemplate)
 }
