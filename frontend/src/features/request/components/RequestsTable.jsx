@@ -7,7 +7,7 @@ import Table from "@components/Table";
 import Pagination from "@components/Pagination";
 import RequestRow from "./RequestRow";
 
-import useRequests from "./hooks/useRequests";
+import useRequests from "../hooks/useRequests";
 import { PAGE_SIZE } from "@utils/consts";
 
 function RequestsTable({ filter }) {

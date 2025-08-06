@@ -1,14 +1,14 @@
 import { useState } from "react";
+import styled from "styled-components";
 import { JsonForms } from "@jsonforms/react";
 import { materialRenderers } from "@jsonforms/material-renderers";
 
 import InputFieldRenderer from "@components/InputFieldRenderer";
+import ActionButtons from "@components/ActionButtons";
 
 //TODO: get the schemas from backend
-import { jsonSchema1, uiSchema1 } from "./forms/form1";
-import { InputFieldTester } from "./renderers/inputFieldTester";
-import styled from "styled-components";
-import ActionButtons from "./ActionButtons";
+import { jsonSchema1, uiSchema1 } from "../forms/form1";
+import { InputFieldTester } from "../renderers/inputFieldTester";
 
 const Container = styled.div`
   width: 50rem;
@@ -18,7 +18,7 @@ const Container = styled.div`
   }
 `;
 
-function Form({onClose}) {
+function Form({ onClose }) {
   const [data, setData] = useState({});
   const [errors, setErrors] = useState([]);
 

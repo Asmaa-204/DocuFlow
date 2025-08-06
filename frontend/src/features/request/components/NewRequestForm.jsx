@@ -9,7 +9,7 @@ import RequestedDocsList from "./RequestedDocsList";
 
 import { documents, forms } from "@data/workflow/requestedDocs";
 import { useAllWorkflows } from "@features/workflow/hooks/useAllWorkflows";
-import { useSendRequest } from "./hooks/useSendRequest";
+import { useSendRequest } from "../hooks/useSendRequest";
 
 const Container = styled.form`
   display: flex;

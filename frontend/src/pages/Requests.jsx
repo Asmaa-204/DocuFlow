@@ -1,8 +1,8 @@
-import RequestsTable from "@features/request/RequestsTable";
+import RequestsTable from "@features/request/components/RequestsTable";
+import RequestsTableOperations from "@features/request/components/RequestsTableOperations";
 
 import Heading from "@components/Heading";
 import Row from "@components/Row";
-import RequestsTableOperations from "@features/request/RequestsTableOperations";
 
 function Requests({ filter }) {
   return (
