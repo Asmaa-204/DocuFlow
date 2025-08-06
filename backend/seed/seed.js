@@ -17,10 +17,6 @@ async function seed() {
   const schema = {
     "type": "object",
     "properties": {
-      "department": {
-        "type": "string",
-        "title": "Department"
-      },
       "studentName": {
         "type": "string",
         "title": "Student Name"
@@ -37,38 +33,14 @@ async function seed() {
       "gpa": {
         "type": "number",
         "title": "GPA"
-      },
-      "supervisors": {
-        "type": "array",
-        "title": "Supervisors",
-        "items": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "title": "Name"
-            },
-            "degreeAndInstitution": {
-              "type": "string",
-              "title": "Degree / Institution"
-            }
-          }
-        }
-      },
-      "researchTitle": {
-        "type": "string",
-        "title": "Proposed Research Title"
       }
-    }
+    },
+    "required": ["studentName", "registrationDate", "creditHours", "gpa"],
   };
 
   const uiSchema = {
     "type": "VerticalLayout",
     "elements": [
-      {
-        "type": "Control",
-        "scope": "#/properties/department"
-      },
       {
         "type": "Control",
         "scope": "#/properties/studentName"
@@ -89,19 +61,11 @@ async function seed() {
             "scope": "#/properties/gpa"
           }
         ]
-      },
-      {
-        "type": "Control",
-        "scope": "#/properties/supervisors"
-      },
-      {
-        "type": "Control",
-        "scope": "#/properties/researchTitle"
       }
     ]
   };
 
-  const fileUrl = '../../templates/request_for_supervision.doc';
+  const fileUrl = 'public/templates/template_tmp.docx';
 
   const template = await Template.create({
     title: 'Request for Supervision',
