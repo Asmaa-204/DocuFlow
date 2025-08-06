@@ -1,8 +1,9 @@
-const { WorkflowInstance, Workflow, Request, User } = require('../models')
+const { WorkflowInstance, Workflow, Stage, Request, User, Document, Access, Template } = require('../models')
 const { Op } = require("sequelize")
 const AppError = require("../errors/AppError");
 const SequelizeQueryBuilder = require("../utils/SequelizeQueryBuilder");
 const InstanceService = require('./instance.service');
+
 
 class RequestService 
 {
@@ -18,6 +19,21 @@ class RequestService
         ]
     }
 
+    static includeDocuments = {
+        model: Document,
+        as: 'documents',
+        attributes: ['id'],
+    };
+
+    static includeTemplateIds = {
+        model: Stage,
+        as: 'stage',
+        include: {
+            model: Template,
+            attributes: ['id']
+        }
+    };
+
     static _transformRequest(request)
     {
         const plainRequest = request.get({ plain: true });
@@ -30,7 +46,7 @@ class RequestService
     {
         const queryBuilder = new SequelizeQueryBuilder(query);
         const filter = queryBuilder.filter().sort().attributes().get(); 
-        filter.include = [RequestService.includeWorkflowTitle];
+        filter.include = [RequestService.includeWorkflowTitle, RequestService.includeDocuments];
 
         let requests = await Request.findAll(filter);
         return requests.map(request => RequestService._transformRequest(request));
@@ -41,9 +57,7 @@ class RequestService
         const queryBuilder = new SequelizeQueryBuilder(query);
         const filter = queryBuilder.filter().sort().attributes().get(); 
         filter.where.userId = userId;
-        filter.include = [RequestService.includeWorkflowTitle];
-        console.log(filter)
-
+        filter.include = [RequestService.includeWorkflowTitle, RequestService.includeDocuments];
         let requests = await Request.findAll(filter);
         return requests.map(request => RequestService._transformRequest(request));
     }
@@ -54,7 +68,7 @@ class RequestService
         const filter = queryBuilder.filter().sort().attributes().get(); 
         filter.where.assignedToUserId = userId;
         filter.where.status = { [Op.ne]: 'draft' }; // Exclude drafts
-        filter.include = [RequestService.includeWorkflowTitle];
+        filter.include = [RequestService.includeWorkflowTitle, RequestService.includeDocuments];
 
         let requests = await Request.findAll(filter);
         return requests.map(request => RequestService._transformRequest(request));
@@ -64,66 +78,80 @@ class RequestService
     {
         const queryBuilder = new SequelizeQueryBuilder(query);
         const filter = queryBuilder.attributes().get();
-        filter.include = [RequestService.includeWorkflowTitle];
+        filter.include = [RequestService.includeWorkflowTitle, RequestService.includeDocuments];
 
         const request = await Request.findByPk(requestId, filter)
 
         if(!request)
             throw new AppError('Request not found', 404)
 
-        if(request.assignedToUserId == user.id && request.status === 'draft') 
-        {
-            throw new AppError('Request not found', 404)
-        }
+        const { accessLevel } = await Access.findOne({
+            where: {
+                requestId: request.id,
+                userId: user.id
+            },
+            attributes: ['accessLevel']
+        });
 
-        if(user?.role !== 'administrator' && request.userId !== user.id && request.assignedToUserId !== user.id) 
+        if(!accessLevel && user.role !== 'admin')
         {
-            throw new AppError('You do not have permission to access this request', 403);
+            throw new AppError("You do not have permission to access this request", 403);
         }
 
         return RequestService._transformRequest(request);
     }
 
      
-    static async createRequest(instanceId, note, isDraft, userId) {
-      
-        const instance = await WorkflowInstance.findByPk(instanceId, {
-            include: ['stage']
-        });
+    static async createRequest(instanceId, note, userId) 
+    {  
+
+        const options = {}
+        options.include = [RequestService.includeTemplateIds];
+
+        const instance = await WorkflowInstance.findByPk(instanceId, options);
   
         if (!instance) {
             throw new AppError('Instance not found', 404);
         }
-  
-        if (isDraft) 
-        {
-            const existingDraft = await Request.findOne({
-                where: {
-                    instanceId,
-                    stageId: instance.stageId,
-                    userId,
-                    status: 'draft'
-                }
-            });
-  
-            if (existingDraft) {
-                throw new AppError('You already have a draft request for this stage and instance', 400);
+
+        const existingDraft = await Request.findOne({
+            where: {
+                instanceId,
+                stageId: instance.stageId,
+                userId,
+                status: 'draft'
             }
-        }
+        });
   
+        if (existingDraft) 
+            throw new AppError('You already have a draft request for this stage and instance', 400);
+        
         const request = await Request.create({
             instanceId,
             stageId: instance.stageId,
             note,
             userId,
-            status: isDraft ? 'draft' : 'pending'
+            status: 'draft'
         });
-  
+
+        const documents = instance.stage.templates.map(t => ({
+            templateId: t.id,
+            data: null,
+            requestId: request.id,
+        }));
+
+        await Access.create({
+            requestId: request.id,
+            userId: userId,
+            accessLevel: 'edit'
+        });
+
+        await Document.bulkCreate(documents);
         return request;
     }
 
-    static async getRequestById(requestId){
-
+    static async getRequestById(requestId)
+    {
         const request = await Request.findByPk(requestId);
 
         if(!request)
@@ -132,38 +160,55 @@ class RequestService
         return request
     }
 
-    static async updateMyRequest(request, status, note, assignedTo)
-    {
-        const allowedStatuses = ['pending', 'draft']
-
-        if(request.status != 'draft')
-            throw new AppError("You can update only draft requests", 400);
+    static async updateMyRequest(request, status, note, assignedTo) {
         
-        if(!allowedStatuses.includes(status))
-            throw new AppError('Invalid resposne status', 400);
-        
-        // 3. If moving from draft → pending, ensure assigned user exists
-        if (status === 'pending') 
-        {    
-            if (!assignedTo) 
-                throw new AppError("Assigned user ID is required when submitting the request", 400);
+        const allowedStatuses = ['pending', 'draft'];
 
-            if (assignedTo === request.userId)
-                throw new AppError("You can't assign a request to yourself", 400);
-
-            const user = await User.findByPk(assignedTo);
-            
-            if (!user) 
-                throw new AppError("Assigned user not found", 404);
+        if (!allowedStatuses.includes(status)) {
+            throw new AppError('Invalid request status', 400);
         }
 
-        request.assignedToUserId = assignedTo;
-        request.status = status;
-        request.note = note
+        if (assignedTo === request.userId) {
+            throw new AppError("You can't assign a request to yourself", 400);
+        }
 
-        await request.save()
-        return request
-    }  
+        if (status === 'pending') {
+            if (!assignedTo) {
+                throw new AppError("Assigned user ID is required when submitting the request", 400);
+            }
+
+            const user = await User.findByPk(assignedTo);
+            if (!user) {
+                throw new AppError("Assigned user not found", 404);
+            }
+
+            //TODO: Validate the role of the assigned user
+
+            await Document.update(
+                { status: 'submitted' },
+                { where: { requestId: request.id } }
+            );
+
+            await Access.create({
+                requestId: request.id,
+                userId: assignedTo,
+                accessLevel: 'respond'
+            });
+
+            await Access.update(
+                { accessLevel: 'read' },
+                { where: { requestId: request.id, userId: request.userId } }
+            );
+        }
+
+        request.assignedToUserId = assignedTo || null;
+        request.status = status;
+        request.note = note;
+
+        await request.save();
+        return request;
+    }
+
 
     static async respondToRequest(request, newStatus)
     {

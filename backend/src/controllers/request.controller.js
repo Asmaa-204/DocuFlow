@@ -1,7 +1,7 @@
 const asyncDec = require("../utils/asyncDec")
 const RequestService = require("../services/request.service")
-const { Op } = require('sequelize');
 const AppError = require("../errors/AppError");
+const { Access } = require("../models");
 
 
 async function createRequest(req, res)
@@ -24,27 +24,32 @@ async function updateRequest(req, res)
     } = req.body
 
     const request = await RequestService.getRequestById(req.params.id);
-    
-    const sendToMe = request.assignedToUserId === req.user.id;
-    const sendByMe = request.userId === req.user.id;
 
-    if(!sendToMe && !sendByMe)
-        throw new AppError("You are not authorized to modify this request", 403);
+    const { accessLevel } = await Access.findOne({
+        where: {
+            requestId: request.id,
+            userId: req.user.id
+        }
+    });
 
     let updatedRequest = null;
 
-    if(sendByMe)
+    if(accessLevel === 'edit')
     {
-        updateRequest = await RequestService.updateMyRequest(request, status, note, assignedTo)
+        updatedRequest = await RequestService.updateMyRequest(request, status, note, assignedTo)
     }
-    else if(sendToMe)
+    else if(accessLevel === 'respond')
     {
         updatedRequest = await RequestService.respondToRequest(request, status)
+    }
+    else
+    {
+        throw new AppError("You do not have permission to update this request", 403);
     }
     
     res.json({
         "status": "success",
-        "data": { request: updateRequest }
+        "data": { request: updatedRequest }
     });
 }
 

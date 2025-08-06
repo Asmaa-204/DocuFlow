@@ -14,15 +14,23 @@
   "author": "Google LLC",
   "license": "Apache-2.0",
   "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
+    "docxtemplater": "^3.65.2",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "hpp": "^0.2.3",
+    "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
+    "libreoffice-convert": "^1.6.1",
     "morgan": "^1.10.0",
+    "multer": "^2.0.2",
+    "pizzip": "^3.2.0",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "tmp-promise": "^3.0.3"
   },
   "devDependencies": {
     "apidoc": "^1.2.0",
