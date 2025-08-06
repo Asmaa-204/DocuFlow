@@ -28,10 +28,13 @@ class RequestService
     static includeTemplateIds = {
         model: Stage,
         as: 'stage',
-        include: {
-            model: Template,
-            attributes: ['id']
-        }
+        include: [
+            {
+                as: 'templates',
+                model: Template,
+                attributes: ['id']
+            }
+        ]
     };
 
     static _transformRequest(request)
@@ -104,12 +107,11 @@ class RequestService
      
     static async createRequest(instanceId, note, userId) 
     {  
-
         const options = {}
         options.include = [RequestService.includeTemplateIds];
 
         const instance = await WorkflowInstance.findByPk(instanceId, options);
-  
+ 
         if (!instance) {
             throw new AppError('Instance not found', 404);
         }
@@ -125,7 +127,7 @@ class RequestService
   
         if (existingDraft) 
             throw new AppError('You already have a draft request for this stage and instance', 400);
-        
+       
         const request = await Request.create({
             instanceId,
             stageId: instance.stageId,
@@ -133,6 +135,8 @@ class RequestService
             userId,
             status: 'draft'
         });
+
+        console.log("here1")
 
         const documents = instance.stage.templates.map(t => ({
             templateId: t.id,
@@ -146,7 +150,16 @@ class RequestService
             accessLevel: 'edit'
         });
 
+        console.log("here2")
+
         await Document.bulkCreate(documents);
+
+        const createdDocuments = await Document.findAll({
+            where: { requestId: request.id },
+            attributes: ['id']
+        });
+
+        request.documents = createdDocuments;
         return request;
     }
 
