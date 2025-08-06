@@ -8,17 +8,19 @@ class DocumentService
 {
     static includeUser = {
         model: Request,
-        //status is needed for checking request status
         attributes: ['id', 'status'], 
+        as: 'request',
         include: {
             model: User,
-            attributes: ['id']
+            attributes: ['id'],
+            as: 'user'
         }
     };
 
     static includeSchema = {
         model: Template,
         attributes: ['schema', 'uiSchema'],
+        as: 'template'
     };
 
     static async getDocumentById(user, documentId)
@@ -31,14 +33,14 @@ class DocumentService
         const { accessLevel } = await Access.findOne({
             where: {
                 requestId: document.requestId,
-                userId
+                userId: user.id
             }
         });
 
         if(!document)
             throw new AppError("Document Not Found", 404);
 
-        if(!accessLevel || user.role !== 'administrator')
+        if(!accessLevel && user.role !== 'administrator')
             throw new AppError("You do not have permission to view this document", 403);
     
         return document;
@@ -64,7 +66,7 @@ class DocumentService
         if(!accessLevel || accessLevel !== 'edit')
             throw new AppError("You do not have permission to update this document", 403);
 
-        const validate = ajv.compile(document.Template.schema);
+        const validate = ajv.compile(document.template.schema);
         
         if(!validate(data))
         {
