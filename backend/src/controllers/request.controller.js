@@ -7,7 +7,7 @@ const { Access } = require("../models");
 async function createRequest(req, res)
 {
     const { instanceId, note, isDraft } = req.body;
-    const request = await RequestService.createRequest(instanceId, note, isDraft, req.user.id);
+    const request = await RequestService.createRequest(instanceId, note, req.user.id);
 
     res.json({
         "status": "success",

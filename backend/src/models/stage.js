@@ -63,7 +63,8 @@ module.exports = (sequelize) => {
 
       Stage.belongsToMany(models.Template, {
         through: models.Condition,
-        foreignKey: "stageId"        
+        foreignKey: "stageId",
+        as: 'templates'        
       });
 
     }
