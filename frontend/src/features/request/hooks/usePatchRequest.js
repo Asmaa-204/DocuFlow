@@ -1,10 +1,10 @@
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
-import { sendRequest } from "../services/sendRequest";
+import { patchRequest } from "../services/patchRequest";
 
-function useSendRequest() {
+function usePatchRequest() {
   const { mutate, isPending } = useMutation({
-    mutationFn: sendRequest,
+    mutationFn: patchRequest,
     onSuccess: () => {
       toast.success("Request sent successfully!");
     },
@@ -13,7 +13,7 @@ function useSendRequest() {
     },
   });
 
-  return { sendRequest: mutate, isPending };
+  return { patchRequest: mutate, isPending };
 }
 
-export { useSendRequest };
+export { usePatchRequest };

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Heading from "@components/Heading";
-import ActionButtons from "./ActionButtons";
+import ActionButtons from "@components/ActionButtons";
 
 const CardDiv = styled.div`
   padding: 12px 15px;

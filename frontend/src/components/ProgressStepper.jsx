@@ -64,9 +64,9 @@ const Title = styled.span`
   font-size: 1.6rem;
 `;
 
-function ProgressStepper({ currentStep = 1, items = []}) {
+function ProgressStepper({ currentStep = 1, items = [] }) {
   const totalSteps = items.length;
-  console.log('stages', items)
+
   return (
     <StepperContainer>
       {items.map((item, index) => {
@@ -77,17 +77,13 @@ function ProgressStepper({ currentStep = 1, items = []}) {
         return (
           <div
             key={stepNumber}
-            style={{ display: "flex", alignItems: "center"}}
+            style={{ display: "flex", alignItems: "center" }}
           >
-            <div style={{position: "relative"}}>
-              <Step $isActive={isActive} $isCompleted={isCompleted}
-                style={{}}
-                >
+            <div style={{ position: "relative" }}>
+              <Step $isActive={isActive} $isCompleted={isCompleted} style={{}}>
                 {stepNumber}
               </Step>
-              <Title>
-                {item.title}
-              </Title>
+              <Title>{item.title}</Title>
             </div>
             {stepNumber < totalSteps && (
               <StepConnector $isCompleted={isCompleted} />

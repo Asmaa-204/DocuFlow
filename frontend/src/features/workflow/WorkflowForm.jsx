@@ -84,8 +84,6 @@ function WorkFlowForm() {
     },
   });
 
-  console.log(workflows)
-
   const selectedWorkflow = watch("workflowId");
 
   async function onSubmit(data) {
@@ -125,10 +123,7 @@ function WorkFlowForm() {
       </Content>
 
       <Footer>
-        <ProgressStepper
-          currentStep={1}
-          items={selectedOption?.stages || []}
-        />
+        <ProgressStepper currentStep={1} items={selectedOption?.stages || []} />
         <ButtonContainer>
           <StyledButton disabled={!selectedOption} type="submit">
             Start

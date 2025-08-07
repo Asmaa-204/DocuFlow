@@ -11,9 +11,9 @@ const ButtonsBox = styled.div`
 function ActionButtons({
   onCancel,
   onSave,
-  isCancelDanger,
-  textSave,
-  textCancel,
+  isCancelDanger = true,
+  textSave = "save",
+  textCancel = "cancel",
 }) {
   return (
     <ButtonsBox>

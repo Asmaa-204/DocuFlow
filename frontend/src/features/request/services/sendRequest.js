@@ -7,7 +7,7 @@ async function sendRequest(request) {
     body: request,
     token,
   });
-  return data?.request;
+  return data.data.request;
 }
 
 export { sendRequest };

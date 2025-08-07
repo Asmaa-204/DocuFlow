@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
 import { JsonForms } from "@jsonforms/react";
 import { materialRenderers } from "@jsonforms/material-renderers";
 
 import InputFieldRenderer from "@components/InputFieldRenderer";
+import ActionButtons from "@components/ActionButtons";
 
-//TODO: get the schemas from backend
-import { jsonSchema1, uiSchema1 } from "./forms/form1";
-import { InputFieldTester } from "./renderers/inputFieldTester";
-import styled from "styled-components";
-import ActionButtons from "./ActionButtons";
+import { InputFieldTester } from "../renderers/inputFieldTester";
+import useDocData from "../hooks/useDocData";
+import { usePatchDoc } from "../hooks/usePatchDoc";
 
 const Container = styled.div`
   width: 50rem;
@@ -18,17 +18,35 @@ const Container = styled.div`
   }
 `;
 
-function Form({onClose}) {
+function Form({ onClose, id }) {
   const [data, setData] = useState({});
   const [errors, setErrors] = useState([]);
+  const { patchDocument } = usePatchDoc();
+  const { doc, isPending } = useDocData({ docId: id });
 
-  console.log(errors);
+  useEffect(() => {
+    if (isPending) return;
+    setData(doc.data);
+  }, [doc]);
+
+  function handleSaveForm() {
+    patchDocument(
+      { docData: data, id },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+      }
+    );
+  }
+
+  if (isPending) return;
 
   return (
     <Container>
       <JsonForms
-        schema={jsonSchema1}
-        uischema={uiSchema1}
+        schema={doc?.template?.schema}
+        uischema={doc?.template?.uiSchema}
         data={data}
         onChange={({ data, errors }) => {
           setData(data);
@@ -46,7 +64,7 @@ function Form({onClose}) {
         isCancelDanger={false}
         textSave="Save"
         textCancel="Cancel"
-        onSave={() => {}}
+        onSave={handleSaveForm}
         onCancel={onClose}
       />
     </Container>

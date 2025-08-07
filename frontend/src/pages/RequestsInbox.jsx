@@ -5,8 +5,7 @@ import useRequests from "@features/request/hooks/useRequests";
 import { useState } from "react";
 import Heading from "@components/Heading";
 
-import allRequests from "@data/requests/mock_requests";
-import RequestDetails from "@features/request/RequestDetails";
+import RequestDetails from "@features/request/components/RequestDetails";
 
 function RequestsInbox() {
   const filter = null;

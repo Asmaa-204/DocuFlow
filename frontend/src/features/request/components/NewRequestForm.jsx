@@ -1,6 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "@components/Button";
 import TextArea from "@components/inputs/TextArea";
@@ -9,7 +9,10 @@ import RequestedDocsList from "./RequestedDocsList";
 
 import { documents, forms } from "@data/workflow/requestedDocs";
 import { useAllWorkflows } from "@features/workflow/hooks/useAllWorkflows";
-import { useSendRequest } from "./hooks/useSendRequest";
+import { useSendRequest } from "../hooks/useSendRequest";
+import useRequestData from "../hooks/useRequestData";
+import Spinner from "@components/Spinner";
+import { usePatchRequest } from "../hooks/usePatchRequest";
 
 const Container = styled.form`
   display: flex;
@@ -56,7 +59,9 @@ const P = styled.p`
 function NewRequestForm() {
   const { data: workflows } = useAllWorkflows();
   const { workflowId, instanceId } = useParams();
-  const { mutate } = useSendRequest();
+  const { request, isPending } = useRequestData();
+  const { patchRequest } = usePatchRequest();
+  const navigate = useNavigate();
 
   const { control, handleSubmit, getValues, reset } = useForm({
     defaultValues: {
@@ -72,18 +77,24 @@ function NewRequestForm() {
 
   function sendRequest(isDraft) {
     const data = getValues();
-    const requestPayload = {
+    let requestPayload = {
       instanceId: Number(instanceId),
       note: data.note,
-      isDraft,
     };
 
-    mutate(requestPayload, {
-      onSuccess: () => {
-        navigate(`/requests/${isDraft ? "draft" : "submitted"}`);
-      },
-    });
+    if (!isDraft) requestPayload = { ...requestPayload, status: "pending" };
+
+    patchRequest(
+      { reuqest: requestPayload, id: request.id },
+      {
+        onSuccess: () => {
+          navigate(`/requests/${isDraft ? "draft" : "submitted"}`);
+        },
+      }
+    );
   }
+
+  if (isPending) return <Spinner />;
 
   return (
     <Container onSubmit={handleSubmit(() => sendRequest(false))}>
@@ -91,7 +102,7 @@ function NewRequestForm() {
         <Heading as="h1">New Request</Heading>
         <P>Request For {selectedWorkflow?.title}</P>
 
-        <RequestedDocsList type="documents" documents={documents} />
+        <RequestedDocsList type="documents" documents={request?.documents} />
         <RequestedDocsList type="forms" documents={forms} />
 
         <NoteSection>
