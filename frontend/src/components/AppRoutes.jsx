@@ -33,7 +33,7 @@ function AppRoutes() {
             <Route path="new" element={<StartNewWorkflow />} />
             <Route path="my-workflows" element={<MyWorkflows />} />
             <Route
-              path=":workflowId/instances/:instanceId"
+              path=":workflowId/instances/:instanceId/request/:requestId"
               element={<NewRequest />}
             />
           </Route>

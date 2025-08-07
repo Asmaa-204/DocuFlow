@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 
 import {
@@ -71,7 +70,7 @@ const ItemLabel = styled.span`
   text-align: center;
 `;
 
-function RequestedDoc({ doc: { name }, type }) {
+function RequestedDoc({ doc: { name, id }, type }) {
   return (
     <Modal>
       <Modal.Open opens="fill-forms">
@@ -79,14 +78,14 @@ function RequestedDoc({ doc: { name }, type }) {
           <ItemIcon>
             {type === "form" ? <HiClipboardDocumentList /> : <HiDocumentText />}
           </ItemIcon>
-          <ItemLabel>{name}</ItemLabel>
+          <ItemLabel>{name || "Document"}</ItemLabel>
           <AddIcon>
             <HiPlus />
           </AddIcon>
         </ItemCard>
       </Modal.Open>
       <Modal.Window name="fill-forms">
-        <Form />
+        <Form id={id} />
       </Modal.Window>
     </Modal>
   );

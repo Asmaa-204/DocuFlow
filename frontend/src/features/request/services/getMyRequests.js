@@ -1,10 +1,9 @@
 import { apiRequest } from "@utils/api";
 
-async function getRequests({ isDraft }) {
-  console.log(isDraft);
+async function getMyRequests({ isDraft }) {
   const token = localStorage.getItem("token");
   const data = await apiRequest(
-    `/me/request?status=${isDraft ? "draft" : "pending"}`,
+    `/me/request?type=sent&status=${isDraft ? "draft" : "pending"}`,
     {
       method: "GET",
       token,
@@ -13,4 +12,4 @@ async function getRequests({ isDraft }) {
   return data.data?.requests;
 }
 
-export { getRequests };
+export { getMyRequests };
