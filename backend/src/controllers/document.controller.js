@@ -15,6 +15,7 @@ async function getDocument(req, res, next)
 async function updateDocument(req, res, next)
 {
     const { data }  = req.body
+
     const document = await DocumentService.updateDocument(req.user.id, req.params.id, data);
 
     res.status(200).json({

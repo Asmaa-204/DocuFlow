@@ -74,7 +74,7 @@ class DocumentService
             throw new AppError(`Invalid data: ${errors.join(', ')}`, 400);
         }
 
-        Object.assign(document.data, data);
+        document.data = data;
         
         await document.save()    
         return document
