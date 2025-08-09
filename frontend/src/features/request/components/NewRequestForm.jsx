@@ -85,7 +85,7 @@ function NewRequestForm() {
     if (!isDraft) requestPayload = { ...requestPayload, status: "pending" };
 
     patchRequest(
-      { reuqest: requestPayload, id: request.id },
+      { request: requestPayload, id: request.id },
       {
         onSuccess: () => {
           navigate(`/requests/${isDraft ? "draft" : "submitted"}`);

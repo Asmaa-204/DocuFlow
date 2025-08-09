@@ -9,7 +9,7 @@
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
     "test": "jest",
-    "seed": "node seed/seed.js"
+    "seed": "npx sequelize-cli db:seed:all"
   },
   "author": "Google LLC",
   "license": "Apache-2.0",

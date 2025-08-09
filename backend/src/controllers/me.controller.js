@@ -38,7 +38,7 @@ async function getMyRequests(req, res)
 
     if(type === 'sent')
         requests = await RequestService.getUserSentRequests(req.user.id, req.query);
-    else if(type === 'incoming')
+    else if(type === 'inbox')
         requests = await RequestService.getUserIncomingRequests(req.user.id, req.query);
 
     res.status(200).json({

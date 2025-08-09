@@ -46,8 +46,13 @@ module.exports = (sequelize) => {
             Department.hasMany(models.User, {
                 foreignKey: 'departmentId',
                 as: "employees",
-                onDelete: "SET NULL"
             });
+
+            Department.hasMany(models.WorkflowInstance, {
+                foreignKey: 'departmentId',
+                as: 'instances'
+            });
+
         }
     }
 

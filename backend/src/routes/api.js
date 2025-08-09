@@ -7,6 +7,7 @@ const requestRouter = require('./request.route');
 const meRouter = require('./me.route');
 const templateRouter = require('./template.route');
 const documentRouter = require('./document.route');
+const departmentRouter = require('./department.route');
 
 const apiRouter = express.Router();
 
@@ -17,6 +18,7 @@ apiRouter.use('/request', requestRouter)
 apiRouter.use("/me", meRouter)
 apiRouter.use("/template", templateRouter);
 apiRouter.use("/document", documentRouter);
+apiRouter.use('/department', departmentRouter);
 
 module.exports = apiRouter;
 

@@ -71,10 +71,6 @@ class TemplateService
         return template;
     }
 
-
-
-
-
-}
+};
 
 module.exports = TemplateService;

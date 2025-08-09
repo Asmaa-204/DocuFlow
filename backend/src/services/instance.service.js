@@ -1,6 +1,9 @@
-const { Workflow, Stage, WorkflowInstance, Request } = require('../models');
+const { Workflow, Stage, WorkflowInstance, Request, Department } = require('../models');
 const AppError = require('../errors/AppError');
 const SequelizeQueryBuilder = require("../utils/SequelizeQueryBuilder");
+const RequestService = require('./request.service');
+const { Op } = require("sequelize");
+const withTransaction = require('../utils/withTransaction');
 
 class InstanceService
 {
@@ -49,8 +52,17 @@ class InstanceService
         return instances;
     }
 
-    static async createInstance(workflowId, user)
+    static async createInstance(workflowId, user, departmentId)
     {
+        departmentId = departmentId || user.departmentId;
+
+        const departmend = await Department.findByPk(departmentId);
+
+        if(!departmend)
+        {
+            throw new AppError('Department not found', 404);
+        }
+
         const workflow = await Workflow.findByPk(workflowId, {
             include: {
                 model: Stage,
@@ -59,7 +71,8 @@ class InstanceService
             }
         });
 
-        if (!workflow) {
+        if (!workflow) 
+        {
             throw new AppError('Workflow not found', 404);
         }
 
@@ -72,44 +85,69 @@ class InstanceService
         const instance = await WorkflowInstance.create({
             workflowId,
             stageId: firstStage.id,
-            userId: user.id
+            userId: user.id,
+            departmentId: departmend.id
         });
 
         return instance
     }
 
-    static async advanceInstance(instanceId, status)
-    {
-        const filter = {};
-        filter.include = InstanceService.includeStage
+    static async advanceInstance(instanceId, status, transaction) {
+        
+        const cb = async (transaction) => {
 
-        const instance = await WorkflowInstance.findByPk(instanceId, filter);
-
-        if (!instance) {
-            throw new AppError('Instance not found', 404);
-        }
-
-        const nextStage = await Stage.findOne({
-            where: {
-                workflowId: instance.workflowId,
-                stageOrder: instance.stage.stageOrder + 1
-            }
-        });
-
-        if(!nextStage)
-        {
-            console.log("Instance Finished")
-        }
-        else 
-        {
-            await instance.update({
-                stageId: nextStage.id
+            const instance = await WorkflowInstance.findByPk(instanceId, {
+                include: [InstanceService.includeStage],
+                transaction
             });
-        } 
-    
 
-        return instance;
+            if (!instance) {
+                throw new AppError('Instance not found', 404);
+            }
+
+            const nextStages = await Stage.findAll({
+                where: {
+                    workflowId: instance.workflowId,
+                    stageOrder: {
+                        [Op.in]: [
+                            instance.stage.stageOrder + 1,
+                            instance.stage.stageOrder + 2
+                        ]
+                    }
+                },
+                order: [['stageOrder', 'ASC']],
+                transaction
+            });
+
+            const nextStage = nextStages[0];
+            const secondNextStage = nextStages[1];
+
+            // Advance stage or mark completed
+            if (nextStage) {
+                await instance.update({ stageId: nextStage.id }, { transaction });
+            }
+
+            if (secondNextStage) {
+                await RequestService._createRequest(instance.id, null, instance.userId, transaction);
+            } else {
+                await instance.update({ status: 'completed' }, { transaction });
+            }
+
+            // Reload to get updated data
+            await instance.reload({
+                include: [InstanceService.includeStage],
+                transaction
+            });
+
+            return instance;
+        };
+
+        if(transaction)
+            return await cb(transaction);
+        else
+            return await withTransaction(cb);
     }
+
 }
 
 module.exports = InstanceService

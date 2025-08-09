@@ -55,31 +55,26 @@ module.exports = (sequelize) => {
       User.hasMany(models.WorkflowInstance, {
         foreignKey: 'userId',
         as: 'instances',
-        onDelete: 'CASCADE'
       });
 
       User.hasMany(models.Request, {
         foreignKey: 'userId',
         as: 'requests',
-        onDelete: 'CASCADE'
       });
 
       User.hasMany(models.Request, {
         foreignKey: "assignedToUserId",
         as: "assignedRequests",
-        onDelete: "CASCADE"
       });
 
       User.hasOne(models.Department, {
         foreignKey: "managerId",
         as: "managedDepartment",
-        onDelete: "SET NULL"
       });
 
       User.hasMany(models.Department, {
         foreignKey: "affairsEmployeeId",
-        as: "departments",
-        onDelete: "SET NULL"
+        as: "departments"
       });
 
       User.belongsTo(models.Department, {

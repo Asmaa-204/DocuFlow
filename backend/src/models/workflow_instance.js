@@ -23,8 +23,18 @@ const WorkflowInstanceSchema = {
     userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-    }
+    },
 
+    departmentId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+
+    status: {
+        type: DataTypes.ENUM('in_progress', 'completed', 'rejected'),
+        allowNull: false,
+        defaultValue: 'in_progress',
+    }
 };
 
 module.exports = (sequelize) => {
@@ -50,7 +60,11 @@ module.exports = (sequelize) => {
             WorkflowInstance.hasMany(models.Request, {
                 foreignKey: 'instanceId',
                 as: 'requests',
-                onDelete: 'CASCADE'
+            });
+
+            WorkflowInstance.belongsTo(models.Department, {
+                foreignKey: 'departmentId',
+                as: 'department'
             });
         }
     };

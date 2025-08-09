@@ -66,7 +66,7 @@ class WorkflowService
     return workflow;
   }
 
-  static async createWorkflow(title, description, stagesInput) 
+  static async createWorkflow(title, description, stagesInput, transaction) 
   {
     validateWorkflowInput({ title, description, stages: stagesInput });
 
@@ -101,7 +101,10 @@ class WorkflowService
       return workflow;
     }
 
-    const workflow = await withTransaction(cb);
+    if(transaction) 
+      return await cb(transaction);
+    else 
+      return await withTransaction(cb);
   }
 }
 

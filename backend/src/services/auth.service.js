@@ -19,9 +19,7 @@ class AuthService {
 
         const payload = user.toJSON();
 
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN }, {
-            algorithm: 'HS256'
-        });
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
         
         return token;
     };

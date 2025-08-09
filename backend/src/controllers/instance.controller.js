@@ -3,7 +3,11 @@ const InstanceService = require("../services/instance.service")
 
 async function createInstance(req, res)
 {    
-    const { workflowId } = req.body;
+    const { 
+        workflowId,
+        departmentId 
+    } = req.body;
+
     const instance = await InstanceService.createInstance(workflowId, req.user);
 
     res.json({
