@@ -1,6 +1,7 @@
 import { apiRequest } from "@utils/api";
 
 async function createInstance(instance) {
+  console.log(instance);
   const token = localStorage.getItem("token");
   const data = await apiRequest("/instance", {
     method: "POST",

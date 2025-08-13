@@ -8,7 +8,6 @@ import Heading from "@components/Heading";
 import RequestedDocsList from "./RequestedDocsList";
 
 import { useAllWorkflows } from "@features/workflow/hooks/useAllWorkflows";
-import { useSendRequest } from "../hooks/useSendRequest";
 import useRequestData from "../hooks/useRequestData";
 import Spinner from "@components/Spinner";
 import { usePatchRequest } from "../hooks/usePatchRequest";
@@ -62,7 +61,7 @@ function NewRequestForm() {
   const { patchRequest } = usePatchRequest();
   const navigate = useNavigate();
 
-  const { control, handleSubmit, getValues, reset } = useForm({
+  const { control, handleSubmit, getValues, formState } = useForm({
     defaultValues: {
       note: "",
       selectedDocuments: [],
@@ -98,11 +97,12 @@ function NewRequestForm() {
   return (
     <Container onSubmit={handleSubmit(() => sendRequest(false))}>
       <Content>
-        <Heading as="h1">New Request</Heading>
+        <Heading as="h1">Request #{request.id}</Heading>
         <P>Request For {selectedWorkflow?.title}</P>
 
-        <RequestedDocsList type="documents" documents={request?.documents} />
-      
+        {request.documents.length > 0 && (
+          <RequestedDocsList type="documents" documents={request?.documents} />
+        )}
 
         <NoteSection>
           <NoteLabel>Note</NoteLabel>
@@ -117,12 +117,16 @@ function NewRequestForm() {
       </Content>
 
       <Footer>
-        <Button $variation="danger" type="button" onClick={() => reset()}>
+        {
+          //TODO: delete the request when it's done in backend
+        }
+        <Button $variation="danger" type="button" onClick={() => navigate("/")}>
           CANCEL
         </Button>
 
         <ButtonGroup>
           <Button
+            disabled={!formState.isDirty}
             type="button"
             $variation="secondary"
             onClick={() => sendRequest(true)}

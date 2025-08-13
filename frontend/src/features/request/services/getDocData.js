@@ -1,8 +1,6 @@
 import { apiRequest } from "@utils/api";
 
 async function getDocData({ docId }) {
-  console.log(docId);
-
   const token = localStorage.getItem("token");
   const data = await apiRequest(`/document/${docId}`, {
     method: "GET",

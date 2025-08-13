@@ -9,6 +9,7 @@ import RequestRow from "./RequestRow";
 
 import useRequests from "../hooks/useRequests";
 import { PAGE_SIZE } from "@utils/consts";
+import { useAllWorkflows } from "@features/workflow";
 
 function RequestsTable({ filter }) {
   const { isPending, data: requests } = useRequests({ filter });
@@ -25,9 +26,7 @@ function RequestsTable({ filter }) {
   const paginatedData = requests.slice(startIndex, endIndex);
   //-----------------------------------------
 
-  console.log(filter);
-
-  
+  console.log(requests);
 
   return (
     <Menus>

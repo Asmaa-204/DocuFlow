@@ -45,14 +45,16 @@ function Select({ placeholder, options = [], value, onChange, ...props }) {
         <option value="" disabled>
           {placeholder}
         </option>
-        {options.map((option) => (
-          <option
-            key={option?.id || option.value}
-            value={option.id || option.value}
-          >
-            {option.title || option.label}
-          </option>
-        ))}
+        {options.map((option) => {
+          return (
+            <option
+              key={option?.id || option.value}
+              value={option.id || option.value}
+            >
+              {option.title || option.label || option.name}
+            </option>
+          );
+        })}
       </StyledSelect>
       <SelectIcon />
     </SelectContainer>
