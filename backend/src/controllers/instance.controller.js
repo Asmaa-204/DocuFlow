@@ -8,7 +8,7 @@ async function createInstance(req, res)
         departmentId 
     } = req.body;
 
-    const instance = await InstanceService.createInstance(workflowId, req.user);
+    const instance = await InstanceService.createInstance(workflowId, req.user, departmentId);
 
     res.json({
         "status": "success",

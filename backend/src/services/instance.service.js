@@ -51,9 +51,9 @@ class InstanceService
     {
         departmentId = departmentId || user.departmentId;
 
-        const departmend = await Department.findByPk(departmentId);
+        const department = await Department.findByPk(departmentId);
 
-        if(!departmend)
+        if(!department)
         {
             throw new AppError('Department not found', 404);
         }
@@ -81,7 +81,7 @@ class InstanceService
             workflowId,
             stageId: firstStage.id,
             userId: user.id,
-            departmentId: departmend.id
+            departmentId: department.id
         });
 
         return instance
