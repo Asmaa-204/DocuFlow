@@ -7,11 +7,6 @@ const withTransaction = require('../utils/withTransaction');
 
 class InstanceService
 {
-    static includeStage = {
-        model: Stage,
-        as: 'stage'
-    }
-
     static async getAllInstances(query)
     {
         const builder = new SequelizeQueryBuilder(query);
@@ -90,62 +85,6 @@ class InstanceService
         });
 
         return instance
-    }
-
-    static async advanceInstance(instanceId, status, transaction) {
-        
-        const cb = async (transaction) => {
-
-            const instance = await WorkflowInstance.findByPk(instanceId, {
-                include: [InstanceService.includeStage],
-                transaction
-            });
-
-            if (!instance) {
-                throw new AppError('Instance not found', 404);
-            }
-
-            const nextStages = await Stage.findAll({
-                where: {
-                    workflowId: instance.workflowId,
-                    stageOrder: {
-                        [Op.in]: [
-                            instance.stage.stageOrder + 1,
-                            instance.stage.stageOrder + 2
-                        ]
-                    }
-                },
-                order: [['stageOrder', 'ASC']],
-                transaction
-            });
-
-            const nextStage = nextStages[0];
-            const secondNextStage = nextStages[1];
-
-            // Advance stage or mark completed
-            if (nextStage) {
-                await instance.update({ stageId: nextStage.id }, { transaction });
-            }
-
-            if (secondNextStage) {
-                await RequestService._createRequest(instance.id, null, instance.userId, transaction);
-            } else {
-                await instance.update({ status: 'completed' }, { transaction });
-            }
-
-            // Reload to get updated data
-            await instance.reload({
-                include: [InstanceService.includeStage],
-                transaction
-            });
-
-            return instance;
-        };
-
-        if(transaction)
-            return await cb(transaction);
-        else
-            return await withTransaction(cb);
     }
 
 }

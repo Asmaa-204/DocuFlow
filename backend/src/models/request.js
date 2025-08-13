@@ -38,6 +38,11 @@ const RequestSchema = {
     status: {
         type: DataTypes.ENUM('draft', 'pending', 'approved', 'rejected'),
         allowNull: false,
+    },
+
+    sentAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
     }
 };
 
@@ -82,6 +87,12 @@ module.exports = (sequelize) => {
         sequelize,
         modelName: 'Request',
         timestamps: true
+    });
+
+    Request.beforeUpdate((request, options) => {
+        if (request.status === 'pending' && !request.sentAt) {
+            request.sentAt = new Date();
+        }
     });
 
     return Request;

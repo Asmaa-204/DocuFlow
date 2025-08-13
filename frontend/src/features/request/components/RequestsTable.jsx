@@ -26,6 +26,9 @@ function RequestsTable({ filter }) {
   //-----------------------------------------
 
   console.log(filter);
+
+  
+
   return (
     <Menus>
       <Table columns="0.6fr 2.4fr 1fr 2fr 2rem">
@@ -33,7 +36,7 @@ function RequestsTable({ filter }) {
           <div>ID</div>
           <div>Type</div>
           <div>Status</div>
-          <div>Date</div>
+          <div>{filter === "draft" ? "Last Updated" : "Sent"}</div>
           {filter == "draft" && <div></div>}
         </Table.Header>
 

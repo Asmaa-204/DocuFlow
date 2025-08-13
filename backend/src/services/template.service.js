@@ -1,6 +1,7 @@
 const AppError = require('../errors/AppError');
 const { Template } = require("../models");
 const { validateSchema, validateUiSchema } = require('../utils/ajv');
+const optionalize = require('../utils/optionalize');
 
 
 class TemplateService
@@ -41,6 +42,10 @@ class TemplateService
     static async getTemplateById(id)
     {
         const template = await Template.findByPk(id);
+
+        console.log(typeof template.schema);
+
+        template.schema = optionalize(template.schema);
 
         if(!template)
             throw new AppError("Template Not Found", 404);

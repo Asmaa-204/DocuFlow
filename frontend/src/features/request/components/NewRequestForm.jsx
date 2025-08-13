@@ -7,7 +7,6 @@ import TextArea from "@components/inputs/TextArea";
 import Heading from "@components/Heading";
 import RequestedDocsList from "./RequestedDocsList";
 
-import { documents, forms } from "@data/workflow/requestedDocs";
 import { useAllWorkflows } from "@features/workflow/hooks/useAllWorkflows";
 import { useSendRequest } from "../hooks/useSendRequest";
 import useRequestData from "../hooks/useRequestData";
@@ -103,7 +102,7 @@ function NewRequestForm() {
         <P>Request For {selectedWorkflow?.title}</P>
 
         <RequestedDocsList type="documents" documents={request?.documents} />
-        <RequestedDocsList type="forms" documents={forms} />
+      
 
         <NoteSection>
           <NoteLabel>Note</NoteLabel>

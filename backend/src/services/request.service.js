@@ -4,8 +4,8 @@ const {
 const { Op } = require("sequelize");
 const AppError = require("../errors/AppError");
 const SequelizeQueryBuilder = require("../utils/SequelizeQueryBuilder");
-const InstanceService = require('./instance.service');
 const withTransaction = require('../utils/withTransaction');
+const DocumentService = require('./document.service');
 
 class RequestService {
     
@@ -15,6 +15,11 @@ class RequestService {
         as: 'instance',
         include: [{ model: Workflow, as: 'workflow', attributes: ['title'] }]
     };
+
+    static includeStage = {
+        model: Stage,
+        as: 'stage'
+    }
 
     static includeDocuments = {
         model: Document,
@@ -50,16 +55,18 @@ class RequestService {
         return requests.map(req => this._transformRequest(req));
     }
 
-    // ===== Public Methods =====
+
     static getAllRequests(query) 
     {
         return this._fetchRequests(query);
     }
 
+
     static getUserSentRequests(userId, query) 
     {
         return this._fetchRequests(query, { userId });
     }
+
 
     static getUserIncomingRequests(userId, query)
     {
@@ -83,7 +90,7 @@ class RequestService {
             attributes: ['accessLevel']
         });
 
-        if (!access?.accessLevel && user.role !== 'admin') {
+        if (!access?.accessLevel && user.role !== 'administrator') {
             throw new AppError('You do not have permission to access this request', 403);
         }
 
@@ -175,11 +182,21 @@ class RequestService {
             const allowedStatuses = ['pending', 'draft'];
 
             if (!allowedStatuses.includes(status)) {
-                throw new AppError(` ${status} is an invalid request status`, 400);
+                throw new AppError(`${status} is an invalid request status`, 400);
             }
         
-            if (status === 'pending') 
-            {
+            if (status === 'pending') {
+                if (!request.assignedToUserId) {
+                    throw new AppError('Cannot set status to pending: no assigned user', 400);
+                }
+
+                const documents = await Document.findAll({
+                    where: { requestId: request.id },
+                    transaction: t
+                });
+
+                await DocumentService.validateDocumentsData(documents, false);
+
                 await Access.create({
                     requestId: request.id,
                     userId: request.assignedToUserId,
@@ -202,7 +219,63 @@ class RequestService {
             return request;
         };
 
-        console.log(transaction)
+
+
+        if(transaction)
+            return await cb(transaction);
+        else
+            return await withTransaction(cb);
+    }
+
+        static async advanceInstance(instanceId, status, transaction) {
+        
+        const cb = async (transaction) => {
+
+            const instance = await WorkflowInstance.findByPk(instanceId, {
+                include: [RequestService.includeStage],
+                transaction
+            });
+
+            if (!instance) {
+                throw new AppError('Instance not found', 404);
+            }
+
+            const nextStages = await Stage.findAll({
+                where: {
+                    workflowId: instance.workflowId,
+                    stageOrder: {
+                        [Op.in]: [
+                            instance.stage.stageOrder + 1,
+                            instance.stage.stageOrder + 2
+                        ]
+                    }
+                },
+                order: [['stageOrder', 'ASC']],
+                transaction
+            });
+
+            const nextStage = nextStages[0];
+            const secondNextStage = nextStages[1];
+
+            // Advance stage or mark completed
+            if (nextStage) {
+                await instance.update({ stageId: nextStage.id }, { transaction });
+            }
+
+            if (secondNextStage) {
+                await RequestService._createRequest(instance.id, null, instance.userId, transaction);
+            } else {
+                await instance.update({ status: 'completed' }, { transaction });
+            }
+
+            // Reload to get updated data
+            await instance.reload({
+                include: [RequestService.includeStage],
+                transaction
+            });
+
+            return instance;
+        };
 
         if(transaction)
             return await cb(transaction);
@@ -211,8 +284,7 @@ class RequestService {
     }
 
 
-    static async respondToRequest(request, newStatus, transaction) 
-    {
+    static async respondToRequest(request, newStatus, transaction) {
         const cb = async (t) => {
             const allowedStatuses = ['approved', 'rejected'];
 
@@ -220,19 +292,63 @@ class RequestService {
                 throw new AppError('Invalid response status', 400);
             }
 
+            // If approved → advance instance
             if (newStatus === 'approved') {
-                await InstanceService.advanceInstance(request.instanceId);
+                const instance = await WorkflowInstance.findByPk(request.instanceId, {
+                    include: [RequestService.includeStage],
+                    transaction: t
+                });
+
+                if (!instance) {
+                    throw new AppError('Instance not found', 404);
+                }
+
+                const nextStages = await Stage.findAll({
+                    where: {
+                        workflowId: instance.workflowId,
+                        stageOrder: {
+                            [Op.in]: [
+                                instance.stage.stageOrder + 1,
+                                instance.stage.stageOrder + 2
+                            ]
+                        }
+                    },
+                    order: [['stageOrder', 'ASC']],
+                    transaction: t
+                });
+
+                const nextStage = nextStages[0];
+                const secondNextStage = nextStages[1];
+
+                if (nextStage) {
+                    await instance.update({ stageId: nextStage.id }, { transaction: t });
+                }
+
+                if (secondNextStage) {
+                    await RequestService._createRequest(instance.id, null, instance.userId, t);
+                } else {
+                    await instance.update({ status: 'completed' }, { transaction: t });
+                }
+
+                await instance.reload({
+                    include: [RequestService.includeStage],
+                    transaction: t
+                });
             }
 
+            // Update the request status
             request.status = newStatus;
-            await request.save();
-        }
+            await request.save({ transaction: t });
 
-        if(transaction)
+            return request;
+        };
+
+        if (transaction)
             return await cb(transaction);
         else
             return await withTransaction(cb);
     }
+
 }
 
 module.exports = RequestService;

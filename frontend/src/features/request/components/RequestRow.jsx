@@ -30,12 +30,14 @@ const Info = styled.div`
   }
 `;
 
-function RequestRow({ request: { id, workflowTitle, status, createdAt } }) {
+function RequestRow({ request: { id, workflowTitle, status, sentAt, updatedAt } }) {
   const statusToTag = {
     pending: "blue",
     draft: "green",
     rejected: "red",
   };
+
+  const dateToDisplay = status === "draft" ? updatedAt : sentAt;
 
   return (
     <Table.Row>
@@ -44,8 +46,8 @@ function RequestRow({ request: { id, workflowTitle, status, createdAt } }) {
 
       <Tag $type={statusToTag[status]}>{status}</Tag>
       <Info>
-        <span>{formatDistanceToNow(new Date(createdAt))} ago</span>
-        <span>{format(new Date(createdAt), "MMM dd yyyy, HH:mm")}</span>
+        <span>{formatDistanceToNow(new Date(dateToDisplay))} ago</span>
+        <span>{format(new Date(dateToDisplay), "MMM dd yyyy, HH:mm")}</span>
       </Info>
 
       {status === "draft" && (
