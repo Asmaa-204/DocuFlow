@@ -8,7 +8,6 @@ import Heading from "@components/Heading";
 import { useAllWorkflows } from "./hooks/useAllWorkflows";
 import { useCreateInstance } from "./hooks/useCreateInstance";
 import useDepartments from "@features/request/hooks/useDepartments";
-import useDepartments from "@features/request/hooks/useDepartments";
 
 const Container = styled.form`
   display: flex;
@@ -34,7 +33,6 @@ const FormSection = styled.div`
   align-items: start;
 `;
 
-const SelectGroup = styled.div`
 const SelectGroup = styled.div`
   display: flex;
   flex-direction: column;
@@ -79,8 +77,6 @@ function WorkFlowForm() {
   const { createInstance } = useCreateInstance();
   const { departments } = useDepartments();
 
-  const { departments } = useDepartments();
-
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
       workflowId: "",
@@ -110,43 +106,31 @@ function WorkFlowForm() {
 
         <FormSection>
           <SelectGroup>
-          <SelectGroup>
-            <Controller
-              control={control}
-              name="workflowId"
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  placeholder="Choose a workflow"
-                  options={workflows}
-                />
-              )}
-            />
+            <SelectGroup>
+              <Controller
+                control={control}
+                name="workflowId"
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    placeholder="Choose a workflow"
+                    options={workflows}
+                  />
+                )}
+              />
 
-            <Controller
-              control={control}
-              name="departmentId"
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  placeholder="Select your department"
-                  options={departments}
-                />
-              )}
-            />
-          </SelectGroup>
-
-            <Controller
-              control={control}
-              name="departmentId"
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  placeholder="Select your department"
-                  options={departments}
-                />
-              )}
-            />
+              <Controller
+                control={control}
+                name="departmentId"
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    placeholder="Select your department"
+                    options={departments}
+                  />
+                )}
+              />
+            </SelectGroup>
           </SelectGroup>
 
           <Description>
