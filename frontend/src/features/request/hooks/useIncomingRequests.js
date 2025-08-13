@@ -7,7 +7,7 @@ function useIncomingRequests() {
     queryFn: () => getIncomingRequests(),
   });
 
-  return { data, isPending };
+  return { requests: data, isPending };
 }
 
-export default useIncomingRequests;
+export { useIncomingRequests };
