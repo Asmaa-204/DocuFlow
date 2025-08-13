@@ -1,6 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
 import styled from "styled-components";
-
 import Select from "@components/inputs/Select";
 import ProgressStepper from "@components/ProgressStepper";
 import Button from "@components/Button";
@@ -8,6 +7,8 @@ import Heading from "@components/Heading";
 
 import { useAllWorkflows } from "./hooks/useAllWorkflows";
 import { useCreateInstance } from "./hooks/useCreateInstance";
+import useDepartments from "@features/request/hooks/useDepartments";
+import useDepartments from "@features/request/hooks/useDepartments";
 
 const Container = styled.form`
   display: flex;
@@ -33,23 +34,23 @@ const FormSection = styled.div`
   align-items: start;
 `;
 
-const SelectContainer = styled.div`
+const SelectGroup = styled.div`
+const SelectGroup = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 2rem;
 `;
 
 const Description = styled.div`
   width: 100%;
   min-height: 12rem;
   padding: 1.6rem;
-
-  border: var(--border-radius-tiny) solid var(--color-brand-600);
+  border: 1px solid var(--color-brand-600);
+  border: 1px solid var(--color-brand-600);
   border-radius: var(--border-radius-md);
   background-color: var(--color-grey-0);
-
   font-size: 1.4rem;
   line-height: 1.6;
-
   color: var(--color-grey-700);
 `;
 
@@ -62,10 +63,8 @@ const ButtonContainer = styled.div`
 
 const StyledButton = styled(Button)`
   padding: 1.2rem 3.2rem;
-
   font-size: 1.6rem;
   font-weight: 600;
-
   text-transform: uppercase;
   letter-spacing: 0.5px;
   min-width: 12rem;
@@ -78,16 +77,26 @@ const StyledHeading = styled(Heading)`
 function WorkFlowForm() {
   const { data: workflows } = useAllWorkflows();
   const { createInstance } = useCreateInstance();
+  const { departments } = useDepartments();
+
+  const { departments } = useDepartments();
+
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
       workflowId: "",
+      departmentId: "",
+      departmentId: "",
     },
   });
 
   const selectedWorkflow = watch("workflowId");
 
   async function onSubmit(data) {
-    createInstance({ ...data, workflowId: Number(data.workflowId) });
+    createInstance({
+      ...data,
+      workflowId: Number(data.workflowId),
+      departmentId: Number(data.departmentId),
+    });
   }
 
   const selectedOption = workflows?.find(
@@ -100,7 +109,8 @@ function WorkFlowForm() {
         <StyledHeading as="h1">Start New Workflow</StyledHeading>
 
         <FormSection>
-          <SelectContainer>
+          <SelectGroup>
+          <SelectGroup>
             <Controller
               control={control}
               name="workflowId"
@@ -112,7 +122,32 @@ function WorkFlowForm() {
                 />
               )}
             />
-          </SelectContainer>
+
+            <Controller
+              control={control}
+              name="departmentId"
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  placeholder="Select your department"
+                  options={departments}
+                />
+              )}
+            />
+          </SelectGroup>
+
+            <Controller
+              control={control}
+              name="departmentId"
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  placeholder="Select your department"
+                  options={departments}
+                />
+              )}
+            />
+          </SelectGroup>
 
           <Description>
             {selectedWorkflow

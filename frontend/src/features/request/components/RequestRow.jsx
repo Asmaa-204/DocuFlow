@@ -9,6 +9,8 @@ import Menus from "@components/Menu";
 import Table from "@components/Table";
 import Tag from "@components/Tag";
 import ConfirmDelete from "@components/ConfirmDelete";
+import { useNavigate } from "react-router-dom";
+import { useAllWorkflows } from "@features/workflow";
 
 const Note = styled.div`
   font-size: 1.4rem;
@@ -30,14 +32,27 @@ const Info = styled.div`
   }
 `;
 
-function RequestRow({ request: { id, workflowTitle, status, sentAt, updatedAt } }) {
+function RequestRow({
+  request: { id, workflowTitle, status, sentAt, updatedAt, instanceId },
+}) {
+  const navigate = useNavigate();
+  const { data: workflows } = useAllWorkflows();
+
   const statusToTag = {
     pending: "blue",
     draft: "green",
     rejected: "red",
   };
 
+  const workflowId = workflows?.find(
+    (workflow) => workflow.title === workflowTitle
+  )?.id;
+
   const dateToDisplay = status === "draft" ? updatedAt : sentAt;
+
+  function handleEditRequest() {
+    navigate(`/workflows/${workflowId}/instances/${instanceId}/request/${id}`);
+  }
 
   return (
     <Table.Row>
@@ -55,7 +70,9 @@ function RequestRow({ request: { id, workflowTitle, status, sentAt, updatedAt } 
           <Menus.Menu>
             <Menus.Toggle id={id} />
             <Menus.List id={id}>
-              <Menus.Button icon={<CiEdit />}>Edit Request</Menus.Button>
+              <Menus.Button onClick={handleEditRequest} icon={<CiEdit />}>
+                Edit Request
+              </Menus.Button>
 
               <Modal.Open opens="delete-request">
                 <Menus.Button icon={<HiTrash />}>Delete request</Menus.Button>
