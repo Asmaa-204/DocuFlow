@@ -51,11 +51,6 @@ class InstanceService {
     return instances;
   }
 
-  static async createInstance(workflowId, user, departmentId) {
-    console.log(departmentId);
-    console.log(workflowId);
-    departmentId = departmentId || user.departmentId;
-
         const department = await Department.findByPk(departmentId);
 
         if(!department)
