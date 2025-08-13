@@ -56,8 +56,9 @@ const P = styled.p`
 
 function NewRequestForm() {
   const { data: workflows } = useAllWorkflows();
-  const { workflowId, instanceId } = useParams();
-  const { request, isPending } = useRequestData();
+  const { workflowId, instanceId, requestId } = useParams();
+  const { request, isPending } = useRequestData({ requestId });
+
   const { patchRequest } = usePatchRequest();
   const navigate = useNavigate();
 
@@ -70,7 +71,7 @@ function NewRequestForm() {
   });
 
   const selectedWorkflow = workflows?.find(
-    (wf) => wf.id === Number(workflowId)
+    (wf) => wf?.id === Number(workflowId)
   );
 
   function sendRequest(isDraft) {
@@ -100,8 +101,12 @@ function NewRequestForm() {
         <Heading as="h1">Request #{request.id}</Heading>
         <P>Request For {selectedWorkflow?.title}</P>
 
-        {request.documents.length > 0 && (
-          <RequestedDocsList type="documents" documents={request?.documents} />
+        {request?.documents?.length > 0 && (
+          <RequestedDocsList
+            mode="edit"
+            type="documents"
+            documents={request?.documents}
+          />
         )}
 
         <NoteSection>

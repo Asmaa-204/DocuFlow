@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { getRequestData } from "../services/getRequestData";
-import { useParams } from "react-router-dom";
 
-function useRequestData() {
-  const { requestId } = useParams();
+function useRequestData({ requestId }) {
   const { data, isPending } = useQuery({
     queryKey: [`req-${requestId}`],
     queryFn: () => getRequestData({ requestId }),
+    enabled: Boolean(requestId),
   });
 
   return { request: data, isPending };

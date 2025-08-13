@@ -14,6 +14,10 @@ const Main = styled.main`
   background-color: var(--color-grey-50);
   padding: 4rem 4.8rem 6.4rem;
   overflow: scroll;
+
+  &:has(.full-width) {
+    padding: 0;
+  }
 `;
 
 const Container = styled.div`
@@ -23,6 +27,13 @@ const Container = styled.div`
   flex-direction: column;
   gap: 3.2rem;
   max-width: 120rem;
+
+  &:has(.full-width) {
+    max-width: none;
+    margin: 0;
+    gap: 0;
+    padding: 0;
+  }
 `;
 
 function AppLayout() {

@@ -10,13 +10,13 @@ const ItemsGrid = styled.div`
   margin-bottom: 3rem;
 `;
 
-function RequestedDocsList({ type, documents }) {
+function RequestedDocsList({ type, documents, mode }) {
   return (
     <>
       <Heading as="h3">{type}</Heading>
       <ItemsGrid>
-        {documents.map((doc) => (
-          <RequestedDoc key={doc?.id} doc={doc} type={type} />
+        {documents?.map((doc) => (
+          <RequestedDoc mode={mode} key={doc?.id} doc={doc} type={type} />
         ))}
       </ItemsGrid>
     </>

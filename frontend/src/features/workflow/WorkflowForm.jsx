@@ -81,11 +81,11 @@ function WorkFlowForm() {
     defaultValues: {
       workflowId: "",
       departmentId: "",
-      departmentId: "",
     },
   });
 
   const selectedWorkflow = watch("workflowId");
+  const selectedDepartment = watch("departmentId");
 
   async function onSubmit(data) {
     createInstance({
@@ -98,6 +98,8 @@ function WorkFlowForm() {
   const selectedOption = workflows?.find(
     (option) => option?.id == selectedWorkflow
   );
+
+  const isStartEnabled = Boolean(selectedWorkflow && selectedDepartment);
 
   return (
     <Container onSubmit={handleSubmit(onSubmit)}>
@@ -144,7 +146,7 @@ function WorkFlowForm() {
       <Footer>
         <ProgressStepper currentStep={1} items={selectedOption?.stages || []} />
         <ButtonContainer>
-          <StyledButton disabled={!selectedOption} type="submit">
+          <StyledButton disabled={!isStartEnabled} type="submit">
             Start
           </StyledButton>
         </ButtonContainer>

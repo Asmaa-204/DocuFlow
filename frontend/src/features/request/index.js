@@ -1,5 +1,5 @@
 // Main component
-export { default as RequestDetails } from "./components/RequestDetails";
+export { default as RequestDetails } from "../Inbox/RequestDetails";
 
 // Sub-components
 export { default as EmptyState } from "./components/EmptyState";

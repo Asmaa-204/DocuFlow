@@ -18,7 +18,7 @@ const ItemCard = styled.div`
   border: 2px solid var(--color-grey-200);
   border-radius: var(--border-radius-md);
   background-color: var(--color-grey-0);
-  cursor: pointer;
+  cursor: ${(props) => (props.$mode === "edit" ? "pointer" : "default")};
   transition: all 0.3s;
   position: relative;
 
@@ -70,23 +70,27 @@ const ItemLabel = styled.span`
   text-align: center;
 `;
 
-function RequestedDoc({ doc: { name, id }, type }) {
+function RequestedDoc({ doc: { name, id }, type, mode = "view" }) {
   return (
     <Modal>
-      <Modal.Open opens="fill-forms">
-        <ItemCard>
+      <Modal.Open opens={mode === "edit" ? "fill-forms" : ""}>
+        <ItemCard $mode={mode}>
           <ItemIcon>
             {type === "form" ? <HiClipboardDocumentList /> : <HiDocumentText />}
           </ItemIcon>
           <ItemLabel>{name || "Document"}</ItemLabel>
-          <AddIcon>
-            <HiPlus />
-          </AddIcon>
+          {mode === "edit" && (
+            <AddIcon>
+              <HiPlus />
+            </AddIcon>
+          )}
         </ItemCard>
       </Modal.Open>
-      <Modal.Window name="fill-forms">
-        <Form id={id} />
-      </Modal.Window>
+      {mode === "edit" && (
+        <Modal.Window name="fill-forms">
+          <Form id={id} />
+        </Modal.Window>
+      )}
     </Modal>
   );
 }
