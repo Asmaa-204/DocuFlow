@@ -8,6 +8,7 @@ import Heading from "@components/Heading";
 import { useAllWorkflows } from "./hooks/useAllWorkflows";
 import { useCreateInstance } from "./hooks/useCreateInstance";
 import useDepartments from "@features/request/hooks/useDepartments";
+import { translator as t } from "@data/translations/ar";
 
 const Container = styled.form`
   display: flex;
@@ -54,7 +55,7 @@ const Description = styled.div`
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   margin-top: 2rem;
   padding-top: 4rem;
 `;
@@ -104,7 +105,7 @@ function WorkFlowForm() {
   return (
     <Container onSubmit={handleSubmit(onSubmit)}>
       <Content>
-        <StyledHeading as="h1">Start New Workflow</StyledHeading>
+        <StyledHeading as="h1">{t.workflow.startNew}</StyledHeading>
 
         <FormSection>
           <SelectGroup>
@@ -115,7 +116,7 @@ function WorkFlowForm() {
                 render={({ field }) => (
                   <Select
                     {...field}
-                    placeholder="Choose a workflow"
+                    placeholder={t.workflow.chooseWorkflow}
                     options={workflows}
                   />
                 )}
@@ -127,7 +128,7 @@ function WorkFlowForm() {
                 render={({ field }) => (
                   <Select
                     {...field}
-                    placeholder="Select your department"
+                    placeholder={t.workflow.selectDepartment}
                     options={departments}
                   />
                 )}
@@ -138,7 +139,7 @@ function WorkFlowForm() {
           <Description>
             {selectedWorkflow
               ? selectedOption?.description
-              : "Select a workflow to see its description."}
+              : t.messages.selectWorkflow}
           </Description>
         </FormSection>
       </Content>
@@ -147,7 +148,7 @@ function WorkFlowForm() {
         <ProgressStepper currentStep={1} items={selectedOption?.stages || []} />
         <ButtonContainer>
           <StyledButton disabled={!isStartEnabled} type="submit">
-            Start
+            {t.actions.save}
           </StyledButton>
         </ButtonContainer>
       </Footer>

@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 import { useForm } from "react-hook-form";
@@ -12,6 +11,8 @@ import SpinnerMini from "@components/SpinnerMini";
 
 import { useLogin } from "./hooks/useLogin";
 import Form from "../Form";
+import { translator as t } from "@data/translations/ar";
+import CallToAction from "@features/CallToAction";
 
 const Container = styled.div`
   background-color: #f5f6fa;
@@ -38,8 +39,8 @@ function LoginForm() {
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <div>
           <InputField
-            label="Email"
-            placeholder="Enter your email"
+            label={t.user.email}
+            placeholder={t.auth.enterEmail}
             defaultValue="test@gmail.com"
             error={errors?.email?.message}
             type="email"
@@ -47,8 +48,8 @@ function LoginForm() {
             register={register}
           />
           <InputField
-            label="Password"
-            placeholder="Enter your password"
+            label={t.user.password}
+            placeholder={t.auth.enterPassword}
             defaultValue="1234"
             register={register}
             error={errors?.password?.message}
@@ -57,11 +58,16 @@ function LoginForm() {
           />
         </div>
         <div>
-          <Button type="submit" disabled={isSubmitting || isPending}>
-            {isSubmitting || isPending ? <SpinnerMini /> : "Login"}
+          <Button
+            $variation="primary"
+            type="submit"
+            disabled={isSubmitting || isPending}
+          >
+            {isSubmitting || isPending ? <SpinnerMini /> : t.auth.login}
           </Button>
           <p>
-            Don't have an account? <NavLink to="/signup">Sign up</NavLink>
+            {t.auth.noAccount}{" "}
+            <CallToAction to="/signup">{t.auth.signUp}</CallToAction>
           </p>
         </div>
       </Form>

@@ -9,6 +9,8 @@ import {
 import Modal from "@components/Modal";
 import Form from "./Form";
 
+import { translator as t } from "@data/translations/ar";
+
 const ItemCard = styled.div`
   display: flex;
   flex-direction: column;
@@ -48,7 +50,7 @@ const ItemIcon = styled.div`
 const AddIcon = styled.div`
   position: absolute;
   top: -0.8rem;
-  right: -0.8rem;
+  left: -0.8rem;
   width: 2.4rem;
   height: 2.4rem;
   background-color: var(--color-grey-800);
@@ -78,7 +80,7 @@ function RequestedDoc({ doc: { name, id }, type, mode = "view" }) {
           <ItemIcon>
             {type === "form" ? <HiClipboardDocumentList /> : <HiDocumentText />}
           </ItemIcon>
-          <ItemLabel>{name || "Document"}</ItemLabel>
+          <ItemLabel>{name || `${t.documents.document} #${id}`}</ItemLabel>
           {mode === "edit" && (
             <AddIcon>
               <HiPlus />

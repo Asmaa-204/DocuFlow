@@ -10,6 +10,8 @@ import { InputFieldTester } from "../renderers/inputFieldTester";
 import useDocData from "../hooks/useDocData";
 import { usePatchDoc } from "../hooks/usePatchDoc";
 
+import { translator as t } from "@data/translations/ar";
+
 const Container = styled.div`
   width: 50rem;
 
@@ -62,8 +64,8 @@ function Form({ onClose, id }) {
       />
       <ActionButtons
         isCancelDanger={false}
-        textSave="Save"
-        textCancel="Cancel"
+        textSave={t.actions.save}
+        textCancel={t.actions.cancel}
         onSave={handleSaveForm}
         onCancel={onClose}
       />

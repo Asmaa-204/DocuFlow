@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 import { useForm } from "react-hook-form";
@@ -13,6 +12,8 @@ import { inputsData } from "./inputsData.js";
 import { useSignup } from "./hooks/useSignup.jsx";
 import Form from "../Form.jsx";
 import { validation } from "./schema/validation.js";
+import { translator as t } from "@data/translations/ar";
+import CallToAction from "@features/CallToAction.jsx";
 
 const Container = styled.div`
   background-color: #f5f6fa;
@@ -20,7 +21,7 @@ const Container = styled.div`
 
 const Names = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   gap: 0.5rem;
   width: 100%;
   flex-wrap: wrap;
@@ -65,6 +66,7 @@ function SignupForm() {
                       label={input.label}
                       register={register}
                       error={errors[input.id]?.message}
+                      placeholder={input.placeholder}
                     />
                   </div>
                 );
@@ -89,7 +91,7 @@ function SignupForm() {
                     input.id === "confirmPassword"
                       ? (val) => {
                           if (watch("password") !== val) {
-                            return "Your passwords do not match";
+                            return t.validation.passwordsMismatch;
                           }
                         }
                       : undefined
@@ -100,11 +102,16 @@ function SignupForm() {
           })}
         </div>
         <div>
-          <Button type="submit" disabled={isSubmitting || isPending}>
-            {isSubmitting || isPending ? <SpinnerMini /> : "Signup"}
+          <Button
+            $variation="primary"
+            type="submit"
+            disabled={isSubmitting || isPending}
+          >
+            {isSubmitting || isPending ? <SpinnerMini /> : t.auth.signUp}
           </Button>
           <p>
-            Already have an account? <NavLink to="/login">Login</NavLink>
+            {t.auth.haveAccount}{" "}
+            <CallToAction to="/login">{t.auth.login}</CallToAction>
           </p>
         </div>
       </Form>

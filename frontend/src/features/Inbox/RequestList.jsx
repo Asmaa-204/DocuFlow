@@ -7,6 +7,8 @@ import SpinnerMini from "@components/SpinnerMini";
 import { useIncomingRequests } from "@features/request/hooks/useIncomingRequests";
 import Empty from "@components/Empty";
 
+import { translator as t } from "@data/translations/ar";
+
 const List = styled.ul`
   border: 1px solid var(--color-grey-200);
   border-radius: var(--border-radius-md);
@@ -38,7 +40,7 @@ function RequestList() {
   return (
     <List>
       {requests.length === 0 ? (
-        <Empty resource="requests" />
+        <Empty resource={t.request.requests} />
       ) : (
         filteredRequests?.map((request) => (
           <RequestElement request={request} key={request.id} />

@@ -1,8 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 import { login } from "../services/login";
-import { useNavigate } from "react-router-dom";
+import { translator as t } from "@data/translations/ar";
 
 function useLogin() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ function useLogin() {
       localStorage.setItem("token", data.token);
       await queryClient.invalidateQueries({ queryKey: ["user"] });
       navigate("/");
-      toast.success("Logged in successfully");
+      toast.success(t.messages.loggedIn);
     },
   });
 

@@ -8,7 +8,7 @@ const SelectContainer = styled.div`
 
 const StyledSelect = styled.select`
   width: 100%;
-  padding: 1.2rem 4rem 1.2rem 1.6rem;
+  padding: 1.2rem 1.6rem 1.2rem 4rem;
   border: 2px solid var(--color-grey-300);
   border-radius: var(--border-radius-sm);
   background-color: var(--color-grey-0);
@@ -29,7 +29,7 @@ const StyledSelect = styled.select`
 
 const SelectIcon = styled(HiChevronDown)`
   position: absolute;
-  right: 1.6rem;
+  left: 1.6rem;
   top: 50%;
   transform: translateY(-50%);
   width: 2rem;

@@ -1,18 +1,19 @@
 import * as yup from "yup";
+import { translator as t } from "@data/translations/ar";
 
 const validation = yup.object({
   email: yup
     .string()
-    .email("Please enter a valid email")
-    .required("Email is required"),
-  password: yup.string().required("Password is required"),
+    .email(t.validation.invalidEmail)
+    .required(t.validation.emailRequired),
+  password: yup.string().required(t.validation.passwordRequired),
   confirmPassword: yup
     .string()
-    .required("Password is required")
-    .oneOf([yup.ref("password")], "Passwords do not match"),
-  firstName: yup.string().required("First name is required"),
-  lastName: yup.string().required("Last name is required"),
-  role: yup.string().required("Role is required"),
+    .required(t.validation.passwordRequired)
+    .oneOf([yup.ref("password")], t.validation.passwordsMismatch),
+  firstName: yup.string().required(t.validation.firstNameRequired),
+  lastName: yup.string().required(t.validation.lastNameRequired),
+  role: yup.string().required(t.validation.roleRequired),
 });
 
 export { validation };

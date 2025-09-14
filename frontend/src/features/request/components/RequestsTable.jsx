@@ -9,14 +9,15 @@ import RequestRow from "./RequestRow";
 
 import useRequests from "../hooks/useRequests";
 import { PAGE_SIZE } from "@utils/consts";
-import { useAllWorkflows } from "@features/workflow";
+
+import { translator as t } from "@data/translations/ar";
 
 function RequestsTable({ filter }) {
   const { isPending, data: requests } = useRequests({ filter });
   const [searchParams] = useSearchParams();
 
   if (isPending) return <Spinner />;
-  if (!requests?.length) return <Empty resource="Requests" />;
+  if (!requests?.length) return <Empty resource={t.request.requests} />;
 
   //TODO: remove when pagination is done
   const currentPage = Number(searchParams.get("page")) || 1;
@@ -26,16 +27,14 @@ function RequestsTable({ filter }) {
   const paginatedData = requests.slice(startIndex, endIndex);
   //-----------------------------------------
 
-  console.log(requests);
-
   return (
     <Menus>
       <Table columns="0.6fr 2.4fr 1fr 2fr 2rem">
         <Table.Header>
-          <div>ID</div>
-          <div>Type</div>
-          <div>Status</div>
-          <div>{filter === "draft" ? "Last Updated" : "Sent"}</div>
+          <div>#</div>
+          <div>{t.general.type}</div>
+          <div>{t.general.status}</div>
+          <div>{filter === "draft" ? t.time.lastUpdated : t.time.sent}</div>
           {filter == "draft" && <div></div>}
         </Table.Header>
 

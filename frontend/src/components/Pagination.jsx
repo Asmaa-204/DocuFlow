@@ -1,9 +1,9 @@
 import styled from "styled-components";
-
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { useSearchParams } from "react-router-dom";
 
 import { PAGE_SIZE } from "@utils/consts";
+import { translator as t } from "@data/translations/ar";
 
 const StyledPagination = styled.div`
   width: 100%;
@@ -87,21 +87,23 @@ function Pagination({ numResults }) {
 
   return (
     <StyledPagination>
-      <P>
-        showing <span>{first}</span> to <span>{last}</span> of{" "}
-        <span>{numResults}</span> results
-      </P>
       <Buttons>
-        <PaginationButton disabled={currentPage === 1} onClick={getPrevious}>
-          <HiChevronLeft />
-          <span>Previous</span>
+        <PaginationButton disabled={currentPage === numPages} onClick={getNext}>
+          <HiChevronRight />
+          <span>{t.pagination.next}</span>
         </PaginationButton>
 
-        <PaginationButton disabled={currentPage === numPages} onClick={getNext}>
-          <span>Next</span>
-          <HiChevronRight />
+        <PaginationButton disabled={currentPage === 1} onClick={getPrevious}>
+          <span>{t.pagination.previous}</span>
+          <HiChevronLeft />
         </PaginationButton>
       </Buttons>
+
+      <P>
+        {t.pagination.showing} <span>{first}</span> {t.pagination.to}{" "}
+        <span>{last}</span> {t.pagination.of} <span>{numResults}</span>{" "}
+        {t.pagination.results}
+      </P>
     </StyledPagination>
   );
 }

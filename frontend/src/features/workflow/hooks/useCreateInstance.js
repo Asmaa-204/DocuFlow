@@ -5,6 +5,8 @@ import { useMutation } from "@tanstack/react-query";
 import { createInstance } from "../services/createInstance";
 import { useSendRequest } from "@features/request/hooks/useSendRequest";
 
+import { translator as t } from "@data/translations/ar";
+
 function useCreateInstance() {
   const navigate = useNavigate();
   const { sendRequest } = useSendRequest();
@@ -12,7 +14,7 @@ function useCreateInstance() {
   const { mutate, isPending } = useMutation({
     mutationFn: createInstance,
     onSuccess: (instance) => {
-      toast.success("Instance created successfully!");
+      toast.success(t.messages.instanceCreated);
       sendRequest(
         { instanceId: instance.id, note: "" },
         {
@@ -25,7 +27,7 @@ function useCreateInstance() {
       );
     },
     onError: (error) => {
-      toast.error(`Error creating instance: ${error.message}`);
+      toast.error(`${t.messages.instanceError}: ${error.message}`);
     },
   });
 

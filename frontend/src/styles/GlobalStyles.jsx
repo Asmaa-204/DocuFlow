@@ -111,8 +111,10 @@ html {
 }
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins", "Cairo", "Tajawal", sans-serif;
   color: var(--color-grey-700);
+  direction: rtl;
+  text-align: right;
 
   transition: color 0.3s, background-color 0.3s;
   min-height: 100vh;
@@ -179,6 +181,16 @@ h6 {
 img {
   max-width: 100%;
   filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
+}
+
+/* RTL specific styles */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] .ltr {
+  direction: ltr;
+  text-align: left;
 }
 
 ::-webkit-scrollbar {

@@ -1,16 +1,18 @@
 import styled from "styled-components";
 import { HiTrash } from "react-icons/hi2";
 import { CiEdit } from "react-icons/ci";
-
 import { formatDistanceToNow, format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import { ar } from "date-fns/locale";
 
 import Modal from "@components/Modal";
 import Menus from "@components/Menu";
 import Table from "@components/Table";
 import Tag from "@components/Tag";
 import ConfirmDelete from "@components/ConfirmDelete";
-import { useNavigate } from "react-router-dom";
 import { useAllWorkflows } from "@features/workflow";
+
+import { translator as t } from "@data/translations/ar";
 
 const Note = styled.div`
   font-size: 1.4rem;
@@ -59,10 +61,19 @@ function RequestRow({
       <p>{id}</p>
       <Note>{workflowTitle}</Note>
 
-      <Tag $type={statusToTag[status]}>{status}</Tag>
+      <Tag $type={statusToTag[status]}>{t.status[status]}</Tag>
       <Info>
-        <span>{formatDistanceToNow(new Date(dateToDisplay))} ago</span>
-        <span>{format(new Date(dateToDisplay), "MMM dd yyyy, HH:mm")}</span>
+        <span>
+          {formatDistanceToNow(new Date(dateToDisplay), {
+            addSuffix: true,
+            locale: ar,
+          })}
+        </span>
+        <span>
+          {format(new Date(dateToDisplay), "EEEE d MMMM yyyy, h:mm a", {
+            locale: ar,
+          })}
+        </span>
       </Info>
 
       {status === "draft" && (
@@ -71,17 +82,19 @@ function RequestRow({
             <Menus.Toggle id={id} />
             <Menus.List id={id}>
               <Menus.Button onClick={handleEditRequest} icon={<CiEdit />}>
-                Edit Request
+                {t.actions.editRequest}
               </Menus.Button>
 
               <Modal.Open opens="delete-request">
-                <Menus.Button icon={<HiTrash />}>Delete request</Menus.Button>
+                <Menus.Button icon={<HiTrash />}>
+                  {t.actions.deleteRequest}
+                </Menus.Button>
               </Modal.Open>
             </Menus.List>
           </Menus.Menu>
 
           <Modal.Window name="delete-request">
-            <ConfirmDelete resourceName="request" />
+            <ConfirmDelete resourceName={t.request.request} />
           </Modal.Window>
         </Modal>
       )}

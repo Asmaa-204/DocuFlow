@@ -6,6 +6,8 @@ import Filter from "@components/Filter";
 import TableOperations from "@components/TableOperations";
 import Row from "@components/Row";
 
+import { translator as t } from "@data/translations/ar";
+
 const Container = styled.div`
   flex: 1;
   display: flex;
@@ -17,17 +19,17 @@ const Container = styled.div`
 `;
 
 const options = [
-  { value: "all", label: "All" },
-  { value: "approved", label: "Approved" },
-  { value: "rejected", label: "Rejected" },
-  { value: "pending", label: "Pending" },
+  { value: "all", label: t.general.all },
+  { value: "approved", label: t.status.approved },
+  { value: "rejected", label: t.status.rejected },
+  { value: "pending", label: t.status.pending },
 ];
 
 function InboxMessages() {
   return (
     <Container>
       <Row type="horizontal">
-        <Heading as="h1">Inbox</Heading>
+        <Heading as="h1">{t.request.inbox}</Heading>
         <TableOperations>
           <Filter
             filterBy="status"

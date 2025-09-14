@@ -1,6 +1,7 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { format } from "date-fns";
+import { ar } from "date-fns/locale";
 
 import { RequestedDocsList } from "../request";
 import RequestTag from "./RequestTag";
@@ -12,6 +13,7 @@ import Heading from "@components/Heading";
 
 import useRequestData from "../request/hooks/useRequestData";
 import { usePatchRequest } from "../request/hooks/usePatchRequest";
+import { translator as t } from "@data/translations/ar";
 
 const Container = styled.form`
   display: flex;
@@ -33,7 +35,7 @@ const Content = styled.div`
 
 const Footer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 1.2rem;
   align-items: center;
   padding-top: 2rem;
@@ -119,28 +121,20 @@ function RequestDetails() {
     );
   }
 
-  const getStatusMessage = (status) => {
-    switch (status) {
-      case "approved":
-        return "You approved this request";
-      case "rejected":
-        return "You rejected this request";
-      default:
-        return "";
-    }
-  };
-
   const isPending = request?.status === "pending" || !request?.status;
 
   if (!searchParams.get("request"))
-    return <Empty>Click a request to show its details</Empty>;
+    return <Empty>{t.request.clickRequest}</Empty>;
   if (isLoadingRequest) return <Spinner />;
 
   return (
     <Container>
       <Content>
         <StyledHeading>
-          <Heading as="h1">Request For Supervision</Heading>
+          {
+            // TODO: the heading should be replaced
+          }
+          <Heading as="h1">request for Supervision</Heading>
           <RequestTag status={request.status} />
         </StyledHeading>
 
@@ -150,7 +144,10 @@ function RequestDetails() {
           <UserInfo>
             <UserName>{request?.senderName || "Shehab Khaled"}</UserName>
             <UserDate>
-              on {format(new Date(request.sentAt), "EEE M/d/yyyy h:mm a")}
+              {t.time.on}{" "}
+              {format(new Date(request.sentAt), "EEEE d MMMM yyyy, h:mm a", {
+                locale: ar,
+              })}
             </UserDate>
           </UserInfo>
         </UserRow>
@@ -161,10 +158,10 @@ function RequestDetails() {
           documents={request.documents}
         />
 
-        <Heading as="h3">Note</Heading>
+        <Heading as="h3">{t.request.note}</Heading>
         <TextArea
-          value={request?.note || "No note provided"}
-          placeholder="No note provided"
+          value={request?.note || t.request.noNote}
+          placeholder={t.request.noNote}
           rows={4}
           readOnly
         />
@@ -174,13 +171,13 @@ function RequestDetails() {
             <ActionButtons
               onCancel={() => respondToRequest("rejected")}
               onSave={() => respondToRequest("approved")}
-              textCancel="Reject"
-              textSave="Approve"
+              textCancel={t.actions.reject}
+              textSave={t.actions.approve}
               isCancelDanger={true}
             />
           ) : (
             <StatusMessage $status={request?.status}>
-              {getStatusMessage(request?.status)}
+              {t.request[request?.status]}
             </StatusMessage>
           )}
         </Footer>
