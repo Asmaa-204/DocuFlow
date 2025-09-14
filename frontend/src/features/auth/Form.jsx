@@ -8,7 +8,7 @@ const Form = styled.form`
 
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.6rem;
 
   width: min(45rem, 95%);
 
@@ -20,7 +20,7 @@ const Form = styled.form`
   & > div {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.6rem;
   }
 `;
 

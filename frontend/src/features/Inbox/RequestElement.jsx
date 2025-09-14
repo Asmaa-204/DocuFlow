@@ -4,6 +4,7 @@ import { format } from "date-fns";
 
 import RequestTag from "./RequestTag";
 import UserAvatar from "@components/UserAvatar";
+import { ar } from "date-fns/locale";
 
 const ListItem = styled.li`
   padding: 1.5rem;
@@ -79,7 +80,7 @@ function InboxRequestListItem({ request }) {
           <WorkflowTitle>{workflowTitle}</WorkflowTitle>
         </div>
       </SenderSection>
-      <SentAt>{format(new Date(sentAt), "EEEE hh:mm a")}</SentAt>
+      <SentAt>{format(new Date(sentAt), "EEEE hh:mm a", {locale: ar})}</SentAt>
     </ListItem>
   );
 }

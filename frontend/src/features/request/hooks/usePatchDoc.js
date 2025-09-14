@@ -1,15 +1,16 @@
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { patchDocument } from "../services/patchDocument";
+import { translator as t } from "@data/translations/ar";
 
 function usePatchDoc() {
   const { mutate, isPending } = useMutation({
     mutationFn: patchDocument,
     onSuccess: () => {
-      toast.success("Document saved successfully!");
+      toast.success(t.messages.documentSaved);
     },
     onError: (error) => {
-      toast.error(`Error saving document: ${error.message}`);
+      toast.error(`${t.messages.errorSaving}: ${error.message}`);
     },
   });
 

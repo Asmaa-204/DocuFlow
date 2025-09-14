@@ -3,12 +3,13 @@ import RequestsTableOperations from "@features/request/components/RequestsTableO
 
 import Heading from "@components/Heading";
 import Row from "@components/Row";
+import { translator as t } from "@data/translations/ar";
 
 function Requests({ filter }) {
   return (
     <>
       <Row type="horizontal">
-        <Heading as="h1">{filter} Requests</Heading>
+        <Heading as="h1">{t.request[`${filter}Requests`]}</Heading>
         <RequestsTableOperations />
       </Row>
       <Row>

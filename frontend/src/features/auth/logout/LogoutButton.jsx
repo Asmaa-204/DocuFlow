@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import toast from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
+
+import { translator as t } from "@data/translations/ar";
 
 const Button = styled.button`
   background: none;
@@ -18,10 +20,10 @@ function LogoutButton() {
 
     localStorage.clear();
     navigate("/login", { replace: true, state: { from: "logout" } });
-    toast.success("Logged out successfully");
+    toast.success(t.messages.loggedOut);
   }
 
-  return <Button onClick={handleLogout}>Logout</Button>;
+  return <Button onClick={handleLogout}>{t.navigation.logout}</Button>;
 }
 
 export default LogoutButton;

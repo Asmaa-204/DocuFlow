@@ -1,39 +1,46 @@
+import { translator as t } from "@data/translations/ar";
+
 const inputsData = [
   {
     type: "email",
-    label: "Email",
+    label: t.user.email,
     id: "email",
+    placeholder: "example@cu.edu.eg",
   },
   {
     type: "password",
-    label: "Password",
+    label: t.user.password,
     id: "password",
+    placeholder: t.auth.enterPassword,
   },
   {
     type: "password",
-    label: "Confirm Password",
+    label: t.user.confirmPassword,
     id: "confirmPassword",
+    placeholder: t.auth.reenterPassword,
   },
   {
     type: "text",
-    label: "First Name",
+    label: t.user.firstName,
     id: "firstName",
+    placeholder: t.auth.enterFirstName,
   },
   {
     type: "text",
-    label: "Last Name",
+    label: t.user.lastName,
     id: "lastName",
+    placeholder: t.auth.enterLastName,
   },
   {
     type: "select",
-    label: "Role",
+    label: t.user.role,
     id: "role",
     options: [
-      { value: "professor", label: "Professor" },
-      { value: "department_manager", label: "Department Manager" },
-      { value: "administrator", label: "Administrator" },
+      { value: "professor", label: t.user.professor },
+      { value: "department_manager", label: t.user.departmentManager },
+      { value: "administrator", label: t.user.administrator },
     ],
-    placeholder: "Select your role",
+    placeholder: t.auth.selectRole,
   },
 ];
 

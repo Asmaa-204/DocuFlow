@@ -45,6 +45,7 @@ const StyledButton = styled.button`
     props.$variation === "primary" &&
     css`
       background-color: var(--color-brand-700);
+      font-size: 1.6rem;
 
       &:hover {
         background-color: var(--color-brand-800);

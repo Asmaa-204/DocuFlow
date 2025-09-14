@@ -1,16 +1,17 @@
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "@components/Button";
 import TextArea from "@components/inputs/TextArea";
 import Heading from "@components/Heading";
+import Spinner from "@components/Spinner";
 import RequestedDocsList from "./RequestedDocsList";
 
 import { useAllWorkflows } from "@features/workflow/hooks/useAllWorkflows";
 import useRequestData from "../hooks/useRequestData";
-import Spinner from "@components/Spinner";
 import { usePatchRequest } from "../hooks/usePatchRequest";
+import { translator as t } from "@data/translations/ar";
 
 const Container = styled.form`
   display: flex;
@@ -98,8 +99,12 @@ function NewRequestForm() {
   return (
     <Container onSubmit={handleSubmit(() => sendRequest(false))}>
       <Content>
-        <Heading as="h1">Request #{request.id}</Heading>
-        <P>Request For {selectedWorkflow?.title}</P>
+        <Heading as="h1">
+          {t.request.request} #{request.id}
+        </Heading>
+        <P>
+          {t.request.request} {selectedWorkflow?.title}
+        </P>
 
         {request?.documents?.length > 0 && (
           <RequestedDocsList
@@ -110,12 +115,16 @@ function NewRequestForm() {
         )}
 
         <NoteSection>
-          <NoteLabel>Note</NoteLabel>
+          <NoteLabel>{t.request.notes}</NoteLabel>
           <Controller
             control={control}
             name="note"
             render={({ field }) => (
-              <TextArea {...field} placeholder="Add a note..." rows={4} />
+              <TextArea
+                {...field}
+                placeholder={`${t.request.addNote}...`}
+                rows={4}
+              />
             )}
           />
         </NoteSection>
@@ -125,21 +134,20 @@ function NewRequestForm() {
         {
           //TODO: delete the request when it's done in backend
         }
-        <Button $variation="danger" type="button" onClick={() => navigate("/")}>
-          CANCEL
-        </Button>
-
         <ButtonGroup>
+          <Button type="submit">{t.actions.send}</Button>
           <Button
             disabled={!formState.isDirty}
             type="button"
             $variation="secondary"
             onClick={() => sendRequest(true)}
           >
-            SAVE AS DRAFT
+            {t.actions.saveDraft}
           </Button>
-          <Button type="submit">SEND</Button>
         </ButtonGroup>
+        <Button $variation="danger" type="button" onClick={() => navigate("/")}>
+          {t.actions.cancel}
+        </Button>
       </Footer>
     </Container>
   );

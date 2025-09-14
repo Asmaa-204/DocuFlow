@@ -9,7 +9,7 @@ const Menu = styled.div`
 
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
 `;
 
 const StyledToggle = styled.button`

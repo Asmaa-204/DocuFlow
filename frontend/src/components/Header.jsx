@@ -5,13 +5,14 @@ import { useNavigate } from "react-router-dom";
 import Button from "@components/Button";
 import UserAvatar from "@components/UserAvatar";
 import BurgerMenu from "@components/BurgerMenu";
+import { translator as t } from "@data/translations/ar";
 
 const StyledHeader = styled.header`
   background-color: var(--color-grey-0);
   border-bottom: 1px solid var(--color-grey-100);
- 
+
   padding: 1.2rem 4.8rem;
-  
+
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -46,7 +47,7 @@ function Header() {
       <HeaderRight>
         <Button onClick={handleStartWorkflow}>
           <HiPlus />
-          Start a new workflow
+          {t.workflow.startNew}
         </Button>
         <UserAvatar />
       </HeaderRight>

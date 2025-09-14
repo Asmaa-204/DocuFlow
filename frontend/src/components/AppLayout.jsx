@@ -5,9 +5,10 @@ import Header from "@components/Header";
 
 const StylesAppLayout = styled.div`
   display: grid;
-  grid-template-columns: 26rem 1fr;
+  grid-template-columns: 30rem 1fr;
   grid-template-rows: auto 1fr;
   height: 100dvh;
+  direction: rtl;
 `;
 
 const Main = styled.main`

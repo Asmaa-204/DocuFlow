@@ -1,54 +1,65 @@
+import { translator as t } from "@data/translations/ar";
+
 export const navLinks = [
   {
-    name: "Dashboard",
+    name: "dashboard",
+    label: t.navigation.dashboard,
     icon: "home",
     to: "/dashboard",
   },
   {
-    name: "Workflows",
+    name: "workflows",
+    label: t.navigation.workflows,
     icon: "workflow",
     children: [
       {
-        name: "New",
+        name: "new",
+        label: t.workflow.new,
         icon: "new",
         to: "/workflows/new",
       },
       {
-        name: "My Workflows",
+        name: "my workflows",
+        label: t.workflow.myWorkflows,
         icon: "myWorkflows",
         to: "/workflows/my-workflows",
       },
-    ]
-
+    ],
   },
   {
-    name: "Requests",
+    name: "requests",
     icon: "inbox",
+    label: t.navigation.requests,
     children: [
       {
-        name: "Inbox",
+        name: "inbox",
+        label: t.request.inbox,
         icon: "email",
-        to: "/requests/inbox"
+        to: "/requests/inbox",
       },
       {
-        name: "Drafts",
+        name: "drafts",
+        label: t.request.drafts,
         icon: "pen",
         to: "/requests/drafts",
       },
       {
-        name: "Submitted",
+        name: "submitted",
+        label: t.request.submitted,
         icon: "submitted",
         to: "/requests/submitted",
       },
     ],
   },
   {
-    name: "Settings",
+    name: "settings",
+    label: t.navigation.settings,
     icon: "settings",
     to: "/settings",
   },
   {
     name: "logout",
+    label: t.navigation.logout,
     icon: "logout",
     to: "/login",
   },

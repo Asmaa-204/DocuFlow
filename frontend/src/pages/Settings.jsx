@@ -1,5 +1,7 @@
+import { translator as t } from "@data/translations/ar";
+
 function Settings() {
-  return <div>Settings</div>;
+  return <div>{t.navigation.settings}</div>;
 }
 
 export default Settings;

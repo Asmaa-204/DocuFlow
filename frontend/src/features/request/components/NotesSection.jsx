@@ -2,6 +2,8 @@ import styled from "styled-components";
 import Heading from "@components/Heading";
 import ActionButtons from "@components/ActionButtons";
 
+import { translator as t } from "@data/translations/ar";
+
 const CardDiv = styled.div`
   padding: 12px 15px;
   border-bottom: 1px solid #f5f5f5;
@@ -31,7 +33,7 @@ function NotesSection({ request, heading = "h3", onReject, onAccept }) {
   return (
     <CardDiv>
       <div>
-        <Heading as={heading}>Notes</Heading>
+        <Heading as={heading}>{t.request.notes}</Heading>
         <Notes>
           {request.notes}
           Nothing to look at for now
@@ -39,8 +41,8 @@ function NotesSection({ request, heading = "h3", onReject, onAccept }) {
       </div>
       <ActionButtons
         isCancelDanger={true}
-        textSave="Accept"
-        textCancel="Reject"
+        textSave={t.actions.accept}
+        textCancel={t.actions.reject}
         onCancel={onReject}
         onSave={onAccept}
       />

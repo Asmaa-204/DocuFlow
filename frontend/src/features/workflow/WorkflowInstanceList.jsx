@@ -4,8 +4,12 @@ import Spinner from "@components/Spinner";
 import WorkflowInstanceCard from "./WorkflowInstanceCard";
 import styled from "styled-components";
 
+import { translator as t } from "@data/translations/ar";
+
 const Container = styled.div`
   margin: 20px 0;
+  margin: 10px 0;
+  width: 100%;
 `;
 
 /**
@@ -18,7 +22,7 @@ function WorkflowInstanceList({ isPending = false, instancesData = [] }) {
   }
 
   if (!instancesData.length) {
-    return <Empty resource="workflow instances" />;
+    return <Empty resource={t.workflow.instance} />;
   }
 
   return (

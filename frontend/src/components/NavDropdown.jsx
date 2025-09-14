@@ -35,7 +35,7 @@ export function NavDropdown({ data }) {
     <DropdownContainer>
       <DropdownButton onClick={() => setIsOpen((prev) => !prev)}>
         {IconComponent && <IconComponent />}
-        <span>{data?.name}</span>
+        <span>{data?.label}</span>
         <StyledDropdownIcon $isOpen={isOpen} />
       </DropdownButton>
 
