@@ -1,4 +1,5 @@
 import { API_URL } from "@utils/consts";
+import { translator as t } from "@data/translations/ar";
 
 async function apiRequest(
   endpoint,
@@ -25,9 +26,10 @@ async function apiRequest(
   const res = await fetch(`${API_URL}${endpoint}`, config);
   const data = await res.json();
 
-  if (data?.message) {
-    throw new Error(data.message);
+  if (!res.ok) {
+    throw new Error(data.message || t.general.error);
   }
+
   return data;
 }
 

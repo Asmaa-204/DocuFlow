@@ -156,6 +156,7 @@ export const translator = {
     sort: "ترتيب",
     notFound: "الصفحة غير موجودة",
     empty: "لم يتم العثور على أي",
+    error: "حدث خطأ ما",
   },
 
   departments: {

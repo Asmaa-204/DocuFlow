@@ -3,33 +3,54 @@ import UpdateUserDataForm from "../features/user/UpdateUserDataForm";
 import UpdatePasswordForm from "../features/user/UpdatePasswordForm";
 import ActivityHistory from "../features/user/ActivityHistory";
 import Heading from "@components/Heading";
-import Row from "@components/Row";
 import styled from "styled-components";
 
 const StyledSettings = styled.div`
-  padding: 4rem;
-  max-width: 120rem;
+  padding: 4.8rem;
+  max-width: 100rem;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4.8rem;
+`;
+
+const Section = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+`;
+
+const SectionHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+`;
+
+const Description = styled.p`
+  font-size: 1.4rem;
+  color: var(--color-grey-500);
 `;
 
 function Settings() {
   return (
     <StyledSettings>
-      <Row>
-        <Heading as="h1">{t.navigation.settings}</Heading>
-      </Row>
-
-      <Row>
-        <Heading as="h3">{t.user.updateProfile}</Heading>
+      <Section>
+        <SectionHeader>
+          <Heading as="h2">{t.user.profile}</Heading>
+        </SectionHeader>
         <UpdateUserDataForm />
-      </Row>
+      </Section>
 
-      <Row>
-        <Heading as="h3">{t.user.changePassword}</Heading>
+      <Section>
+        <SectionHeader>
+          <Heading as="h2">{t.user.password}</Heading>
+        </SectionHeader>
         <UpdatePasswordForm />
-      </Row>
+      </Section>
 
-      <ActivityHistory />
+      <Section>
+        <ActivityHistory />
+      </Section>
     </StyledSettings>
   );
 }

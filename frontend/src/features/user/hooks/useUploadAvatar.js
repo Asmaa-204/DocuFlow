@@ -10,6 +10,7 @@ export function useUploadAvatar() {
         mutationFn: uploadAvatarApi,
         onSuccess: (data) => {
             toast.success(t.messages.avatarUploaded);
+            queryClient.setQueryData(["user"], data.user);
             queryClient.invalidateQueries({ queryKey: ["user"] });
         },
         onError: (err) => toast.error(err.message),
