@@ -6,7 +6,7 @@ import styled from "styled-components";
 const Page = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh; /* full page height */
+  height: 100%; /* fit within parent container */
   direction: rtl; /* 👈 RTL for Arabic */
 `;
 

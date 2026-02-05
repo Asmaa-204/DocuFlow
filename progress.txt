@@ -102,3 +102,28 @@ Documents now display correctly when reopened immediately after saving. The cach
 
 ## Date
 2026-02-05
+
+---
+
+# Bug Fix: MyWorkflows Page Scrolling Issue
+
+## Problem
+The MyWorkflows page was not scrolling to show all workflow instances. When there were many workflows, users couldn't see the complete list as the page was cut off.
+
+## Root Cause
+The `Page` styled component in `MyWorkflows.jsx` used `height: 100vh` which caused the page to overflow its parent container (the AppLayout's Container). The viewport height unit didn't account for the parent container's boundaries and padding.
+
+## Solution
+Changed the height property from `100vh` to `100%` so the page properly fits within the parent container and respects the layout boundaries.
+
+## Files Modified
+
+### 1. frontend/src/pages/MyWorkflows.jsx
+- Changed `height: 100vh` to `height: 100%` in the Page styled component
+- This ensures the page fits within the AppLayout Container and allows proper scrolling
+
+## Result
+Users can now scroll through all their workflows on the MyWorkflows page. The page properly fits within the layout container and overflow is handled correctly.
+
+## Date
+2026-02-05
