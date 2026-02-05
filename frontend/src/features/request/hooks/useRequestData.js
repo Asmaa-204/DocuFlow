@@ -6,6 +6,7 @@ function useRequestData({ requestId }) {
     queryKey: [`req-${requestId}`],
     queryFn: () => getRequestData({ requestId }),
     enabled: Boolean(requestId),
+    refetchOnMount: 'always',
   });
 
   return { request: data, isPending };

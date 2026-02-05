@@ -10,7 +10,7 @@ function usePatchDoc(docId) {
     mutationFn: patchDocument,
     onSuccess: () => {
       toast.success(t.messages.documentSaved);
-      queryClient.invalidateQueries({ queryKey: [`doc-${docId}`] });
+      queryClient.removeQueries({ queryKey: [`doc-${docId}`] });
     },
     onError: (error) => {
       toast.error(`${t.messages.errorSaving}: ${error.message}`);

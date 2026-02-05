@@ -11,7 +11,7 @@ function usePatchRequest(requestId) {
     onSuccess: () => {
       toast.success(t.messages.requestSent);
       if (requestId) {
-        queryClient.invalidateQueries({ queryKey: [`req-${requestId}`] });
+        queryClient.removeQueries({ queryKey: [`req-${requestId}`] });
       }
       queryClient.invalidateQueries({ queryKey: ["incoming-reqs"] });
       queryClient.invalidateQueries({ queryKey: ["draft-reqs"] });

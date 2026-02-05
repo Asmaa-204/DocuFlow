@@ -5,6 +5,7 @@ function useDocData({ docId }) {
   const { data, isPending } = useQuery({
     queryKey: [`doc-${docId}`],
     queryFn: () => getDocData({ docId }),
+    refetchOnMount: 'always',
   });
 
   return { doc: data, isPending };
