@@ -6,6 +6,7 @@ const AppError = require("../errors/AppError");
 const SequelizeQueryBuilder = require("../utils/SequelizeQueryBuilder");
 const withTransaction = require('../utils/withTransaction');
 const DocumentService = require('./document.service');
+const ar = require('../translations/ar');
 
 class RequestService {
     
@@ -83,7 +84,7 @@ class RequestService {
         filter.include = [this.includeWorkflowTitle, this.includeDocuments];
 
         const request = await Request.findByPk(requestId, filter);
-        if (!request) throw new AppError('Request not found', 404);
+        if (!request) throw new AppError(ar.request.notFound, 404);
 
         const access = await Access.findOne({
             where: { requestId: request.id, userId: user.id },
@@ -91,7 +92,7 @@ class RequestService {
         });
 
         if (!access?.accessLevel && user.role !== 'administrator') {
-            throw new AppError('You do not have permission to access this request', 403);
+            throw new AppError(ar.request.noPermission, 403);
         }
 
         return this._transformRequest(request);
@@ -105,7 +106,7 @@ class RequestService {
                 transaction
             });
         
-            if (!instance) throw new AppError('Instance not found', 404);
+            if (!instance) throw new AppError(ar.instance.notFound, 404);
 
             const nextStage = await Stage.findOne({
                 where: {
@@ -172,7 +173,7 @@ class RequestService {
     static async getRequestById(requestId) 
     {
         const request = await Request.findByPk(requestId);
-        if (!request) throw new AppError('Request not found', 404);
+        if (!request) throw new AppError(ar.request.notFound, 404);
         return request;
     }
 
@@ -182,12 +183,12 @@ class RequestService {
             const allowedStatuses = ['pending', 'draft'];
 
             if (!allowedStatuses.includes(status)) {
-                throw new AppError(`${status} is an invalid request status`, 400);
+                throw new AppError(ar.request.invalidStatus(status), 400);
             }
         
             if (status === 'pending') {
                 if (!request.assignedToUserId) {
-                    throw new AppError('Cannot set status to pending: no assigned user', 400);
+                    throw new AppError(ar.request.cannotSetPendingNoAssignedUser, 400);
                 }
 
                 const documents = await Document.findAll({
@@ -237,7 +238,7 @@ class RequestService {
             });
 
             if (!instance) {
-                throw new AppError('Instance not found', 404);
+                throw new AppError(ar.instance.notFound, 404);
             }
 
             const nextStages = await Stage.findAll({
@@ -284,12 +285,17 @@ class RequestService {
     }
 
 
-    static async respondToRequest(request, newStatus, transaction) {
+    static async respondToRequest(request, newStatus, rejectionReason, transaction) {
         const cb = async (t) => {
             const allowedStatuses = ['approved', 'rejected'];
 
             if (!allowedStatuses.includes(newStatus)) {
-                throw new AppError('Invalid response status', 400);
+                throw new AppError(ar.request.invalidResponseStatus, 400);
+            }
+
+            // If rejected, require a reason
+            if (newStatus === 'rejected' && !rejectionReason) {
+                throw new AppError(ar.request.rejectionReasonRequired, 400);
             }
 
             // If approved → advance instance
@@ -300,7 +306,7 @@ class RequestService {
                 });
 
                 if (!instance) {
-                    throw new AppError('Instance not found', 404);
+                    throw new AppError(ar.instance.notFound, 404);
                 }
 
                 const nextStages = await Stage.findAll({
@@ -336,8 +342,11 @@ class RequestService {
                 });
             }
 
-            // Update the request status
+            // Update the request status and rejection reason
             request.status = newStatus;
+            if (newStatus === 'rejected') {
+                request.rejectionReason = rejectionReason;
+            }
             await request.save({ transaction: t });
 
             return request;

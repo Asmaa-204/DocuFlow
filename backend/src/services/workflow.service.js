@@ -3,6 +3,7 @@ const { Workflow, Stage, Template } = require('../models');
 const SequelizeQueryBuilder = require('../utils/SequelizeQueryBuilder');
 const AppError = require('../errors/AppError');
 const withTransaction = require('../utils/withTransaction');
+const ar = require('../translations/ar');
 
 const { validate: validateWorkflow } = require("../validators/workflow.validate");
 
@@ -60,7 +61,7 @@ class WorkflowService
     const workflow = await Workflow.findByPk(workflowId, filter);
 
     if (!workflow) {
-      throw new AppError('Workflow not found', 404);
+      throw new AppError(ar.workflow.notFound, 404);
     }
 
     return workflow;
@@ -91,7 +92,7 @@ class WorkflowService
         });
 
         if (templates.length !== templateIds.length) {
-          throw new AppError(`One or more template IDs are invalid for stage ${title}`, 400);
+          throw new AppError(ar.workflow.invalidTemplateIds(title), 400);
         }
 
         await stage.addTemplates(templates, { transaction });

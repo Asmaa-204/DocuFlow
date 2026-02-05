@@ -4,6 +4,7 @@ const SequelizeQueryBuilder = require("../utils/SequelizeQueryBuilder");
 const RequestService = require('./request.service');
 const { Op } = require("sequelize");
 const withTransaction = require('../utils/withTransaction');
+const ar = require('../translations/ar');
 
 class InstanceService
 {
@@ -23,14 +24,14 @@ class InstanceService
         const instance = await WorkflowInstance.findByPk(instanceId, filter);
 
         if (!instance) {
-            throw new AppError('Instance not found', 404);
+            throw new AppError(ar.instance.notFound, 404);
         }
 
         // Instance Access Policy
         if(user?.role != 'administrator')
         {
             if (instance.userId !== user.id) {
-                throw new AppError('You do not have permission to access this instance', 403);
+                throw new AppError(ar.instance.noPermission, 403);
             }
         }
         
@@ -55,7 +56,7 @@ class InstanceService
 
         if(!department)
         {
-            throw new AppError('Department not found', 404);
+            throw new AppError(ar.instance.departmentNotFound, 404);
         }
 
         const workflow = await Workflow.findByPk(workflowId, {
@@ -68,13 +69,13 @@ class InstanceService
 
         if (!workflow) 
         {
-            throw new AppError('Workflow not found', 404);
+            throw new AppError(ar.workflow.notFound, 404);
         }
 
         const firstStage = workflow.stages[0]
 
         if (firstStage.role !== user.role) {
-            throw new AppError(`User role '${user.role}' cannot start this workflow. Required role: '${firstStage.role}'`, 403);
+            throw new AppError(ar.instance.cannotStartWorkflow(user.role, firstStage.role), 403);
         } 
 
         const instance = await WorkflowInstance.create({

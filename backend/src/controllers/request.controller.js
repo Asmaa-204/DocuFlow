@@ -2,10 +2,10 @@ const asyncDec = require("../utils/asyncDec")
 const RequestService = require("../services/request.service")
 const AppError = require("../errors/AppError");
 const { Access } = require("../models");
+const ar = require('../translations/ar');
 
 
-async function createRequest(req, res)
-{
+async function createRequest(req, res) {
     const { instanceId, note, isDraft } = req.body;
     const request = await RequestService.createRequest(instanceId, note, req.user.id);
 
@@ -15,8 +15,7 @@ async function createRequest(req, res)
     });
 }
 
-async function updateRequest(req, res)
-{
+async function updateRequest(req, res) {
     const {
         status,
         note,
@@ -34,27 +33,23 @@ async function updateRequest(req, res)
 
     let updatedRequest = null;
 
-    if(accessLevel === 'edit')
-    {
+    if (accessLevel === 'edit') {
         updatedRequest = await RequestService.updateMyRequest(request, status, note, assignedTo)
     }
-    else if(accessLevel === 'respond')
-    {
+    else if (accessLevel === 'respond') {
         updatedRequest = await RequestService.respondToRequest(request, status)
     }
-    else
-    {
-        throw new AppError("You do not have permission to update this request", 403);
+    else {
+        throw new AppError(ar.request.noPermissionToUpdate, 403);
     }
-    
+
     res.json({
         "status": "success",
         "data": { request: updatedRequest }
     });
 }
 
-async function getAllRequests(req, res)
-{
+async function getAllRequests(req, res) {
     const requests = await RequestService.getAllRequests(req.query);
 
     res.json({
@@ -63,8 +58,7 @@ async function getAllRequests(req, res)
     });
 }
 
-async function getRequest(req, res)
-{
+async function getRequest(req, res) {
     const { id } = req.params;
     const request = await RequestService.getRequest(id, req.query, req.user);
 

@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const AppError = require('../errors/AppError');
+const ar = require('../translations/ar');
 
 class AuthService {
     
@@ -10,11 +11,11 @@ class AuthService {
         const user = await User.findOne({ where: { email } });
 
         if (!user) {
-            throw new AppError('Invalid email or password', 401);
+            throw new AppError(ar.auth.invalidEmailOrPassword, 401);
         }
 
         if(!(await user.comparePassword(password))){
-            throw new AppError('Invalid email or password', 401);
+            throw new AppError(ar.auth.invalidEmailOrPassword, 401);
         }
 
         const payload = user.toJSON();
@@ -30,7 +31,7 @@ class AuthService {
 
         if (await User.findOne({ where: { email } })) 
         {
-            throw new AppError('Email already exists', 400);
+            throw new AppError(ar.auth.emailAlreadyExists, 400);
         }
 
         const user = await User.create(userData);

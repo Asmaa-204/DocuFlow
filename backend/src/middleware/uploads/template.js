@@ -1,6 +1,7 @@
 const multer = require("multer");
 const mimetypes = require("../../constants/mimeTypes");
 const path = require('path');
+const ar = require('../../translations/ar');
 
 const storage = multer.diskStorage({
 
@@ -29,7 +30,7 @@ const fileFilter = function(req, file, cb)
     if(checkExtension && checkMimetype)
         cb(null, true);
     else
-        cb(new Error("Only .docx files are allowed!"), false)
+        cb(new Error(ar.upload.onlyDocxAllowed), false)
 }
 
 module.exports = multer({

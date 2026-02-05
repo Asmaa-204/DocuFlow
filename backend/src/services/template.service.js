@@ -2,6 +2,7 @@ const AppError = require('../errors/AppError');
 const { Template } = require("../models");
 const { validateSchema, validateUiSchema } = require('../utils/ajv');
 const optionalize = require('../utils/optionalize');
+const ar = require('../translations/ar');
 
 
 class TemplateService
@@ -11,13 +12,13 @@ class TemplateService
         if(!validateSchema(schema)) 
         {
             const errors = validateSchema.errors.map(err => `${err.instancePath} ${err.message}`);
-            throw new AppError(`Invalid schema: ${errors.join(', ')}`, 400);
+            throw new AppError(ar.template.invalidSchema(errors.join(', ')), 400);
         }
 
         if(!validateUiSchema(uiSchema)) 
         {
             const errors = validateUiSchema.errors.map(err => `${err.instancePath} ${err.message}`);
-            throw new AppError(`Invalid UI schema: ${errors.join(', ')}`, 400);
+            throw new AppError(ar.template.invalidUiSchema(errors.join(', ')), 400);
         }
 
         const template = await Template.create({
@@ -48,7 +49,7 @@ class TemplateService
         template.schema = optionalize(template.schema);
 
         if(!template)
-            throw new AppError("Template Not Found", 404);
+            throw new AppError(ar.template.notFound, 404);
 
         return template;
     }
@@ -58,18 +59,18 @@ class TemplateService
         const template = await Template.findByPk(id);
 
         if(!template)
-            throw new AppError("Template Not Found", 404);
+            throw new AppError(ar.template.notFound, 404);
 
         if(data.schema && !validateSchema(data.schema)) 
         {
             const errors = validateSchema.errors.map(err => `${err.instancePath} ${err.message}`);
-            throw new AppError(`Invalid schema: ${errors.join(', ')}`, 400);
+            throw new AppError(ar.template.invalidSchema(errors.join(', ')), 400);
         }
 
         if(data.uiSchema && !validateUiSchema(data.uiSchema)) 
         {
             const errors = validateUiSchema.errors.map(err => `${err.instancePath} ${err.message}`);
-            throw new AppError(`Invalid UI schema: ${errors.join(', ')}`, 400);
+            throw new AppError(ar.template.invalidUiSchema(errors.join(', ')), 400);
         }
 
         template.update(data);

@@ -3,6 +3,7 @@ const { Document, User, Request, Template, Access } = require("../models");
 const DocxService = require("../services/docx.service");
 const { ajv } = require('../utils/ajv');
 const optionalize = require('../utils/optionalize');
+const ar = require('../translations/ar');
 
 class DocumentService
 {
@@ -31,7 +32,7 @@ class DocumentService
         );
 
         if(!document)
-            throw new AppError("Document Not Found", 404);
+            throw new AppError(ar.document.notFound, 404);
 
         const { accessLevel } = await Access.findOne({
             where: {
@@ -41,7 +42,7 @@ class DocumentService
         });
 
         if(!accessLevel && user.role !== 'administrator')
-            throw new AppError("You do not have permission to view this document", 403);
+            throw new AppError(ar.document.noPermissionToView, 403);
    
         document.template.schema = optionalize(document.template.schema);
         return document;
@@ -52,7 +53,7 @@ class DocumentService
         const template = await Template.findByPk(document.templateId);
         
         if (!template || !template.schema) {
-            throw new AppError("Document schema not found", 400);
+            throw new AppError(ar.document.schemaNotFound, 400);
         }
 
         const schema = optional ? optionalize(template.schema) : template.schema;
@@ -61,7 +62,7 @@ class DocumentService
         
         if (!validate(document.data)) {
             const errors = validate.errors.map(err => `${err.instancePath} ${err.message}`);
-            throw new AppError(`Invalid data: ${errors.join(', ')}`, 400);
+            throw new AppError(ar.document.invalidData(errors.join(', ')), 400);
         }
     }
 
@@ -82,10 +83,10 @@ class DocumentService
         const document = await Document.findByPk(documentId, options);
 
         if(!document)
-            throw new AppError("Document Not Found", 404);
+            throw new AppError(ar.document.notFound, 404);
 
         if (!document.requestId) {
-            throw new AppError("Invalid document state: missing requestId", 400);
+            throw new AppError(ar.document.invalidStateMissingRequestId, 400);
         }
 
         const { accessLevel } = await Access.findOne({
@@ -96,7 +97,7 @@ class DocumentService
         });
 
         if(!accessLevel || accessLevel !== 'edit')
-            throw new AppError("You do not have permission to update this document", 403);
+            throw new AppError(ar.document.noPermissionToUpdate, 403);
 
         document.data = data;
         await DocumentService.validateDocumentData(document, true);
@@ -118,7 +119,7 @@ class DocumentService
         });
 
         if(!document)
-            throw new AppError("Document Not Found", 404);
+            throw new AppError(ar.document.notFound, 404);
 
         const { accessLevel } = await Access.findOne({
             where: {
@@ -128,10 +129,10 @@ class DocumentService
         });
 
         if(!accessLevel || (accessLevel !== 'read' && accessLevel !== 'edit'))
-            throw new AppError("You do not have permission to view this document", 403);
+            throw new AppError(ar.document.noPermissionToView, 403);
 
         if (!document.template?.fileUrl) {
-            throw new AppError("Template file URL not found", 404);
+            throw new AppError(ar.document.templateFileUrlNotFound, 404);
         }
 
         const buffer = await DocxService.fillDocument(document.template.fileUrl, document.data);

@@ -1,6 +1,6 @@
 const { Department, User } = require('../models');
 const AppError = require('../errors/AppError');
-const department = require('../models/department');
+const ar = require('../translations/ar');
 
 
 class DepartmentService 
@@ -17,7 +17,7 @@ class DepartmentService
     
         if (!department) 
         {
-            throw new AppError('Department not found', 404);
+            throw new AppError(ar.department.notFound, 404);
         }
     
         return department;
@@ -34,13 +34,13 @@ class DepartmentService
         if(managerId)
         {
             const manager = await User.findByPk(managerId);
-            if(!manager) throw new AppError('Manager not found', 404);
+            if(!manager) throw new AppError(ar.department.managerNotFound, 404);
         }
 
         if(affairsEmployeeId)
         {
             const affairsEmployee = await User.findByPk(affairsEmployeeId);
-            if(!affairsEmployee) throw new AppError('Affairs Employee not found', 404);
+            if(!affairsEmployee) throw new AppError(ar.department.affairsEmployeeNotFound, 404);
         }
 
         const department = await Department.create({ 
@@ -64,19 +64,19 @@ class DepartmentService
 
         if (!department) 
         {
-            throw new AppError('Department not found', 404);
+            throw new AppError(ar.department.notFound, 404);
         };
 
         if(managerId)
         {
             const manager = await User.findByPk(managerId);
-            if(!manager) throw new AppError('Manager not found', 404);
+            if(!manager) throw new AppError(ar.department.managerNotFound, 404);
         }
 
         if(affairsEmployeeId)
         {
             const affairsEmployee = await User.findByPk(affairsEmployeeId);   
-            if(!affairsEmployee) throw new AppError('Affairs Employee not found', 404);
+            if(!affairsEmployee) throw new AppError(ar.department.affairsEmployeeNotFound, 404);
         }
 
         department.name = name || department.name;
