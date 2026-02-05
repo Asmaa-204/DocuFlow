@@ -127,3 +127,34 @@ Users can now scroll through all their workflows on the MyWorkflows page. The pa
 
 ## Date
 2026-02-05
+
+---
+
+# Bug Fix: Request Filters Not Working in Requests Page
+
+## Problem
+The filter and sort controls in the Requests page (submitted/draft requests) were not working. Clicking filter buttons (All, Pending, Approved, Rejected) or changing the sort order had no effect on the displayed requests.
+
+## Root Cause
+The `Filter` and `SortBy` components were correctly setting URL parameters (`status` and `sortBy`), but the `RequestsTable` component was not reading these parameters or applying any filtering/sorting to the data. The table simply displayed all requests from the API without any client-side filtering.
+
+## Solution
+Updated the `RequestsTable` component to:
+1. Read the `status` filter from URL parameters and filter requests accordingly
+2. Read the `sortBy` parameter and sort requests by date (ascending/descending)
+3. Update pagination to use the filtered count instead of total count
+4. Show empty state when filters return no results
+
+## Files Modified
+
+### 1. frontend/src/features/request/components/RequestsTable.jsx
+- Added logic to read `status` URL parameter and filter requests by status
+- Added logic to read `sortBy` URL parameter and sort requests by date
+- Updated pagination to use filtered request count
+- Added empty state check for filtered results
+
+## Result
+Users can now filter requests by status (All, Pending, Approved, Rejected) and sort by date. The table correctly updates to show only matching requests, and pagination reflects the filtered count.
+
+## Date
+2026-02-05
