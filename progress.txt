@@ -63,3 +63,42 @@ Date fields now display proper labels above the input fields with adequate sizin
 
 ## Date
 2026-02-05
+
+---
+
+# Bug Fix: Documents Appear Empty When Reopened Immediately After Save
+
+## Problem
+After implementing initial cache invalidation, documents still appeared empty when users saved changes and immediately reopened the form. The stale data was being shown briefly before fresh data loaded.
+
+## Root Cause
+Using `invalidateQueries()` only marks cached data as stale but doesn't remove it immediately. When reopening a form quickly after save, the stale cached data was being displayed momentarily before refetching completed.
+
+## Solution
+Enhanced cache management by:
+1. Using `removeQueries()` instead of `invalidateQueries()` to completely delete cached data
+2. Adding `refetchOnMount: 'always'` to query hooks to force fresh data fetch on component mount
+
+## Files Modified
+
+### 1. frontend/src/features/request/hooks/usePatchDoc.js
+- Changed `queryClient.invalidateQueries()` to `queryClient.removeQueries()`
+- Completely removes document cache after successful save
+
+### 2. frontend/src/features/request/hooks/usePatchRequest.js
+- Changed `queryClient.invalidateQueries()` to `queryClient.removeQueries()` for specific request cache
+- Keeps list invalidations using `invalidateQueries()` for efficiency
+
+### 3. frontend/src/features/request/hooks/useDocData.js
+- Added `refetchOnMount: 'always'` option to `useQuery`
+- Ensures fresh data is always fetched when document form mounts
+
+### 4. frontend/src/features/request/hooks/useRequestData.js
+- Added `refetchOnMount: 'always'` option to `useQuery`
+- Ensures fresh data is always fetched when request form mounts
+
+## Result
+Documents now display correctly when reopened immediately after saving. The cache is completely cleared on save, and fresh data is always fetched when reopening forms.
+
+## Date
+2026-02-05
