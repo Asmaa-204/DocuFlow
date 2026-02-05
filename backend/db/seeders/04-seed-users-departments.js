@@ -1,12 +1,8 @@
 'use strict';
 
-const bcrypt = require('bcryptjs');
-const path = require('path');
-
 module.exports = {
   async up(queryInterface, Sequelize) {
-
-    const { Department, User } = require('../../src/models'); 
+    const { Department, User } = require('../../src/models');
 
     const now = new Date();
 
@@ -29,6 +25,10 @@ module.exports = {
       'Structural Engineering'
     ];
 
+    // Clear existing data to allow re-seeding
+    await User.destroy({ where: {} });
+    await Department.destroy({ where: {} });
+
     // 1️⃣ Create departments first
     const departments = await Department.bulkCreate(
       departmentNames.map(name => ({ name, createdAt: now, updatedAt: now })),
@@ -41,7 +41,7 @@ module.exports = {
 
       const manager = await User.create({
         firstName: `Manager${i + 1}`,
-        lastName: dept.name,
+        lastName: 'Manager',
         email: `manager${i + 1}@college.edu`,
         password: 'password123',
         role: 'department_manager',
@@ -50,7 +50,7 @@ module.exports = {
 
       const affairs = await User.create({
         firstName: `Affairs${i + 1}`,
-        lastName: dept.name,
+        lastName: 'Affairs',
         email: `affairs${i + 1}@college.edu`,
         password: 'password123',
         role: 'administrator',
@@ -59,7 +59,7 @@ module.exports = {
 
       const professor = await User.create({
         firstName: `Professor${i + 1}`,
-        lastName: dept.name,
+        lastName: 'Professor',
         email: `professor${i + 1}@college.edu`,
         password: 'password123',
         role: 'professor',
@@ -74,16 +74,8 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-
-    const { Department, User } = require('../models');
-
-    const emails = [
-      ...Array.from({ length: 16 }).map((_, i) => `manager${i + 1}@college.edu`),
-      ...Array.from({ length: 16 }).map((_, i) => `affairs${i + 1}@college.edu`),
-      ...Array.from({ length: 16 }).map((_, i) => `professor${i + 1}@college.edu`)
-    ];
-
-    await User.destroy({ where: { email: emails } });
+    const { Department, User } = require('../../src/models');
+    await User.destroy({ where: {} });
     await Department.destroy({ where: {} });
   }
 };

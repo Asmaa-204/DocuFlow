@@ -8,6 +8,7 @@ import {
 
 import Modal from "@components/Modal";
 import Form from "./Form";
+import DocumentPreview from "./DocumentPreview";
 
 import { translator as t } from "@data/translations/ar";
 
@@ -75,8 +76,8 @@ const ItemLabel = styled.span`
 function RequestedDoc({ doc: { name, id }, type, mode = "view" }) {
   return (
     <Modal>
-      <Modal.Open opens={mode === "edit" ? "fill-forms" : ""}>
-        <ItemCard $mode={mode}>
+      <Modal.Open opens={mode === "edit" ? "fill-forms" : "preview-doc"}>
+        <ItemCard $mode={mode || "view"}>
           <ItemIcon>
             {type === "form" ? <HiClipboardDocumentList /> : <HiDocumentText />}
           </ItemIcon>
@@ -88,9 +89,13 @@ function RequestedDoc({ doc: { name, id }, type, mode = "view" }) {
           )}
         </ItemCard>
       </Modal.Open>
-      {mode === "edit" && (
+      {mode === "edit" ? (
         <Modal.Window name="fill-forms">
           <Form id={id} />
+        </Modal.Window>
+      ) : (
+        <Modal.Window name="preview-doc" width="80%">
+          <DocumentPreview docId={id} />
         </Modal.Window>
       )}
     </Modal>

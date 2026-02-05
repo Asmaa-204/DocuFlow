@@ -3,6 +3,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const { Workflow, Stage } = require('../../src/models');
+
+    // Clear existing data to allow re-seeding
+    await Stage.destroy({ where: {} });
+    await Workflow.destroy({ where: {} });
+
     // Define workflows with their stages
     const workflowsData = [
       {
@@ -51,53 +57,27 @@ module.exports = {
       },
     ];
 
-    // First, insert workflows
-    const workflowsToInsert = workflowsData.map(workflow => ({
-      title: workflow.title,
-      description: workflow.description,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }));
+    for (const workflow of workflowsData) {
+      const createdWorkflow = await Workflow.create({
+        title: workflow.title,
+        description: workflow.description
+      });
 
-    await queryInterface.bulkInsert('Workflows', workflowsToInsert, {});
-
-    // Get the inserted workflows with their IDs
-    const insertedWorkflows = await queryInterface.sequelize.query(
-      'SELECT id, title FROM Workflows ORDER BY id',
-      { type: queryInterface.sequelize.QueryTypes.SELECT }
-    );
-
-    // Prepare stages data with workflow IDs
-    const stagesToInsert = [];
-    
-    workflowsData.forEach((workflowData, workflowIndex) => {
-      const correspondingWorkflow = insertedWorkflows.find(w => w.title === workflowData.title);
-      
-      if (correspondingWorkflow) {
-        workflowData.stages.forEach(stage => {
-          stagesToInsert.push({
-            title: stage.title,
-            description: stage.description,
-            role: stage.role,
-            stageOrder: stage.stageOrder,
-            workflowId: correspondingWorkflow.id,
-            createdAt: new Date(),
-            updatedAt: new Date()
-          });
+      for (const stage of workflow.stages) {
+        await Stage.create({
+          title: stage.title,
+          description: stage.description,
+          role: stage.role,
+          stageOrder: stage.stageOrder,
+          workflowId: createdWorkflow.id
         });
       }
-    });
-
-    // Insert all stages
-    if (stagesToInsert.length > 0) {
-      await queryInterface.bulkInsert('Stages', stagesToInsert, {});
     }
   },
 
   async down(queryInterface, Sequelize) {
-    // Delete stages first (due to foreign key constraint)
-    await queryInterface.bulkDelete('Stages', null, {});
-    // Then delete workflows
-    await queryInterface.bulkDelete('Workflows', null, {});
+    const { Workflow, Stage } = require('../../src/models');
+    await Stage.destroy({ where: {} });
+    await Workflow.destroy({ where: {} });
   }
 };

@@ -69,6 +69,10 @@ export const translator = {
     document: "مستند",
     fillForms: "ملء الاستمارات",
     requestedDocuments: "المستندات المطلوبة",
+    preview: "معاينة",
+    print: "طباعة",
+    sideBySide: "عرض جانبي",
+    closePreview: "إغلاق المعاينة",
   },
 
   user: {

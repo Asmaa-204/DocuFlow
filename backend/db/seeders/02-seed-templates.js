@@ -3,6 +3,11 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const { Template } = require('../../src/models');
+
+    // Clear existing data to allow re-seeding
+    await Template.destroy({ where: {} });
+
     const schema = {
       "type": "object",
       "properties": {
@@ -54,46 +59,43 @@ module.exports = {
       ]
     };
 
-    await queryInterface.bulkInsert('Templates', [
+    await Template.bulkCreate([
       {
         title: 'Request for Supervision',
         description: 'Template for requesting supervision for final year projects',
-        schema: JSON.stringify(schema),
-        uiSchema: JSON.stringify(uiSchema),
-        fileUrl: 'public/templates/template_tmp.docx',
-        createdAt: new Date(),
-        updatedAt: new Date()
+        schema: schema,
+        uiSchema: uiSchema,
+        fileUrl: 'public/templates/template_tmp.docx'
       },
       {
         title: 'Research Proposal Template',
         description: 'Template for research proposal submissions',
-        schema: JSON.stringify({
+        schema: {
           "type": "object",
           "properties": {
-            "proposalTitle": {"type": "string", "title": "Proposal Title"},
-            "researchArea": {"type": "string", "title": "Research Area"},
-            "duration": {"type": "number", "title": "Duration (months)"},
-            "budget": {"type": "number", "title": "Budget"}
+            "proposalTitle": { "type": "string", "title": "Proposal Title" },
+            "researchArea": { "type": "string", "title": "Research Area" },
+            "duration": { "type": "number", "title": "Duration (months)" },
+            "budget": { "type": "number", "title": "Budget" }
           },
           "required": ["proposalTitle", "researchArea", "duration"]
-        }),
-        uiSchema: JSON.stringify({
+        },
+        uiSchema: {
           "type": "VerticalLayout",
           "elements": [
-            {"type": "Control", "scope": "#/properties/proposalTitle"},
-            {"type": "Control", "scope": "#/properties/researchArea"},
-            {"type": "Control", "scope": "#/properties/duration"},
-            {"type": "Control", "scope": "#/properties/budget"}
+            { "type": "Control", "scope": "#/properties/proposalTitle" },
+            { "type": "Control", "scope": "#/properties/researchArea" },
+            { "type": "Control", "scope": "#/properties/duration" },
+            { "type": "Control", "scope": "#/properties/budget" }
           ]
-        }),
-        fileUrl: 'public/templates/research_proposal_template.docx',
-        createdAt: new Date(),
-        updatedAt: new Date()
+        },
+        fileUrl: 'public/templates/template_tmp.docx' // Using same file for now to avoid 404
       }
-    ], {});
+    ]);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Templates', null, {});
+    const { Template } = require('../../src/models');
+    await Template.destroy({ where: {} });
   }
 };

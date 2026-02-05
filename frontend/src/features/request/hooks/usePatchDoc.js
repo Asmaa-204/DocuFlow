@@ -11,6 +11,7 @@ function usePatchDoc(docId) {
     onSuccess: () => {
       toast.success(t.messages.documentSaved);
       queryClient.removeQueries({ queryKey: [`doc-${docId}`] });
+      queryClient.removeQueries({ queryKey: ["doc-pdf", docId] });
     },
     onError: (error) => {
       toast.error(`${t.messages.errorSaving}: ${error.message}`);

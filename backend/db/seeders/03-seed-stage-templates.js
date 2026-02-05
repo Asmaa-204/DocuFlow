@@ -7,6 +7,9 @@ module.exports = {
 
     const now = new Date();
 
+    // Clear existing data to allow re-seeding
+    await Condition.destroy({ where: {} });
+
     // Get all first stages (stageOrder = 1) from each workflow
     const firstStages = await Stage.findAll({
       where: { stageOrder: 1 },
@@ -24,7 +27,7 @@ module.exports = {
     }
 
     const supervisionTemplate = templates.find(t => t.title === 'Request for Supervision');
-    
+
     const conditionsData = [];
 
     // Add supervision template to all first stages
