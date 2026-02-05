@@ -6,10 +6,8 @@ const libre = require('libreoffice-convert');
 const fs = require("fs");
 const path = require("path");
 
-class DocxService 
-{
-    static async fillDocument(templatePath, data) 
-    {
+class DocxService {
+    static async fillDocument(templatePath, data) {
         const content = fs.readFileSync(templatePath, "binary");
         const zip = new PizZip(content);
 
@@ -23,9 +21,8 @@ class DocxService
         return doc.toBuffer();
     };
 
-    static async convertToPdf(docBuffer) 
-    {
-        const { path: inputPath, cleanup } = await file({ postfix: '.docx' });
+    static async convertToPdf(docBuffer) {
+        const { path: inputPath, cleanup } = await tmp.file({ postfix: '.docx' });
 
         // write the buffer to the temp file
         fs.writeFileSync(inputPath, docBuffer);
