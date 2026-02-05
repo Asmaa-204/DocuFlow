@@ -65,7 +65,16 @@ class RequestService {
 
     static getUserSentRequests(userId, query) 
     {
-        return this._fetchRequests(query, { userId });
+        // Check if a specific status is requested
+        const hasStatusFilter = query && query.status;
+        
+        // If no status filter provided, exclude drafts by default
+        // This ensures submitted page doesn't show drafts
+        const whereClause = hasStatusFilter 
+            ? { userId }
+            : { userId, status: { [Op.ne]: 'draft' } };
+        
+        return this._fetchRequests(query, whereClause);
     }
 
 

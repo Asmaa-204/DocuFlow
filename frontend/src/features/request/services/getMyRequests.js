@@ -7,9 +7,19 @@ async function getMyRequests({ isDraft, status, sortBy }) {
   const params = new URLSearchParams();
   params.append("type", "sent");
 
-  // Add status filter (if not "all")
-  if (status && status !== "all") {
-    params.append("status", status);
+  // Handle page-level filter (draft vs submitted)
+  if (isDraft) {
+    // Draft page: always show only drafts
+    params.append("status", "draft");
+  } else {
+    // Submitted page: show non-draft requests only
+    if (status && status !== "all") {
+      // Apply specific status filter (pending, approved, rejected)
+      params.append("status", status);
+    }
+    // Note: When showing submitted requests without a specific status filter,
+    // we rely on the page-level filter to distinguish drafts from submitted.
+    // The draft page uses filter="draft" and this branch uses filter="submitted".
   }
 
   // Add sort parameter
