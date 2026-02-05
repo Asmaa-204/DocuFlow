@@ -38,3 +38,4 @@ class DocxService {
 
 };
 
+module.exports = DocxService;
