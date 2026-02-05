@@ -8,10 +8,9 @@ const ar = require('../translations/ar');
 const { validate: validateWorkflow } = require("../validators/workflow.validate");
 
 
-class WorkflowService 
-{
+class WorkflowService {
   static validRoles = ['professor', 'department_manager', 'administrator'];
-   
+
   static roleFilter = (role) => {
     return {
       model: Stage,
@@ -26,20 +25,19 @@ class WorkflowService
   }
 
   static includeStages = {
-      model: Stage,
-      as: 'stages',
-      seperate: true,
-      order: [['stageOrder', 'ASC']],
-  } 
-  
-  static async getAllWorkflows(query) 
-  {
+    model: Stage,
+    as: 'stages',
+    seperate: true,
+    order: [['stageOrder', 'ASC']],
+  }
+
+  static async getAllWorkflows(query) {
     const queryBuilder = new SequelizeQueryBuilder(query);
     const filter = queryBuilder.filter().sort().attributes().get();
 
     filter.include = []
 
-    if(query.role) {
+    if (query.role) {
       const roleFilter = WorkflowService.roleFilter(query.role);
       filter.include.push(roleFilter);
       delete filter.where.role;
@@ -51,8 +49,7 @@ class WorkflowService
     return workflows
   }
 
-  static async getWorkflow(workflowId, query)
-  {
+  static async getWorkflow(workflowId, query) {
     const queryBuilder = new SequelizeQueryBuilder(query);
     const filter = queryBuilder.attributes().get();
 
@@ -67,18 +64,17 @@ class WorkflowService
     return workflow;
   }
 
-  static async createWorkflow(title, description, stagesInput, transaction) 
-  {
-    validateWorkflowInput({ title, description, stages: stagesInput });
+  static async createWorkflow(title, description, stagesInput, transaction) {
+    validateWorkflow({ title, description, stages: stagesInput });
 
     const cb = async (transaction) => {
-      
+
       const workflow = await Workflow.create({ title, description }, { transaction });
 
       const stageRecords = [];
 
       for (const stageInput of stagesInput) {
-      
+
         const { title, stageOrder, role, templateIds } = stageInput;
 
         const stage = await Stage.create(
@@ -102,9 +98,9 @@ class WorkflowService
       return workflow;
     }
 
-    if(transaction) 
+    if (transaction)
       return await cb(transaction);
-    else 
+    else
       return await withTransaction(cb);
   }
 }
