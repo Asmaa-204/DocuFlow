@@ -12,14 +12,14 @@ const UserSchema = {
   firstName: {
     type: DataTypes.STRING,
     allowNull: false,
-    validate:{
+    validate: {
       len: [2, 50]
     }
   },
   lastName: {
     type: DataTypes.STRING,
     allowNull: false,
-    validate:{
+    validate: {
       len: [2, 50]
     }
   },
@@ -43,6 +43,10 @@ const UserSchema = {
   },
   departmentId: {
     type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  profilePicture: {
+    type: DataTypes.STRING,
     allowNull: true
   }
 };

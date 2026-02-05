@@ -82,6 +82,10 @@ export const translator = {
     professor: "أستاذ",
     departmentManager: "مدير القسم",
     administrator: "مدير النظام",
+    oldPassword: "كلمة المرور القديمة",
+    newPassword: "كلمة المرور الجديدة",
+    changePassword: "تغيير كلمة المرور",
+    updateProfile: "تحديث الملف الشخصي",
   },
 
   auth: {
@@ -114,6 +118,20 @@ export const translator = {
     selectToRead: "يرجى اختيار عنصر للقراءة",
     clickRequest: "اضغط على طلب لعرض تفاصيله",
     selectWorkflow: "اختر سير عمل لعرض تفاصيله",
+    profileUpdated: "تم تحديث الملف الشخصي بنجاح",
+    passwordChanged: "تم تغيير كلمة المرور بنجاح",
+    avatarUploaded: "تم تحميل الصورة الشخصية بنجاح",
+    activityLogged: "تم تسجيل النشاط",
+  },
+
+  activity: {
+    history: "سجل النشاط",
+    action: "الإجراء",
+    details: "التفاصيل",
+    time: "الوقت",
+    profileUpdate: "تحديث الملف الشخصي",
+    passwordChange: "تغيير كلمة المرور",
+    avatarUpdate: "تحديث الصورة الشخصية",
   },
 
   time: {
@@ -168,5 +186,7 @@ export const translator = {
     lastNameRequired: "يرجى إدخال اسم العائلة",
     roleRequired: "يرجى اختيار مهنتك",
     invalidEmail: "يرجى إدخال بريد إلكتروني صحيح",
+    oldPasswordRequired: "يرجى إدخال كلمة المرور القديمة",
+    newPasswordRequired: "يرجى إدخال كلمة المرور الجديدة",
   },
 };

@@ -81,6 +81,14 @@ const ar = {
   error: {
     notFound: (url) => `غير موجود - ${url}`,
   },
+
+  // Profile messages
+  profile: {
+    updateSuccess: 'تم تحديث الملف الشخصي بنجاح',
+    passwordChangeSuccess: 'تم تغيير كلمة المرور بنجاح',
+    oldPasswordIncorrect: 'كلمة المرور القديمة غير صحيحة',
+    avatarUpdateSuccess: 'تم تحديث الصورة الشخصية بنجاح',
+  },
 };
 
 module.exports = ar;

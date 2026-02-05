@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useAuth } from "@context/AuthContext";
 
 const Avatar = styled.img`
   display: block;
@@ -12,7 +13,13 @@ const Avatar = styled.img`
 `;
 
 function UserAvatar() {
-  return <Avatar src="/default-user.jpg" />;
+  const { user } = useAuth();
+
+  const src = user?.profilePicture
+    ? `http://localhost:5000${user.profilePicture}`
+    : "/default-user.jpg";
+
+  return <Avatar src={src} alt={user?.firstName} />;
 }
 
 export default UserAvatar;
