@@ -1,0 +1,65 @@
+# Bug Fix: Request/Document Save Cache Invalidation Issue
+
+## Problem
+When creating a request and filling a document, clicking save, then immediately reopening it, the data appeared to be gone. However, waiting for some time would show the data correctly.
+
+## Root Cause
+TanStack Query (React Query) was caching the old data after save operations. When a document or request was saved successfully to the database, the frontend cache was not invalidated, causing stale data to be displayed when reopening immediately.
+
+## Solution
+Added cache invalidation using `queryClient.invalidateQueries()` in the mutation hooks to ensure fresh data is fetched after save operations.
+
+## Files Modified
+
+### 1. frontend/src/features/request/hooks/usePatchDoc.js
+- Added `useQueryClient` import
+- Modified hook to accept `docId` parameter
+- Added `onSuccess` callback to invalidate the specific document cache after save
+
+### 2. frontend/src/features/request/hooks/usePatchRequest.js
+- Added `useQueryClient` import
+- Modified hook to accept `requestId` parameter
+- Added `onSuccess` callback to invalidate:
+  - Specific request cache (`req-${requestId}`)
+  - All request list caches (`incoming-reqs`, `draft-reqs`, `submitted-reqs`)
+
+### 3. frontend/src/features/request/components/Form.jsx
+- Updated `usePatchDoc()` call to pass `id` parameter: `usePatchDoc(id)`
+
+### 4. frontend/src/features/Inbox/RequestDetails.jsx
+- Extracted `requestId` from searchParams
+- Updated `usePatchRequest()` call to pass `requestId` parameter
+
+### 5. frontend/src/features/request/components/NewRequestForm.jsx
+- Updated `usePatchRequest()` call to pass `requestId` parameter
+
+## Result
+Now when users save a document or request, the cache is immediately invalidated. When they reopen the item, fresh data is fetched from the server, eliminating the delay issue.
+
+## Date
+2026-02-05
+
+---
+
+# Bug Fix: Date Field Label Display in Document Forms
+
+## Problem
+Date fields in document forms were displaying labels as floating placeholder text inside tiny input fields instead of proper labels above the input, making them extremely difficult to read and use.
+
+## Root Cause
+The JSON Forms renderer priority rank (3) was too low, causing Material UI's date picker renderer to take precedence over the custom InputFieldRenderer. Material UI's renderer uses floating labels which conflicted with the custom label display.
+
+## Solution
+Increased the InputFieldTester rank from 3 to 10 in the renderer configuration to ensure the custom InputFieldRenderer takes precedence over Material UI's default renderers.
+
+## Files Modified
+
+### 1. frontend/src/features/request/renderers/inputFieldTester.js
+- Changed rank from `3` to `10`
+- This ensures custom renderer takes precedence for string and number field types
+
+## Result
+Date fields now display proper labels above the input fields with adequate sizing, matching the design of other form fields.
+
+## Date
+2026-02-05

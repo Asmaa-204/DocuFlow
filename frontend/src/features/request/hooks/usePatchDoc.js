@@ -21,5 +21,3 @@ function usePatchDoc(docId) {
 }
 
 export { usePatchDoc };
-
-export { usePatchDoc };
