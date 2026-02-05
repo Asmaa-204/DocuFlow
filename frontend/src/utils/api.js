@@ -5,9 +5,12 @@ async function apiRequest(
   { method = "GET", body, token, ...customConfig } = {}
 ) {
   const headers = {
-    "Content-Type": "application/json",
     ...(token && { Authorization: `Bearer ${token}` }),
   };
+
+  if (!(body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
 
   const config = {
     method,
@@ -16,7 +19,7 @@ async function apiRequest(
   };
 
   if (body) {
-    config.body = JSON.stringify(body);
+    config.body = body instanceof FormData ? body : JSON.stringify(body);
   }
 
   const res = await fetch(`${API_URL}${endpoint}`, config);

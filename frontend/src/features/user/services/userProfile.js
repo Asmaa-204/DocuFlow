@@ -1,28 +1,43 @@
-import { backend } from "@data/services/api";
+import { apiRequest } from "@utils/api";
 
 export async function updateProfile(data) {
-    const { data: response } = await backend.patch("/me/profile", data);
-    return response.data;
+    const token = localStorage.getItem("token");
+    const response = await apiRequest("/me/profile", {
+        method: "PATCH",
+        body: data,
+        token,
+    });
+    return response.data.user;
 }
 
 export async function changePassword(data) {
-    const { data: response } = await backend.patch("/me/password", data);
+    const token = localStorage.getItem("token");
+    const response = await apiRequest("/me/password", {
+        method: "PATCH",
+        body: data,
+        token,
+    });
     return response;
 }
 
 export async function uploadAvatar(file) {
+    const token = localStorage.getItem("token");
     const formData = new FormData();
     formData.append("avatar", file);
 
-    const { data: response } = await backend.post("/me/avatar", formData, {
-        headers: {
-            "Content-Type": "multipart/form-data",
-        },
+    const response = await apiRequest("/me/avatar", {
+        method: "POST",
+        body: formData,
+        token,
     });
     return response.data;
 }
 
 export async function getActivityHistory() {
-    const { data: response } = await backend.get("/me/activity");
+    const token = localStorage.getItem("token");
+    const response = await apiRequest("/me/activity", {
+        method: "GET",
+        token,
+    });
     return response.data.activities;
 }
