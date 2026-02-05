@@ -1,14 +1,30 @@
 import { apiRequest } from "@utils/api";
 
-async function getMyRequests({ isDraft }) {
+async function getMyRequests({ isDraft, status, sortBy }) {
   const token = localStorage.getItem("token");
-  const data = await apiRequest(
-    `/me/request?type=sent&status=${isDraft ? "draft" : "pending"}`,
-    {
-      method: "GET",
-      token,
-    }
-  );
+
+  // Build query parameters
+  const params = new URLSearchParams();
+  params.append("type", "sent");
+
+  // Add status filter (if not "all")
+  if (status && status !== "all") {
+    params.append("status", status);
+  }
+
+  // Add sort parameter
+  if (sortBy) {
+    const [field, direction] = sortBy.split("-");
+    // Map frontend field names to database columns
+    const sortField = field === "startDate" ? "createdAt" : field;
+    const sortDirection = direction === "asc" ? "" : "-";
+    params.append("sort", `${sortDirection}${sortField}`);
+  }
+
+  const data = await apiRequest(`/me/request?${params.toString()}`, {
+    method: "GET",
+    token,
+  });
   return data.data?.requests;
 }
 

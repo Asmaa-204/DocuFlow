@@ -1,10 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { getMyRequests } from "../services/getMyRequests";
 
-function useRequests({ filter }) {
+function useRequests({ filter, status, sortBy }) {
   const { data, isPending } = useQuery({
-    queryKey: [`${filter}-reqs`],
-    queryFn: () => getMyRequests({ isDraft: filter === "draft" }),
+    queryKey: [`${filter}-reqs`, status, sortBy],
+    queryFn: () =>
+      getMyRequests({
+        isDraft: filter === "draft",
+        status,
+        sortBy,
+      }),
   });
 
   return { data, isPending };

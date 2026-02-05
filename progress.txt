@@ -158,3 +158,49 @@ Users can now filter requests by status (All, Pending, Approved, Rejected) and s
 
 ## Date
 2026-02-05
+
+---
+
+# Refactor: Move Request Filtering from Frontend to Backend
+
+## Problem
+The request filtering was being done on the frontend after fetching all requests. This approach:
+- Downloads unnecessary data (all requests even when filtering)
+- Inefficient for large datasets
+- Pagination becomes inaccurate (shows total count instead of filtered count)
+
+## Solution
+Moved the filtering and sorting logic to the backend API:
+1. Updated the API service to pass status and sort parameters
+2. Backend already supports filtering/sorting via SequelizeQueryBuilder
+3. Frontend now passes URL parameters directly to the API
+4. Removed client-side filtering logic
+
+## Files Modified
+
+### 1. frontend/src/features/request/services/getMyRequests.js
+- Added `status` and `sortBy` parameters to the function signature
+- Build query parameters dynamically based on provided filters
+- Map frontend field names (startDate) to database columns (createdAt)
+- Convert sort direction to Sequelize format (+ for ASC, - for DESC)
+
+### 2. frontend/src/features/request/hooks/useRequests.js
+- Added `status` and `sortBy` parameters to the hook
+- Updated query key to include filter/sort parameters for proper cache invalidation
+- Pass parameters to the getMyRequests service
+
+### 3. frontend/src/features/request/components/RequestsTable.jsx
+- Read filter and sort parameters from URL at the top of the component
+- Pass parameters directly to useRequests hook
+- Removed all client-side filtering and sorting logic
+- Simplified component - data now comes pre-filtered from backend
+
+## Result
+- More efficient data fetching - only requested data is transferred
+- Accurate pagination - shows correct filtered count
+- Better performance for large datasets
+- Backend handles all filtering/sorting logic
+- Frontend is simpler and more maintainable
+
+## Date
+2026-02-05
