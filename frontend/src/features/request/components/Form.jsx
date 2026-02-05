@@ -23,7 +23,7 @@ const Container = styled.div`
 function Form({ onClose, id }) {
   const [data, setData] = useState({});
   const [errors, setErrors] = useState([]);
-  const { patchDocument } = usePatchDoc();
+  const { patchDocument } = usePatchDoc(id);
   const { doc, isPending } = useDocData({ docId: id });
 
   useEffect(() => {

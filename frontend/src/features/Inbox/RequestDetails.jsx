@@ -107,11 +107,12 @@ const Empty = styled.div`
 `;
 
 function RequestDetails() {
-  const { patchRequest } = usePatchRequest();
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const requestId = searchParams.get("request");
+  const { patchRequest } = usePatchRequest(requestId);
+  const navigate = useNavigate();
   const { request, isPending: isLoadingRequest } = useRequestData({
-    requestId: searchParams.get("request"),
+    requestId,
   });
 
   function respondToRequest(status) {

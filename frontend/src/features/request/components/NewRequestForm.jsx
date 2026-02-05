@@ -60,7 +60,7 @@ function NewRequestForm() {
   const { workflowId, instanceId, requestId } = useParams();
   const { request, isPending } = useRequestData({ requestId });
 
-  const { patchRequest } = usePatchRequest();
+  const { patchRequest } = usePatchRequest(requestId);
   const navigate = useNavigate();
 
   const { control, handleSubmit, getValues, formState } = useForm({
