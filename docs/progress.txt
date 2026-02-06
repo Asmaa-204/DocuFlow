@@ -202,5 +202,4 @@ Moved the filtering and sorting logic to the backend API:
 - Backend handles all filtering/sorting logic
 - Frontend is simpler and more maintainable
 
-## Date
-2026-02-05
+

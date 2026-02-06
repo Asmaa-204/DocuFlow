@@ -1,24 +1,7 @@
 # DocuFlow Missing Features & Improvements
 
 
-## 🔴 **Critical Issues (Fix Immediately)**
 
-### 1. **PDF Conversion Bug** (backend/src/services/docx.service.js)
-- **Issue**: Line 28 uses undefined `file()` function instead of `tmp.file()`
-- **Impact**: PDF conversion will fail completely
-- **Fix**: Change `await file({ postfix: '.docx' })` to `await tmp.file({ postfix: '.docx' })`
-
-### 2. **Undefined Function in Workflow Service** (backend/src/services/workflow.service.js)
-- **Issue**: Line 71 calls `validateWorkflowInput()` but imports `validate` from validators
-- **Impact**: Workflow creation will throw runtime error
-- **Fix**: Change `validateWorkflowInput` to `validate`
-
-### 3. **Template Controller Variable Bug** (backend/src/controllers/template.controller.js)
-- **Issue**: Line 17 uses undefined variable `title` instead of `name` from req.body
-- **Impact**: Template creation fails
-- **Fix**: Change `title` to `name` parameter
-
----
 
 ## 🟠 **High Priority Missing Features**
 
@@ -101,18 +84,6 @@ POST /auth/reset-password
 POST /auth/resend-verification
 GET /auth/verify-email/:token
 ```
-
-### 8. **User Profile Management**
-**Description:** Users cannot update their own profiles
-**Missing Components:**
-- Profile page
-- Edit profile form (name, email)
-- Change password functionality
-- Profile picture upload
-- Activity history
-- Notification preferences
-
----
 
 ## 🟡 **Medium Priority Features**
 
@@ -201,12 +172,6 @@ GET /auth/verify-email/:token
 - Download functionality
 - File size limits and validation
 
-### 18. **Document Preview**
-**Description:** No preview before generating PDF
-**Missing Components:**
-- Preview mode for filled documents
-- Side-by-side comparison
-- Print preview
 
 ### 19. **Template Management UI**
 **Description:** Backend exists but no frontend for template management
