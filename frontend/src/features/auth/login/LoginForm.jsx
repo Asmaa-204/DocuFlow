@@ -8,6 +8,7 @@ import { validation } from "./schema/validation";
 import InputField from "@components/InputField";
 import Button from "@components/Button";
 import SpinnerMini from "@components/SpinnerMini";
+import DarkModeToggle from "@components/DarkModeToggle";
 
 import { useLogin } from "./hooks/useLogin";
 import Form from "../Form";
@@ -15,7 +16,16 @@ import { translator as t } from "@data/translations/ar";
 import CallToAction from "@features/CallToAction";
 
 const Container = styled.div`
-  background-color: #f5f6fa;
+  background-color: var(--color-grey-50);
+  min-height: 100vh;
+  position: relative;
+`;
+
+const ToggleWrapper = styled.div`
+  position: absolute;
+  top: 1.6rem;
+  inset-inline-end: 1.6rem;   
+  z-index: 10;
 `;
 
 function LoginForm() {
@@ -36,6 +46,10 @@ function LoginForm() {
 
   return (
     <Container>
+      <ToggleWrapper>
+        <DarkModeToggle />
+      </ToggleWrapper>
+
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <div>
           <InputField
@@ -59,7 +73,6 @@ function LoginForm() {
         </div>
         <div>
           <Button
-            $variation="primary"
             type="submit"
             disabled={isSubmitting || isPending}
           >

@@ -18,6 +18,9 @@ const StyledToggle = styled.button`
   padding: 0.4rem;
   border-radius: var(--border-radius-sm);
   transform: translateX(0.8rem);
+  [dir="rtl"] & {
+    transform: translateX(-0.8rem);
+  }
   transition: all 0.2s;
 
   &:hover {
@@ -39,13 +42,13 @@ const StyledList = styled.ul`
   box-shadow: var(--shadow-md);
   border-radius: var(--border-radius-md);
 
-  right: 15px;
+  inset-inline-end: 25px;
   top: 23px;
 `;
 
 const StyledButton = styled.button`
   width: 100%;
-  text-align: left;
+  text-align: start;
   background: none;
   border: none;
   padding: 1.2rem 2.4rem;

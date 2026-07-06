@@ -1,11 +1,13 @@
 import { createGlobalStyle } from "styled-components";
 
+
 const GlobalStyles = createGlobalStyle`
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap');
 :root {
   --color-brand-50: #eef2ff;
   --color-brand-100: #e0e7ff;
   --color-brand-200: #c7d2fe;
-  --color-brand-300:rgba(120, 121, 231, 0.72);
+  --color-brand-300:#a5b4fc;
   --color-brand-500: #6366f1;
   --color-brand-600: #4f46e5;
   --color-brand-700: #4338ca;
@@ -25,9 +27,19 @@ const GlobalStyles = createGlobalStyle`
     --color-grey-800: #1f2937;
     --color-grey-900: #111827;
 
+
+    --color-blue-50:  #eff8ff;
     --color-blue-100: #e0f2fe;
+    --color-blue-200: #bae6fd;
+    --color-blue-300: #7dd3fc;
+    --color-blue-400: #38bdf8;
+    --color-blue-500: #0ea5e9;
+    --color-blue-600: #0284c7;
     --color-blue-700: #0369a1;
     --color-blue-800: #075985;
+    --color-blue-900: #0c4a6e;
+    --color-blue-950: #082f49;
+
     --color-green-100: #dcfce7;
     --color-green-700: #15803d;
     --color-yellow-100: #fef9c3;
@@ -49,6 +61,8 @@ const GlobalStyles = createGlobalStyle`
 
     --image-grayscale: 0;
     --image-opacity: 100%;
+    --toast-bg: #fff;
+    --toast-color: #374151;
   }
 
   &.dark-mode {
@@ -64,9 +78,18 @@ const GlobalStyles = createGlobalStyle`
     --color-grey-800: #f3f4f6;
     --color-grey-900: #f9fafb;
 
+    --color-blue-50:  #082f49;
     --color-blue-100: #075985;
-    --color-blue-700: #e0f2fe;
-    --color-blue-800: #0c4a6e;
+    --color-blue-200: #0c4a6e;
+    --color-blue-300: #0369a1;
+    --color-blue-400: #0284c7;
+    --color-blue-500: #0ea5e9;
+    --color-blue-600: #38bdf8;
+    --color-blue-700: #7dd3fc;
+    --color-blue-800: #bae6fd;
+    --color-blue-900: #e0f2fe;
+    --color-blue-950: #eff8ff;
+
     --color-green-100: #166534;
     --color-green-700: #dcfce7;
     --color-yellow-100: #854d0e;
@@ -88,6 +111,8 @@ const GlobalStyles = createGlobalStyle`
 
     --image-grayscale: 10%;
     --image-opacity: 90%;
+  --toast-bg: #1e2532;
+  --toast-color: #e2e8f0;
   }
 
   --border-radius-tiny: 2px;
@@ -111,11 +136,11 @@ html {
 }
 
 body {
-  font-family: "Poppins", "Cairo", "Tajawal", sans-serif;
+  font-family: "Cairo", "Tajawal", "Poppins", sans-serif;
   color: var(--color-grey-700);
   direction: rtl;
   text-align: right;
-
+  background-color: var(--color-grey-50); 
   transition: color 0.3s, background-color 0.3s;
   min-height: 100vh;
   line-height: 1.5;
@@ -151,7 +176,6 @@ textarea:focus,
 select:focus {
   outline: 2px solid var(--color-brand-600);
   outline-offset: -1px;
-  outline: none;
 }
 
 button:has(svg) {
@@ -193,9 +217,12 @@ img {
   text-align: left;
 }
 
-::-webkit-scrollbar {
-  display: none;
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-grey-300);
+  border-radius: 4px;
 }
+* { scrollbar-width: thin; scrollbar-color: var(--color-grey-300) transparent; }
 `;
 
 export default GlobalStyles;

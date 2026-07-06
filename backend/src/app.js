@@ -1,25 +1,35 @@
-const express = require('express');
+const express = require("express");
 
-const morgan = require('morgan');
-const cors = require('cors');
-const path = require('path');
-const hpp = require('hpp'); // multiple values in query string
+const morgan = require("morgan");
+const cors = require("cors");
+const path = require("path");
+const hpp = require("hpp"); // multiple values in query string
 
-const {notFoundHandler, errorLogger, errorHandler} = require('./middleware/error.js'); 
-const corOptions = require('./config/cors.js'); 
-const apiRouter = require('./routes/api.js'); 
+const {
+  notFoundHandler,
+  errorLogger,
+  errorHandler,
+} = require("./middleware/error.js");
+const corOptions = require("./config/cors.js");
+const apiRouter = require("./routes/api.js");
 
 const app = express();
-app.use(express.static('public'));
+app.use(express.static("public"));
 
-if(process.env.MODE === "DEV")
-    app.use(morgan('dev'));
+if (process.env.MODE === "DEV") app.use(morgan("dev"));
+
+app.use("/avatars", express.static("public/static/avatars"));
 
 app.use(cors(corOptions));
 app.use(express.json());
-app.use(hpp());
+app.use(
+  hpp({
+    // ? add to whitelist if needed.
+    // whitelist: ["status", "tags", "ids", "filter"],
+  }),
+);
 
-app.use('/api/v1', apiRouter);
+app.use("/api/v1", apiRouter);
 
 app.use(notFoundHandler);
 app.use(errorLogger, errorHandler);

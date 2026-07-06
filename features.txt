@@ -1,0 +1,20 @@
+- there's no respondedAt or completedAt field, so timing data for approval/rejection isn't captured.
+- prevent XSS attacks
+- notifications
+- auto-save drafts
+- admin
+    - insure one dep. manager for each dep. & one affairs.
+    - Add/Edit Workflow (add stage/add file to stage)
+    - Add/Edit Templates
+- Instance
+    - studentId (you should pick this in the first stage) 
+        - تحديد الاشراف -> Choose any student 
+        - Other instances -> Choose only from supervised students
+    - special stage for multiple professors
+- Request & AssignedUserId table to link the two
+- The frontend sends the professors as an array and movement of stages is known from the values in the array
+- Student table
+    - Frontend extra page view students from it you can update/delete and create new students
+        - the page should be accessible only to one role (affairs).
+
+

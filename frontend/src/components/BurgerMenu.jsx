@@ -33,9 +33,9 @@ const MenuButton = styled.button`
   }
 `;
 
-function BurgerMenu() {
+function BurgerMenu({ onClick }) {
   return (
-    <MenuButton>
+    <MenuButton onClick={onClick} aria-label="Toggle menu">
       <HiOutlineBars3 />
     </MenuButton>
   );

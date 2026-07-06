@@ -1,56 +1,36 @@
-'use strict';
+const { eq } = require("drizzle-orm");
+const { db, schema } = require("../../src/db");
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    const { Stage, Template, Condition } = require('../../src/models');
+  async up() {
+    await db.delete(schema.conditions);
 
-    const now = new Date();
-
-    // Clear existing data to allow re-seeding
-    await Condition.destroy({ where: {} });
-
-    // Get all first stages (stageOrder = 1) from each workflow
-    const firstStages = await Stage.findAll({
-      where: { stageOrder: 1 },
-      attributes: ['id']
+    const firstStages = await db.query.stages.findMany({
+      where: eq(schema.stages.stageOrder, 1),
+      columns: { id: true },
+    });
+    const templates = await db.query.templates.findMany({
+      columns: { id: true, title: true },
     });
 
-    // Get templates
-    const templates = await Template.findAll({
-      attributes: ['id', 'title']
-    });
-
-    if (firstStages.length === 0 || templates.length === 0) {
-      console.log('Skipping stage-template conditions - missing required data');
+    if (!firstStages.length || !templates.length) {
+      console.log("Skipping stage-template conditions - missing required data");
       return;
     }
 
-    const supervisionTemplate = templates.find(t => t.title === 'Request for Supervision');
+    const supervisionTemplate = templates.find(
+      (t) => t.title === "Request for Supervision",
+    );
+    if (!supervisionTemplate) return;
 
-    const conditionsData = [];
+    const conditionsData = firstStages.map((stage) => ({
+      stageId: stage.id,
+      templateId: supervisionTemplate.id,
+    }));
 
-    // Add supervision template to all first stages
-    if (supervisionTemplate) {
-      firstStages.forEach(stage => {
-        conditionsData.push({
-          stageId: stage.id,
-          templateId: supervisionTemplate.id,
-          createdAt: now,
-          updatedAt: now
-        });
-      });
+    if (conditionsData.length) {
+      await db.insert(schema.conditions).values(conditionsData);
     }
-
-    if (conditionsData.length > 0) {
-      await Condition.bulkCreate(conditionsData);
-    }
-
     console.log(`Created ${conditionsData.length} stage-template conditions`);
   },
-
-  async down(queryInterface, Sequelize) {
-    const { Condition } = require('../../src/models');
-    await Condition.destroy({ where: {} });
-  }
 };

@@ -14,6 +14,7 @@ const StyledFilter = styled.div`
 
 const FilterButton = styled.button`
   background-color: var(--color-grey-0);
+  color: var(--color-grey-700);
   border: none;
 
   ${(props) =>

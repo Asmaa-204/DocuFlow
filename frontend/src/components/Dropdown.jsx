@@ -18,7 +18,7 @@ const DropdownButton = styled.button`
   font-size: 1.6rem;
   font-weight: 500;
   transition: all 0.3s;
-  text-align: left;
+  text-align:start;
 
   &:hover {
     color: var(--color-grey-800);
@@ -44,9 +44,9 @@ const DropdownButton = styled.button`
 
 const DropdownMenu = styled.div`
   position: relative;
-  left: 0;
+  inset-inline-start: 0;
   margin-top: 0.4rem;
-  padding-left: 1rem;
+  padding-inline-start: 1rem;
   max-height: ${({ $isOpen }) => ($isOpen ? "30rem" : "0")};
   overflow: hidden;
   transition: max-height 0.3s ease-in-out;

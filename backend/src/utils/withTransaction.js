@@ -1,24 +1,11 @@
+const { db } = require("../db");
 
-const { sequelize } = require('../models')
-
-async function withTransaction(callback){
-
-    const transaction = await sequelize.transaction();
-
-    try
-    {
-        const result = await callback(transaction);
-        await transaction.commit();
-        return result;
-    } 
-    catch(err)
-    {
-        await transaction.rollback();
-        throw err;
-    }
-
+// Drizzle better-sqlite3 transactions are synchronous under the hood, but the
+// callback is `async` so awaited work inside still resolves before commit.
+async function withTransaction(callback) {
+  return await db.transaction(async (tx) => {
+    return await callback(tx);
+  });
 }
 
-
 module.exports = withTransaction;
-

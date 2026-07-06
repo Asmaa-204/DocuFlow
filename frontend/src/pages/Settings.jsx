@@ -6,7 +6,7 @@ import Heading from "@components/Heading";
 import styled from "styled-components";
 
 const StyledSettings = styled.div`
-  padding: 4.8rem;
+  padding: 4.8rem 0;
   max-width: 100rem;
   margin: 0 auto;
   display: flex;

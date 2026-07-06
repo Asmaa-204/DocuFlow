@@ -10,7 +10,8 @@ const Container = styled.div`
   & input,
   & select {
     border: 1px solid var(--color-grey-300);
-    background-color: var(--color-grey-0);
+    background-color: var(--color-grey-50);  
+    color: var(--color-grey-700);
     border-radius: var(--border-radius-sm);
     padding: 0.8rem 1.2rem;
     box-shadow: var(--shadow-sm);
@@ -19,11 +20,10 @@ const Container = styled.div`
     max-width: 100%;
   }
 
-  & input:focus,
-  & select:focus {
-    outline: none;
-    border-color: var(--color-brand-600);
+  & input::placeholder {
+    color: var(--color-grey-400);
   }
+
 `;
 
 const TextArea = styled.textarea`
@@ -35,20 +35,27 @@ const TextArea = styled.textarea`
   min-height: 120px;
   resize: vertical;
   transition: border-color 0.2s;
-  background-color: var(--color-grey-0);
+  background-color: var(--color-grey-50);   
+  color: var(--color-grey-700);
 
   &:focus {
     outline: none;
     border-color: var(--color-brand-600);
+  }
+
+  &::placeholder {
+    color: var(--color-grey-400);
   }
 `;
 
 const Label = styled.label`
   display: block;
   text-transform: capitalize;
-  color: var(--color-grey-700);
+  color: var(--color-grey-600);
   font-weight: 500;
+  margin-bottom: 0.4rem;
 `;
+
 
 const Error = styled.p`
   color: var(--color-red-700);

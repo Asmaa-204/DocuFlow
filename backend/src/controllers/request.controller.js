@@ -1,77 +1,72 @@
-const asyncDec = require("../utils/asyncDec")
-const RequestService = require("../services/request.service")
+const asyncDec = require("../utils/asyncDec");
+const RequestService = require("../services/request.service");
 const AppError = require("../errors/AppError");
-const { Access } = require("../models");
-const ar = require('../translations/ar');
-
+const { and, eq } = require("drizzle-orm");
+const { db, schema } = require("../db");
+const ar = require("../translations/ar");
 
 async function createRequest(req, res) {
-    const { instanceId, note, isDraft } = req.body;
-    const request = await RequestService.createRequest(instanceId, note, req.user.id);
-
-    res.json({
-        "status": "success",
-        "data": { request }
-    });
+  const { instanceId, note } = req.body;
+  const request = await RequestService.createRequest(
+    instanceId,
+    note,
+    req.user.id,
+  );
+  res.json({ status: "success", data: { request } });
 }
 
 async function updateRequest(req, res) {
-    const {
-        status,
-        note,
-        assignedTo
-    } = req.body
+  const { status, note, assignedTo, rejectionReason } = req.body;
 
-    const request = await RequestService.getRequestById(req.params.id);
+  const request = await RequestService.getRequestById(req.params.id);
 
-    const { accessLevel } = await Access.findOne({
-        where: {
-            requestId: request.id,
-            userId: req.user.id
-        }
-    });
+  const access = await db.query.accesses.findFirst({
+    where: and(
+      eq(schema.accesses.requestId, request.id),
+      eq(schema.accesses.userId, req.user.id),
+    ),
+  });
 
-    let updatedRequest = null;
+  const accessLevel = access?.accessLevel;
+  if (!accessLevel) throw new AppError(ar.request.noPermissionToUpdate, 403);
 
-    if (accessLevel === 'edit') {
-        updatedRequest = await RequestService.updateMyRequest(request, status, note, assignedTo)
-    }
-    else if (accessLevel === 'respond') {
-        updatedRequest = await RequestService.respondToRequest(request, status)
-    }
-    else {
-        throw new AppError(ar.request.noPermissionToUpdate, 403);
-    }
+  let updatedRequest = null;
 
-    res.json({
-        "status": "success",
-        "data": { request: updatedRequest }
-    });
+  if (accessLevel === "edit") {
+    updatedRequest = await RequestService.updateMyRequest(
+      request,
+      status,
+      note,
+      assignedTo,
+    );
+  } else if (accessLevel === "respond") {
+    updatedRequest = await RequestService.respondToRequest(
+      request,
+      status,
+      rejectionReason,
+      req.user,
+    );
+  } else {
+    throw new AppError(ar.request.noPermissionToUpdate, 403);
+  }
+
+  res.json({ status: "success", data: { request: updatedRequest } });
 }
 
 async function getAllRequests(req, res) {
-    const requests = await RequestService.getAllRequests(req.query);
-
-    res.json({
-        "status": "success",
-        "data": { requests }
-    });
+  const requests = await RequestService.getAllRequests(req.query);
+  res.json({ status: "success", data: { requests } });
 }
 
 async function getRequest(req, res) {
-    const { id } = req.params;
-    const request = await RequestService.getRequest(id, req.query, req.user);
-
-    res.json({
-        "status": "success",
-        "data": { request }
-    });
+  const { id } = req.params;
+  const request = await RequestService.getRequest(id, req.query, req.user);
+  res.json({ status: "success", data: { request } });
 }
 
-
 module.exports = {
-    createRequest: asyncDec(createRequest),
-    updateRequest: asyncDec(updateRequest),
-    getAllRequests: asyncDec(getAllRequests),
-    getRequest: asyncDec(getRequest)
+  createRequest: asyncDec(createRequest),
+  updateRequest: asyncDec(updateRequest),
+  getAllRequests: asyncDec(getAllRequests),
+  getRequest: asyncDec(getRequest),
 };

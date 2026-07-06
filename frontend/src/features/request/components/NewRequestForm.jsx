@@ -12,6 +12,7 @@ import { useAllWorkflows } from "@features/workflow/hooks/useAllWorkflows";
 import useRequestData from "../hooks/useRequestData";
 import { usePatchRequest } from "../hooks/usePatchRequest";
 import { translator as t } from "@data/translations/ar";
+import { useEffect } from "react";
 
 const Container = styled.form`
   display: flex;
@@ -60,10 +61,10 @@ function NewRequestForm() {
   const { workflowId, instanceId, requestId } = useParams();
   const { request, isPending } = useRequestData({ requestId });
 
-  const { patchRequest } = usePatchRequest(requestId);
+  const { patchRequest, isPending: isPatching } = usePatchRequest(requestId);
   const navigate = useNavigate();
 
-  const { control, handleSubmit, getValues, formState } = useForm({
+  const { control, handleSubmit, getValues, formState, reset } = useForm({
     defaultValues: {
       note: "",
       selectedDocuments: [],
@@ -77,22 +78,35 @@ function NewRequestForm() {
 
   function sendRequest(isDraft) {
     const data = getValues();
+    console.log(data);
     let requestPayload = {
       instanceId: Number(instanceId),
       note: data.note,
     };
 
-    if (!isDraft) requestPayload = { ...requestPayload, status: "pending" };
+    requestPayload = { ...requestPayload, status: isDraft ? "draft" : "pending" };
 
     patchRequest(
       { request: requestPayload, id: request.id },
       {
         onSuccess: () => {
-          navigate(`/requests/${isDraft ? "draft" : "submitted"}`);
+          navigate(`/requests/${isDraft ? "drafts" : "submitted"}`);
         },
       }
     );
   }
+
+  useEffect(() => {
+
+    if (!isPending && request) {
+      reset({
+        note: request?.note || "",
+        selectedDocuments: request.documents || [],
+        selectedForms: []
+      });
+    }
+
+  }, [isPending, request, reset])
 
   if (isPending) return <Spinner />;
 
@@ -135,12 +149,13 @@ function NewRequestForm() {
           //TODO: delete the request when it's done in backend
         }
         <ButtonGroup>
-          <Button type="submit">{t.actions.send}</Button>
+          <Button loading={isPatching} type="submit">{t.actions.send}</Button>
           <Button
             disabled={!formState.isDirty}
             type="button"
             $variation="secondary"
             onClick={() => sendRequest(true)}
+            loading={isPatching}
           >
             {t.actions.saveDraft}
           </Button>

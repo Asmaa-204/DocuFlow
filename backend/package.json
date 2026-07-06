@@ -9,7 +9,11 @@
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
     "test": "jest",
-    "seed": "npx sequelize-cli db:seed:all"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "seed": "node db/seeders/run-all.js"
   },
   "author": "Google LLC",
   "license": "Apache-2.0",
@@ -20,6 +24,7 @@
     "cors": "^2.8.5",
     "docxtemplater": "^3.65.2",
     "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.45.2",
     "express": "^4.21.2",
     "hpp": "^0.2.3",
     "joi": "^17.13.3",
@@ -27,16 +32,15 @@
     "libreoffice-convert": "^1.6.1",
     "morgan": "^1.10.0",
     "multer": "^2.0.2",
+    "pg": "^8.13.1",
     "pizzip": "^3.2.0",
-    "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7",
     "tmp-promise": "^3.0.3"
   },
   "devDependencies": {
     "apidoc": "^1.2.0",
+    "drizzle-kit": "^0.30.0",
     "jest": "^30.0.1",
     "nodemon": "^3.1.10",
-    "sequelize-cli": "^6.6.3",
     "supertest": "^7.1.1"
   }
 }

@@ -1,0 +1,27 @@
+- changed database from force true to false to prevent the deletion of data.
+- changed null in createRequest for note to empty string since the database doesn't accept null for note
+- the createRequest function name isn't correct. _createRequest to createRequest
+- createTemplate didn't destruct the values correctly and the values sent to the service weren't in the correct order & wasn't complete.
+- Fixed null check in getTemplateById 
+- updateTemplate service was missing an await.
+- updateDepartment wasn't returning and values & the controller expected a value to be returned.
+- A string instead of an array was passed to authorizeRoles in department.route.js.
+- accessLevel was destructed in request.controller without checking if a valid access was returned first.
+- jwt.verify could fail on expired but an incorrect code is returned 500 instead of 401 & it exposes stack info.
+- fillDocument doesn't handle null data -> will crash 
+- Temp file creation was useless as the file was being created then removed without using it in the middle (docx.service.js)
+- condition.controller doesn't have anyone who needs it..poor soul.
+- Cors only allows one origin.
+- Added validation for sort query when fetching requests.
+- Fixed avatar system
+- Added dark mode
+- Fixed: Stepper of stages in instances. 
+- Add rejectionReason column and fixed rejection
+- Fixed respondToRequest the userIds weren't correct (at all).
+- Added Rejection Reason modal.
+- Added custom views based on role.
+- Fixed document preview (changed the system from converting and viewing pdfs to directly viewing the docx itself)
+- Fixed Modal now fills data if it exists.
+- Added a student table to the database and linked it with instances.
+- Added special stage that can have multiple professors that approve.
+

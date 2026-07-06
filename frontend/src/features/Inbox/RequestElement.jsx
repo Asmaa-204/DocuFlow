@@ -3,8 +3,9 @@ import styled from "styled-components";
 import { format } from "date-fns";
 
 import RequestTag from "./RequestTag";
-import UserAvatar from "@components/UserAvatar";
+import UserAvatar, { Avatar } from "@components/UserAvatar";
 import { ar } from "date-fns/locale";
+import { getProfilePictureUrl } from "@features/user/utils";
 
 const ListItem = styled.li`
   padding: 1.5rem;
@@ -24,9 +25,10 @@ const ListItem = styled.li`
   }
 
   &.selected {
-    background-color: var(--color-brand-50);
-    border-left: 4px solid var(--color-brand-600);
+    background-color: var(--color-grey-100);
+    border-inline-start: 4px solid var(--color-brand-600);  
   }
+
 `;
 
 const SentAt = styled.span`
@@ -71,16 +73,16 @@ function InboxRequestListItem({ request }) {
       onClick={() => handleSelect(request)}
     >
       <SenderSection>
-        <UserAvatar src="/default-user.jpg" alt="sender avatar" />
+        <Avatar src={getProfilePictureUrl(request?.user?.profilePicture)} />
         <div>
           <SenderDetails>
-            <span>{request.senderName || "Shehab Khaled"}</span>
+            <span>{`${request.user.firstName} ${request.user.lastName}`}</span>
             <RequestTag version="icons" status={status} />
           </SenderDetails>
           <WorkflowTitle>{workflowTitle}</WorkflowTitle>
         </div>
       </SenderSection>
-      <SentAt>{format(new Date(sentAt), "EEEE hh:mm a", {locale: ar})}</SentAt>
+      <SentAt>{format(new Date(sentAt), "EEEE hh:mm a", { locale: ar })}</SentAt>
     </ListItem>
   );
 }

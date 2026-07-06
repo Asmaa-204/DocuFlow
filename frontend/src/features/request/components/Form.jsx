@@ -1,23 +1,24 @@
-import { useEffect, useState } from "react";
-import styled from "styled-components";
-import { JsonForms } from "@jsonforms/react";
-import { materialRenderers } from "@jsonforms/material-renderers";
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { JsonForms } from '@jsonforms/react';
+import { materialRenderers } from '@jsonforms/material-renderers';
 
-import InputFieldRenderer from "@components/InputFieldRenderer";
-import ActionButtons from "@components/ActionButtons";
-import Button from "@components/Button";
+import InputFieldRenderer from '@components/InputFieldRenderer';
+import ActionButtons from '@components/ActionButtons';
+import Button from '@components/Button';
 
-import { InputFieldTester } from "../renderers/inputFieldTester";
-import useDocData from "../hooks/useDocData";
-import { usePatchDoc } from "../hooks/usePatchDoc";
-import DocumentPreview from "./DocumentPreview";
+import { InputFieldTester } from '../renderers/inputFieldTester';
+import useDocData from '../hooks/useDocData';
+import { usePatchDoc } from '../hooks/usePatchDoc';
+import DocumentPreview from './DocumentPreview';
 
-import { translator as t } from "@data/translations/ar";
+import { translator as t } from '@data/translations/ar';
+import DocxViewer from './DocxViewer';
 
 const Container = styled.div`
   display: flex;
   gap: 2rem;
-  width: ${(props) => (props.$isSideBySide ? "100rem" : "50rem")};
+  width: ${props => (props.$isSideBySide ? '100rem' : '50rem')};
   transition: width 0.3s;
 `;
 
@@ -37,16 +38,20 @@ const PreviewSection = styled.div`
 `;
 
 function Form({ onClose, id }) {
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
   const [errors, setErrors] = useState([]);
   const [isSideBySide, setIsSideBySide] = useState(false);
-  const { patchDocument } = usePatchDoc(id);
+  const { patchDocument, isPending: isPatching } = usePatchDoc(id);
   const { doc, isPending } = useDocData({ docId: id });
 
   useEffect(() => {
-    if (isPending) return;
-    setData(doc.data);
-  }, [doc]);
+    if (!isPending && doc) {
+      setData(doc.data || {});
+    }
+  }, [doc, isPending]);
+
+
+
 
   function handleSaveForm() {
     patchDocument(
@@ -55,9 +60,10 @@ function Form({ onClose, id }) {
         onSuccess: () => {
           onClose();
         },
-      }
+      },
     );
   }
+
 
   if (isPending) return;
 
@@ -66,47 +72,51 @@ function Form({ onClose, id }) {
       <FormSection>
         <div
           style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginBottom: "1rem",
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginBottom: '1rem',
           }}
         >
           <Button
             $variation="secondary"
             size="small"
-            onClick={() => setIsSideBySide((s) => !s)}
+            onClick={() => setIsSideBySide(s => !s)}
           >
             {isSideBySide ? t.documents.closePreview : t.documents.sideBySide}
           </Button>
         </div>
-        <JsonForms
-          schema={doc?.template?.schema}
-          uischema={doc?.template?.uiSchema}
-          data={data}
-          onChange={({ data, errors }) => {
-            setData(data);
-            setErrors(errors);
-          }}
-          renderers={[
-            ...materialRenderers,
-            {
-              tester: InputFieldTester,
-              renderer: InputFieldRenderer,
-            },
-          ]}
-        />
+        {
+          data &&
+          <JsonForms
+            schema={doc?.template?.schema}
+            uischema={doc?.template?.uiSchema}
+            data={data}
+            onChange={({ data, errors }) => {
+              setData(data);
+              setErrors(errors);
+            }}
+            renderers={[
+              ...materialRenderers,
+              {
+                tester: InputFieldTester,
+                renderer: InputFieldRenderer,
+              },
+            ]}
+          />
+        }
         <ActionButtons
           isCancelDanger={false}
           textSave={t.actions.save}
           textCancel={t.actions.cancel}
           onSave={handleSaveForm}
           onCancel={onClose}
+          isSaving={isPatching}
         />
       </FormSection>
 
       {isSideBySide && (
         <PreviewSection>
-          <DocumentPreview docId={id} />
+          <DocxViewer documentId={id} />
         </PreviewSection>
       )}
     </Container>

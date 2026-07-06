@@ -11,6 +11,7 @@ export const navLinks = [
     name: "workflows",
     label: t.navigation.workflows,
     icon: "workflow",
+    roles: ["professor"],
     children: [
       {
         name: "new",

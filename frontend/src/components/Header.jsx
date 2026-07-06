@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 import Button from "@components/Button";
 import UserAvatar from "@components/UserAvatar";
 import BurgerMenu from "@components/BurgerMenu";
+import DarkModeToggle from "@components/DarkModeToggle";
 import { translator as t } from "@data/translations/ar";
+import { useAuth } from "@context/AuthContext";
 
 const StyledHeader = styled.header`
   background-color: var(--color-grey-0);
@@ -19,13 +21,13 @@ const StyledHeader = styled.header`
   gap: 2.4rem;
 `;
 
-const HeaderLeft = styled.div`
+const HeaderStart = styled.div`
   display: flex;
   align-items: center;
   gap: 1.6rem;
 `;
 
-const HeaderRight = styled.div`
+const HeaderEnd = styled.div`
   display: flex;
   align-items: center;
   gap: 1.6rem;
@@ -38,19 +40,26 @@ function Header() {
     navigate("/workflows/new");
   };
 
+  const { user } = useAuth();
+
   return (
     <StyledHeader>
-      <HeaderLeft>
+      <HeaderStart>
         <BurgerMenu />
-      </HeaderLeft>
+      </HeaderStart>
 
-      <HeaderRight>
-        <Button onClick={handleStartWorkflow}>
-          <HiPlus />
-          {t.workflow.startNew}
-        </Button>
+      <HeaderEnd>
+        {
+          user && user.role == "professor"
+          &&
+          <Button onClick={handleStartWorkflow}>
+            <HiPlus />
+            {t.workflow.startNew}
+          </Button>
+        }
+        <DarkModeToggle />
         <UserAvatar />
-      </HeaderRight>
+      </HeaderEnd>
     </StyledHeader>
   );
 }

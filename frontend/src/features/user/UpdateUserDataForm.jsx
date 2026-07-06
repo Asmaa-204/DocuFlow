@@ -8,6 +8,7 @@ import Button from "@components/Button";
 import InputField from "@components/InputField";
 import { HiCamera } from "react-icons/hi2";
 import { BASE_URL } from "@utils/consts";
+import { getProfilePictureUrl } from "./utils";
 
 const Form = styled.form`
   padding: 4rem;
@@ -139,9 +140,6 @@ function UpdateUserDataForm() {
     }
   }, [user]);
 
-  const avatarSrc = user?.profilePicture
-    ? `${BASE_URL}${user.profilePicture}`
-    : "/default-user.jpg";
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -164,7 +162,7 @@ function UpdateUserDataForm() {
     <Form onSubmit={handleSubmit}>
       <AvatarContainer>
         <AvatarWrapper onClick={handleAvatarClick}>
-          <AvatarImage src={avatarSrc} alt={user?.firstName} />
+          <AvatarImage src={getProfilePictureUrl(user?.profilePicture)} alt={user?.firstName} />
           <EditOverlay>
             <HiCamera />
             <span>{t.actions.edit}</span>

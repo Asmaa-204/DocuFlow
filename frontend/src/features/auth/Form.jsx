@@ -12,10 +12,11 @@ const Form = styled.form`
 
   width: min(45rem, 95%);
 
-  background-color: white;
+  background-color: var(--color-grey-0);  
+  color: var(--color-grey-700);
   border-radius: 6px;
   padding: 3rem 4rem;
-  box-shadow: 0 10px 40px -14px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-lg);             
 
   & > div {
     display: flex;

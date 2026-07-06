@@ -75,7 +75,7 @@ const StyledHeading = styled(Heading)`
 
 function WorkFlowForm() {
   const { data: workflows } = useAllWorkflows();
-  const { createInstance } = useCreateInstance();
+  const { createInstance, isPending } = useCreateInstance();
   const { departments } = useDepartments();
 
   const { control, handleSubmit, watch } = useForm({
@@ -147,9 +147,9 @@ function WorkFlowForm() {
       <Footer>
         <ProgressStepper currentStep={1} items={selectedOption?.stages || []} />
         <ButtonContainer>
-          <StyledButton disabled={!isStartEnabled} type="submit">
+          <Button $size="large" loading={isPending} disabled={!isStartEnabled} type="submit">
             {t.actions.save}
-          </StyledButton>
+          </Button>
         </ButtonContainer>
       </Footer>
     </Container>

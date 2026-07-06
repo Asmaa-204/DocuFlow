@@ -1,81 +1,77 @@
-'use strict';
+const bcrypt = require("bcryptjs");
+const { eq } = require("drizzle-orm");
+const { db, schema } = require("../../src/db");
+
+const departmentNames = [
+  "Aeronautical and Aerospace Engineering",
+  "Architectural Engineering",
+  "Biomedical Engineering and Systems",
+  "Chemical Engineering",
+  "Computer Engineering",
+  "Electrical Power Engineering",
+  "Electronics and Communications",
+  "Engineering Mathematics and Physics",
+  "Irrigation and Hydraulics",
+  "Mechanical Design and Production",
+  "Mechanical Power Engineering",
+  "Mining & Geological Engineering Program",
+  "Petroleum Engineering Program",
+  "Metallurgical Engineering Program",
+  "Public Works",
+  "Structural Engineering",
+];
 
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    const { Department, User } = require('../../src/models');
+  async up() {
+    await db.delete(schema.users);
+    await db.delete(schema.departments);
 
-    const now = new Date();
+    const inserted = await db
+      .insert(schema.departments)
+      .values(departmentNames.map((name) => ({ name })))
+      .returning();
 
-    const departmentNames = [
-      'Aeronautical and Aerospace Engineering',
-      'Architectural Engineering',
-      'Biomedical Engineering and Systems',
-      'Chemical Engineering',
-      'Computer Engineering',
-      'Electrical Power Engineering',
-      'Electronics and Communications',
-      'Engineering Mathematics and Physics',
-      'Irrigation and Hydraulics',
-      'Mechanical Design and Production',
-      'Mechanical Power Engineering',
-      'Mining & Geological Engineering Program',
-      'Petroleum Engineering Program',
-      'Metallurgical Engineering Program',
-      'Public Works',
-      'Structural Engineering'
-    ];
+    for (let i = 0; i < inserted.length; i++) {
+      const dept = inserted[i];
+      const pwd = await bcrypt.hash("password123", 8);
 
-    // Clear existing data to allow re-seeding
-    await User.destroy({ where: {} });
-    await Department.destroy({ where: {} });
+      const [manager] = await db
+        .insert(schema.users)
+        .values({
+          firstName: `Manager${i + 1}`,
+          lastName: "Manager",
+          email: `manager${i + 1}@college.edu`,
+          password: pwd,
+          role: "department_manager",
+          departmentId: dept.id,
+        })
+        .returning();
 
-    // 1️⃣ Create departments first
-    const departments = await Department.bulkCreate(
-      departmentNames.map(name => ({ name, createdAt: now, updatedAt: now })),
-      { returning: true }
-    );
+      const [affairs] = await db
+        .insert(schema.users)
+        .values({
+          firstName: `Affairs${i + 1}`,
+          lastName: "Affairs",
+          email: `affairs${i + 1}@college.edu`,
+          password: pwd,
+          role: "administrator",
+          departmentId: dept.id,
+        })
+        .returning();
 
-    // 2️⃣ Create users for each department
-    for (let i = 0; i < departments.length; i++) {
-      const dept = departments[i];
-
-      const manager = await User.create({
-        firstName: `Manager${i + 1}`,
-        lastName: 'Manager',
-        email: `manager${i + 1}@college.edu`,
-        password: 'password123',
-        role: 'department_manager',
-        departmentId: dept.id
-      });
-
-      const affairs = await User.create({
-        firstName: `Affairs${i + 1}`,
-        lastName: 'Affairs',
-        email: `affairs${i + 1}@college.edu`,
-        password: 'password123',
-        role: 'administrator',
-        departmentId: dept.id
-      });
-
-      const professor = await User.create({
+      await db.insert(schema.users).values({
         firstName: `Professor${i + 1}`,
-        lastName: 'Professor',
+        lastName: "Professor",
         email: `professor${i + 1}@college.edu`,
-        password: 'password123',
-        role: 'professor',
-        departmentId: dept.id
+        password: pwd,
+        role: "professor",
+        departmentId: dept.id,
       });
 
-      // 3️⃣ Update department with managerId + affairsEmployeeId
-      dept.managerId = manager.id;
-      dept.affairsEmployeeId = affairs.id;
-      await dept.save();
+      await db
+        .update(schema.departments)
+        .set({ managerId: manager.id, affairsEmployeeId: affairs.id })
+        .where(eq(schema.departments.id, dept.id));
     }
   },
-
-  async down(queryInterface, Sequelize) {
-    const { Department, User } = require('../../src/models');
-    await User.destroy({ where: {} });
-    await Department.destroy({ where: {} });
-  }
 };

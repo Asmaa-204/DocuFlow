@@ -31,7 +31,7 @@ export function useWorkflowInstances() {
     if (!definition) {
       console.error(
         "Workflow definition not found for ID:",
-        instance.workflowId
+        instance.workflowId,
       );
       return {
         id: instance.id,
@@ -56,7 +56,7 @@ export function useWorkflowInstances() {
       description: instance.description,
       start_datetime: instance.createdAt,
       last_updated_datetime: instance.updatedAt,
-      current_stage: instance.stageId - 1,
+      current_stage: instance.stage.stageOrder,
       items: stepperSteps,
     };
   }
@@ -94,7 +94,7 @@ export function useWorkflowInstances() {
       }, {});
 
       const instancesData = instances.map((instance) =>
-        renderStepper(instance, workflowsMap)
+        renderStepper(instance, workflowsMap),
       );
 
       return { instancesData, workflowsMap };

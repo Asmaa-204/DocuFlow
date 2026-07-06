@@ -1,82 +1,79 @@
-const AppError = require('../errors/AppError');
-const { Template } = require("../models");
-const { validateSchema, validateUiSchema } = require('../utils/ajv');
-const optionalize = require('../utils/optionalize');
-const ar = require('../translations/ar');
+const { eq } = require("drizzle-orm");
+const { db, schema } = require("../db");
+const AppError = require("../errors/AppError");
+const { validateSchema, validateUiSchema } = require("../utils/ajv");
+const optionalize = require("../utils/optionalize");
+const ar = require("../translations/ar");
 
-
-class TemplateService
-{
-    static async createTemplate(title, description, schema,uiSchema, url)
-    {
-        if(!validateSchema(schema)) 
-        {
-            const errors = validateSchema.errors.map(err => `${err.instancePath} ${err.message}`);
-            throw new AppError(ar.template.invalidSchema(errors.join(', ')), 400);
-        }
-
-        if(!validateUiSchema(uiSchema)) 
-        {
-            const errors = validateUiSchema.errors.map(err => `${err.instancePath} ${err.message}`);
-            throw new AppError(ar.template.invalidUiSchema(errors.join(', ')), 400);
-        }
-
-        const template = await Template.create({
-            title,
-            description,
-            schema,
-            uiSchema,
-            fileUrl: url        
-        });
-
-        return template;
+class TemplateService {
+  static async createTemplate(title, description, schemaJson, uiSchema, url) {
+    if (!validateSchema(schemaJson)) {
+      const errors = validateSchema.errors.map(
+        (e) => `${e.instancePath} ${e.message}`,
+      );
+      throw new AppError(ar.template.invalidSchema(errors.join(", ")), 400);
+    }
+    if (!validateUiSchema(uiSchema)) {
+      const errors = validateUiSchema.errors.map(
+        (e) => `${e.instancePath} ${e.message}`,
+      );
+      throw new AppError(ar.template.invalidUiSchema(errors.join(", ")), 400);
     }
 
+    const [template] = await db
+      .insert(schema.templates)
+      .values({
+        title,
+        description,
+        schema: schemaJson,
+        uiSchema,
+        fileUrl: url,
+      })
+      .returning();
 
-    static async getAllTemplates()
-    {
-        const templates = await Template.findAll();
-        return templates;
+    return template;
+  }
+
+  static async getAllTemplates() {
+    return db.query.templates.findMany();
+  }
+
+  static async getTemplateById(id) {
+    const template = await db.query.templates.findFirst({
+      where: eq(schema.templates.id, Number(id)),
+    });
+    if (!template) throw new AppError(ar.template.notFound, 404);
+    template.schema = optionalize(template.schema);
+    return template;
+  }
+
+  static async updateTemplate(id, data) {
+    const template = await db.query.templates.findFirst({
+      where: eq(schema.templates.id, Number(id)),
+    });
+    if (!template) throw new AppError(ar.template.notFound, 404);
+
+    if (data.schema && !validateSchema(data.schema)) {
+      const errors = validateSchema.errors.map(
+        (e) => `${e.instancePath} ${e.message}`,
+      );
+      throw new AppError(ar.template.invalidSchema(errors.join(", ")), 400);
+    }
+    if (data.uiSchema && !validateUiSchema(data.uiSchema)) {
+      const errors = validateUiSchema.errors.map(
+        (e) => `${e.instancePath} ${e.message}`,
+      );
+      throw new AppError(ar.template.invalidUiSchema(errors.join(", ")), 400);
     }
 
+    const [updated] = await db
+      .update(schema.templates)
+      .set(data)
+      .where(eq(schema.templates.id, template.id))
+      .returning();
 
-    static async getTemplateById(id)
-    {
-        const template = await Template.findByPk(id);
-
-        console.log(typeof template.schema);
-
-        template.schema = optionalize(template.schema);
-
-        if(!template)
-            throw new AppError(ar.template.notFound, 404);
-
-        return template;
-    }
-
-    static async updateTemplate(id, data)
-    {
-        const template = await Template.findByPk(id);
-
-        if(!template)
-            throw new AppError(ar.template.notFound, 404);
-
-        if(data.schema && !validateSchema(data.schema)) 
-        {
-            const errors = validateSchema.errors.map(err => `${err.instancePath} ${err.message}`);
-            throw new AppError(ar.template.invalidSchema(errors.join(', ')), 400);
-        }
-
-        if(data.uiSchema && !validateUiSchema(data.uiSchema)) 
-        {
-            const errors = validateUiSchema.errors.map(err => `${err.instancePath} ${err.message}`);
-            throw new AppError(ar.template.invalidUiSchema(errors.join(', ')), 400);
-        }
-
-        template.update(data);
-        return template;
-    }
-
-};
+    return updated;
+  }
+}
 
 module.exports = TemplateService;

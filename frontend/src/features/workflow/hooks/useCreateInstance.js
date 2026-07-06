@@ -20,10 +20,10 @@ function useCreateInstance() {
         {
           onSuccess: (request) => {
             navigate(
-              `/workflows/${instance.workflowId}/instances/${instance.id}/request/${request.id}`
+              `/workflows/${instance.workflowId}/instances/${instance.id}/request/${request.id}`,
             );
           },
-        }
+        },
       );
     },
     onError: (error) => {

@@ -14,7 +14,7 @@ const StyledPagination = styled.div`
 
 const P = styled.p`
   font-size: 1.4rem;
-  margin-left: 0.8rem;
+  margin-inline-start: 0.8rem;
 
   & span {
     font-weight: 600;
@@ -28,8 +28,8 @@ const Buttons = styled.div`
 
 const PaginationButton = styled.button`
   background-color: ${(props) =>
-    props.active ? " var(--color-brand-600)" : "var(--color-grey-50)"};
-  color: ${(props) => (props.active ? " var(--color-brand-50)" : "inherit")};
+    props.$active ? " var(--color-brand-600)" : "var(--color-grey-50)"};
+  color: ${(props) => (props.$active ? " var(--color-brand-50)" : "inherit")};
   border: none;
   border-radius: var(--border-radius-sm);
   font-weight: 500;
@@ -59,6 +59,11 @@ const PaginationButton = styled.button`
     background-color: var(--color-brand-600);
     color: var(--color-brand-50);
   }
+
+  &:disabled {
+    color: var(--color-grey-400);
+    cursor: not-allowed;
+  }
 `;
 
 function Pagination({ numResults }) {
@@ -72,16 +77,17 @@ function Pagination({ numResults }) {
     first + PAGE_SIZE - 1 > numResults ? numResults : first + PAGE_SIZE - 1;
 
   function getNext() {
-    const nexPage = currentPage === numPages ? numPages : currentPage + 1;
-    searchParams.set("page", nexPage);
+    if (currentPage === numPages) return;
+    searchParams.set("page", currentPage + 1);
     setSearchParams(searchParams);
   }
 
   function getPrevious() {
-    const prevPage = currentPage === 1 ? 1 : currentPage - 1;
-    searchParams.set("page", prevPage);
+    if (currentPage === 1) return;
+    searchParams.set("page", currentPage - 1);
     setSearchParams(searchParams);
   }
+
 
   if (PAGE_SIZE >= numResults) return null;
 

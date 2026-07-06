@@ -20,7 +20,7 @@ const Step = styled.div`
   position: relative;
   z-index: 2;
 
-  ${({ $isActive, $isCompleted }) => {
+${({ $isActive, $isCompleted }) => {
     if ($isActive) {
       return `
         background-color: var(--color-brand-600);
@@ -47,10 +47,11 @@ const StepConnector = styled.div`
   height: 3px;
   width: 15cqw;
   background-color: ${({ $isCompleted }) =>
-    $isCompleted ? "var(--color-brand-600)" : "var(--color-grey-300)"};
+    $isCompleted ? "var(--color-brand-600)" : "var(--color-grey-200)"};
   position: relative;
   z-index: 1;
 `;
+
 
 const Title = styled.span`
   display: inline-block;
@@ -61,6 +62,7 @@ const Title = styled.span`
   transform: translateX(-50%);
   text-align: center;
   font-size: 1.6rem;
+  color: var(--color-grey-600); 
 `;
 
 function ProgressStepper({ currentStep = 1, items = [] }) {

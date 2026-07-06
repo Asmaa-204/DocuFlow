@@ -1,0 +1,18 @@
+module.exports = {
+  ...require("./_enums"),
+  ...require("./user"),
+  ...require("./department"),
+  ...require("./workflow"),
+  ...require("./stage"),
+  ...require("./template"),
+  ...require("./workflow_instance"),
+  ...require("./request"),
+  ...require("./doc"),
+  ...require("./access"),
+  ...require("./condition"),
+  ...require("./activity"),
+  ...require("./student"),
+  ...require("./supervised_students"),
+  ...require("./request_assignment"),
+  ...require("./instance_professor"),
+};

@@ -32,7 +32,6 @@ function RequestsTable({ filter }) {
   const endIndex = startIndex + PAGE_SIZE;
   const paginatedData = requests.slice(startIndex, endIndex);
   //-----------------------------------------
-
   return (
     <Menus>
       <Table columns="0.6fr 2.4fr 1fr 2fr 2rem">

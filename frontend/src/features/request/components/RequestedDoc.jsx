@@ -1,16 +1,17 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 import {
   HiDocumentText,
   HiClipboardDocumentList,
   HiPlus,
-} from "react-icons/hi2";
+} from 'react-icons/hi2';
 
-import Modal from "@components/Modal";
-import Form from "./Form";
-import DocumentPreview from "./DocumentPreview";
+import Modal from '@components/Modal';
+import Form from './Form';
+import DocumentPreview from './DocumentPreview';
 
-import { translator as t } from "@data/translations/ar";
+import { translator as t } from '@data/translations/ar';
+import DocxViewer from './DocxViewer';
 
 const ItemCard = styled.div`
   display: flex;
@@ -21,7 +22,7 @@ const ItemCard = styled.div`
   border: 2px solid var(--color-grey-200);
   border-radius: var(--border-radius-md);
   background-color: var(--color-grey-0);
-  cursor: ${(props) => (props.$mode === "edit" ? "pointer" : "default")};
+  cursor: ${props => (props.$mode === 'edit' ? 'pointer' : 'default')};
   transition: all 0.3s;
   position: relative;
 
@@ -73,29 +74,29 @@ const ItemLabel = styled.span`
   text-align: center;
 `;
 
-function RequestedDoc({ doc: { name, id }, type, mode = "view" }) {
+function RequestedDoc({ doc: { name, id }, type, mode = 'view' }) {
   return (
     <Modal>
-      <Modal.Open opens={mode === "edit" ? "fill-forms" : "preview-doc"}>
-        <ItemCard $mode={mode || "view"}>
+      <Modal.Open opens={mode === 'edit' ? 'fill-forms' : 'preview-doc'}>
+        <ItemCard $mode={mode || 'view'}>
           <ItemIcon>
-            {type === "form" ? <HiClipboardDocumentList /> : <HiDocumentText />}
+            {type === 'form' ? <HiClipboardDocumentList /> : <HiDocumentText />}
           </ItemIcon>
           <ItemLabel>{name || `${t.documents.document} #${id}`}</ItemLabel>
-          {mode === "edit" && (
+          {mode === 'edit' && (
             <AddIcon>
               <HiPlus />
             </AddIcon>
           )}
         </ItemCard>
       </Modal.Open>
-      {mode === "edit" ? (
+      {mode === 'edit' ? (
         <Modal.Window name="fill-forms">
           <Form id={id} />
         </Modal.Window>
       ) : (
         <Modal.Window name="preview-doc" width="80%">
-          <DocumentPreview docId={id} />
+          <DocxViewer documentId={id} />
         </Modal.Window>
       )}
     </Modal>

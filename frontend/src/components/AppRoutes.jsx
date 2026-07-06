@@ -15,6 +15,8 @@ import MyWorkflows from "@pages/MyWorkflows";
 import RequestsInbox from "@pages/RequestsInbox";
 import Requests from "@pages/Requests";
 
+import { translator as t } from "@data/translations/ar";
+
 function AppRoutes() {
   return (
     <BrowserRouter>
@@ -48,9 +50,9 @@ function AppRoutes() {
 
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
-        <Route path="*" element={<h1>Page Not Fount</h1>} />
-      </Routes>
-    </BrowserRouter>
+        <Route path="*" element={<h1>{t.general.notFound}</h1>} />
+      </Routes >
+    </BrowserRouter >
   );
 }
 

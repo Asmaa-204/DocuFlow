@@ -1,4 +1,4 @@
-import { cloneElement, createContext, useContext, useState } from "react";
+import { cloneElement, createContext, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
@@ -35,11 +35,11 @@ const Button = styled.button`
   border: none;
   padding: 0.4rem;
   border-radius: var(--border-radius-sm);
-  transform: translateX(0.8rem);
+  /* transform: translateX(0.8rem); */
   transition: all 0.2s;
   position: absolute;
   top: 1.2rem;
-  right: 1.9rem;
+  inset-inline-end: 1.9rem;
 
   &:hover {
     background-color: var(--color-grey-100);
@@ -70,7 +70,13 @@ function Window({ children, name }) {
   const { openName, close } = useContext(ModalContext);
   const ref = useClickOutside(true, close);
 
-  if (name !== openName) return;
+  useEffect(() => {
+    function handleEsc(e) { if (e.key === "Escape") close(); }
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [close]);
+
+  if (name !== openName) return null;
 
   return createPortal(
     <Overlay>

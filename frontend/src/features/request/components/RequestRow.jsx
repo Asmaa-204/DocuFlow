@@ -42,8 +42,9 @@ function RequestRow({
 
   const statusToTag = {
     pending: "blue",
-    draft: "green",
+    draft: "yellow",
     rejected: "red",
+    approved: "green"
   };
 
   const workflowId = workflows?.find(

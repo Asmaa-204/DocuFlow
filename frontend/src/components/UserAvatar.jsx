@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { useAuth } from "@context/AuthContext";
 import { BASE_URL } from "@utils/consts";
+import { getProfilePictureUrl } from "@features/user/utils";
 
-const Avatar = styled.img`
+export const Avatar = styled.img`
   display: block;
-  width: 4rem;
   width: 3.6rem;
   aspect-ratio: 1;
   object-fit: cover;
@@ -16,9 +16,7 @@ const Avatar = styled.img`
 function UserAvatar() {
   const { user } = useAuth();
 
-  const src = user?.profilePicture
-    ? `${BASE_URL}${user.profilePicture}`
-    : "/default-user.jpg";
+  const src = getProfilePictureUrl(user?.profilePicture);
 
   return <Avatar src={src} alt={user?.firstName} />;
 }

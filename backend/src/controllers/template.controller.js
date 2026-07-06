@@ -4,21 +4,14 @@ const AppError = require("../errors/AppError");
 
 
 async function createTemplate(req, res, next) {
-    const { name, description, schema } = req.body;
-
-    if (!req.file)
-        throw new AppError("No File Upload");
-
+    if (!req.file) throw new AppError("No file uploaded", 400);
+    const { title, description } = req.body;
+    const schema = JSON.parse(req.body.schema);
+    const uiSchema = JSON.parse(req.body.uiSchema);
     const fileUrl = `/static/templates/${req.file.filename}`;
 
-    // add a validation layer for schema as it's json
-
-    const template = await TemplateService.createTemplate(name, description, schema, fileUrl);
-
-    res.status(200).json({
-        "status": "success",
-        "data": { template }
-    });
+    const template = await TemplateService.createTemplate(title, description, schema, uiSchema, fileUrl);
+    res.status(201).json({ status: "success", data: { template } });
 }
 
 async function getAllTemplates(req, res, next) {
